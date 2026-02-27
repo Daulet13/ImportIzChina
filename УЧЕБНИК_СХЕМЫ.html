@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Как устроена таможенная схема Питателя — учебник</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --card-hover: #263548;
+            --accent: #38bdf8;
+            --accent2: #a78bfa;
+            --accent3: #34d399;
+            --accent4: #fb923c;
+            --accent5: #f472b6;
+            --danger: #ef4444;
+            --text: #e2e8f0;
+            --text-dim: #94a3b8;
+            --border: #334155;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            padding: 0;
+        }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 50%, #1a1a2e 100%);
+            border-bottom: 1px solid var(--border);
+            padding: 60px 20px 50px;
+            text-align: center;
+        }
+        .hero h1 {
+            font-size: 2.4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
+        }
+        .hero .subtitle {
+            color: var(--text-dim);
+            font-size: 1.15rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Table of contents */
+        .toc {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 30px 35px;
+            margin-bottom: 50px;
+        }
+        .toc h2 {
+            font-size: 1.3rem;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+        .toc ol {
+            padding-left: 20px;
+        }
+        .toc li {
+            margin-bottom: 8px;
+        }
+        .toc a {
+            color: var(--text);
+            text-decoration: none;
+            border-bottom: 1px dashed var(--border);
+            transition: all 0.2s;
+        }
+        .toc a:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        /* Sections */
+        .section {
+            margin-bottom: 70px;
+        }
+        .section-number {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: var(--bg);
+            font-weight: 800;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            text-align: center;
+            line-height: 44px;
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+        }
+        .section h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #f1f5f9;
+        }
+        .section p, .section li {
+            color: var(--text-dim);
+            font-size: 1.05rem;
+            margin-bottom: 14px;
+        }
+        .section strong {
+            color: var(--text);
+        }
+
+        /* Analogy boxes */
+        .analogy {
+            background: linear-gradient(135deg, rgba(167, 139, 250, 0.1), rgba(56, 189, 248, 0.05));
+            border-left: 4px solid var(--accent2);
+            border-radius: 0 12px 12px 0;
+            padding: 20px 24px;
+            margin: 24px 0;
+        }
+        .analogy-title {
+            font-weight: 700;
+            color: var(--accent2);
+            margin-bottom: 6px;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .analogy p {
+            color: var(--text) !important;
+            margin-bottom: 0 !important;
+        }
+
+        /* Diagram containers */
+        .diagram {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 35px;
+            margin: 30px 0;
+            overflow-x: auto;
+        }
+        .diagram-title {
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Flow diagrams using flexbox */
+        .flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0;
+        }
+        .flow-vertical {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+        }
+
+        .entity {
+            background: var(--bg);
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            padding: 18px 22px;
+            text-align: center;
+            min-width: 160px;
+            position: relative;
+            transition: all 0.3s;
+        }
+        .entity:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(56, 189, 248, 0.15);
+        }
+        .entity.blue { border-color: var(--accent); }
+        .entity.purple { border-color: var(--accent2); }
+        .entity.green { border-color: var(--accent3); }
+        .entity.orange { border-color: var(--accent4); }
+        .entity.pink { border-color: var(--accent5); }
+        .entity.red { border-color: var(--danger); }
+
+        .entity-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+        .entity.blue .entity-label { color: var(--accent); }
+        .entity.purple .entity-label { color: var(--accent2); }
+        .entity.green .entity-label { color: var(--accent3); }
+        .entity.orange .entity-label { color: var(--accent4); }
+        .entity.pink .entity-label { color: var(--accent5); }
+        .entity.red .entity-label { color: var(--danger); }
+
+        .entity-name {
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: var(--text);
+        }
+        .entity-detail {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            margin-top: 4px;
+        }
+
+        .arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 8px;
+            color: var(--text-dim);
+            font-size: 1.4rem;
+            min-width: 50px;
+            flex-direction: column;
+        }
+        .arrow-down {
+            padding: 8px 0;
+            font-size: 1.4rem;
+            color: var(--text-dim);
+            text-align: center;
+        }
+        .arrow-label {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            max-width: 120px;
+            text-align: center;
+            line-height: 1.3;
+        }
+        .arrow-label.blue { color: var(--accent); }
+        .arrow-label.green { color: var(--accent3); }
+        .arrow-label.orange { color: var(--accent4); }
+        .arrow-label.red { color: var(--danger); }
+        .arrow-label.purple { color: var(--accent2); }
+
+        /* Big schema */
+        .big-schema {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0;
+            align-items: center;
+            justify-items: center;
+        }
+
+        .schema-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+
+        .schema-connector {
+            text-align: center;
+            padding: 10px 0;
+            color: var(--text-dim);
+            font-size: 1.5rem;
+        }
+
+        /* Multi-column layout */
+        .principals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 14px;
+            margin: 20px 0;
+        }
+        .principal-card {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+        }
+        .principal-card .name { font-weight: 700; font-size: 0.95rem; }
+        .principal-card .stats { font-size: 0.8rem; color: var(--text-dim); margin-top: 6px; }
+        .principal-card .bar {
+            height: 6px;
+            border-radius: 3px;
+            margin-top: 10px;
+            background: var(--border);
+        }
+        .principal-card .bar-fill {
+            height: 100%;
+            border-radius: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+        }
+
+        /* Price comparison */
+        .price-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 20px 0;
+        }
+        .price-table th {
+            background: var(--bg);
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-dim);
+            border-bottom: 2px solid var(--border);
+        }
+        .price-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.95rem;
+        }
+        .price-table tr:hover td {
+            background: rgba(56, 189, 248, 0.05);
+        }
+        .price-low { color: var(--accent3); font-weight: 700; }
+        .price-high { color: var(--danger); font-weight: 700; }
+        .price-mid { color: var(--accent4); font-weight: 700; }
+        .multiplier {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+        }
+
+        /* Highlight box */
+        .highlight {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(251, 146, 60, 0.05));
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 24px 0;
+        }
+        .highlight-green {
+            background: linear-gradient(135deg, rgba(52, 211, 153, 0.1), rgba(56, 189, 248, 0.05));
+            border: 1px solid rgba(52, 211, 153, 0.3);
+        }
+        .highlight h3 {
+            color: var(--danger);
+            margin-bottom: 10px;
+        }
+        .highlight-green h3 {
+            color: var(--accent3);
+        }
+
+        /* Definition */
+        .definition {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 20px 0;
+        }
+        .definition-term {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 4px;
+        }
+        .definition-alt {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            margin-bottom: 12px;
+        }
+        .definition p {
+            color: var(--text) !important;
+        }
+
+        /* 1C vs Logos comparison */
+        .systems-compare {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 24px 0;
+        }
+        @media (max-width: 700px) {
+            .systems-compare { grid-template-columns: 1fr; }
+        }
+        .system-card {
+            background: var(--bg);
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            padding: 24px;
+        }
+        .system-card.logos { border-color: var(--accent); }
+        .system-card.onesee { border-color: var(--accent2); }
+        .system-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 14px;
+        }
+        .system-card.logos h3 { color: var(--accent); }
+        .system-card.onesee h3 { color: var(--accent2); }
+        .system-card ul {
+            list-style: none;
+            padding: 0;
+        }
+        .system-card li {
+            padding: 6px 0;
+            padding-left: 20px;
+            position: relative;
+            color: var(--text-dim) !important;
+            font-size: 0.95rem !important;
+        }
+        .system-card li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--text-dim);
+        }
+
+        /* Steps */
+        .step-list {
+            list-style: none;
+            padding: 0;
+            counter-reset: steps;
+        }
+        .step-list li {
+            counter-increment: steps;
+            padding: 20px 20px 20px 70px;
+            position: relative;
+            border-left: 2px solid var(--border);
+            margin-left: 20px;
+        }
+        .step-list li:last-child { border-left-color: transparent; }
+        .step-list li::before {
+            content: counter(steps);
+            position: absolute;
+            left: -16px;
+            top: 18px;
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: var(--bg);
+            font-weight: 800;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+        .step-list .step-title {
+            font-weight: 700;
+            color: var(--text);
+            font-size: 1.1rem;
+            margin-bottom: 6px;
+        }
+
+        /* Stacked scheme for narrow */
+        .scheme-stack {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+        }
+
+        .scheme-level {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+
+        .connector-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .bracket {
+            border: 2px solid var(--border);
+            border-top: none;
+            border-radius: 0 0 12px 12px;
+            width: 80%;
+            height: 30px;
+            margin: 0 auto;
+        }
+
+        /* Tags */
+        .tag {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 600;
+        }
+        .tag-blue { background: rgba(56, 189, 248, 0.15); color: var(--accent); }
+        .tag-purple { background: rgba(167, 139, 250, 0.15); color: var(--accent2); }
+        .tag-green { background: rgba(52, 211, 153, 0.15); color: var(--accent3); }
+        .tag-orange { background: rgba(251, 146, 60, 0.15); color: var(--accent4); }
+        .tag-red { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
+
+        /* Inline icon */
+        .icon { font-size: 1.3rem; margin-right: 6px; vertical-align: middle; }
+
+        /* Document mock */
+        .doc-mock {
+            background: #f8fafc;
+            color: #1e293b;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.88rem;
+            line-height: 1.8;
+            border: 1px solid #cbd5e1;
+        }
+        .doc-mock .doc-title {
+            text-align: center;
+            font-weight: 800;
+            font-size: 1rem;
+            margin-bottom: 16px;
+            color: #1e293b;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        .doc-mock .field {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+        .doc-mock .field-name {
+            color: #64748b;
+            min-width: 200px;
+        }
+        .doc-mock .field-value {
+            color: #0f172a;
+            font-weight: 700;
+        }
+        .doc-mock .field-value.highlight-red {
+            color: #dc2626;
+            background: #fef2f2;
+            padding: 0 4px;
+            border-radius: 3px;
+        }
+        .doc-mock .field-value.highlight-green {
+            color: #16a34a;
+            background: #f0fdf4;
+            padding: 0 4px;
+            border-radius: 3px;
+        }
+
+        hr.divider {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 40px 0;
+        }
+
+        /* money flow */
+        .money-flow {
+            display: flex;
+            align-items: stretch;
+            justify-content: center;
+            gap: 0;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .money-node {
+            background: var(--bg);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 16px 20px;
+            text-align: center;
+            min-width: 140px;
+        }
+        .money-arrow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0 6px;
+            min-width: 80px;
+        }
+        .money-arrow .amount {
+            font-weight: 800;
+            font-size: 1rem;
+        }
+        .money-arrow .amount.green { color: var(--accent3); }
+        .money-arrow .amount.red { color: var(--danger); }
+        .money-arrow .amount.orange { color: var(--accent4); }
+        .money-arrow .direction {
+            font-size: 1.5rem;
+            color: var(--text-dim);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-dim);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--border);
+        }
+    </style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+    <h1>Как устроена таможенная схема Питателя</h1>
+    <p class="subtitle">Полный разбор для 1С-ника: кто есть кто, откуда берутся цены, и что мы нашли, сопоставив Логос с 1С</p>
+</div>
+
+<div class="container">
+
+<!-- TOC -->
+<nav class="toc">
+    <h2>Содержание</h2>
+    <ol>
+        <li><a href="#glossary">Словарь: кто есть кто (принципал, комитент, агент...)</a></li>
+        <li><a href="#scheme">Большая схема: как товар попадает из Ирана в Москву</a></li>
+        <li><a href="#money">Как двигаются деньги и где появляется наценка</a></li>
+        <li><a href="#two-systems">Две системы — два глаза: Логос vs 1С</a></li>
+        <li><a href="#1c-docs">Что конкретно мы смотрели в 1С (документы)</a></li>
+        <li><a href="#double-price">Двойное ценообразование: главное открытие</a></li>
+        <li><a href="#analysis">Процесс анализа по шагам</a></li>
+        <li><a href="#business">Зачем всё это и что с этим делать</a></li>
+    </ol>
+</nav>
+
+
+<!-- ============================================= -->
+<!-- SECTION 1: GLOSSARY -->
+<!-- ============================================= -->
+<div class="section" id="glossary">
+    <div class="section-number">1</div>
+    <h2>Словарь: кто есть кто</h2>
+
+    <p>Прежде чем смотреть схемы — разберёмся в ролях. Тут много слов, но суть простая.</p>
+
+    <div class="definition">
+        <div class="definition-term">Таможенный брокер (декларант)</div>
+        <div class="definition-alt">В нашем случае: <strong>Сармант-ЮГ</strong></div>
+        <p>Компания, которая оформляет документы на таможне. Как нотариус для грузов — заполняет декларации, общается с таможней, следит за правильностью кодов и платежей. <strong>Сармант НЕ покупает и НЕ продаёт товар</strong> — он оказывает услугу по оформлению.</p>
+    </div>
+
+    <div class="analogy">
+        <div class="analogy-title">Аналогия</div>
+        <p>Сармант — это как бухгалтер, которого нанимают вести налоговую отчётность. Он не владеет бизнесом клиента — просто оформляет бумаги за деньги.</p>
+    </div>
+
+    <div class="definition">
+        <div class="definition-term">Принципал</div>
+        <div class="definition-alt">В нашем случае: ТК Евразия, Фалкон Продукт, Коминс, Альянс, Смарт Моушн Линк, Акванур</div>
+        <p>Компания, которая <strong>реально заказывает и оплачивает товар</strong>. Это конечный покупатель-импортёр. Принципал говорит: «Мне нужно 100 тонн перца из Ирана». Все остальные в цепочке работают <em>на него</em>.</p>
+        <p>В 1С-терминах: принципал ≈ <strong>комитент</strong> (тот, кто даёт поручение купить товар).</p>
+    </div>
+
+    <div class="analogy">
+        <div class="analogy-title">Аналогия</div>
+        <p>Принципал — это как заказчик ремонта в квартире. Он говорит «хочу новую кухню», платит деньги, а бригадир (агент) организует закупку материалов и работу.</p>
+    </div>
+
+    <div class="definition">
+        <div class="definition-term">Агент (комиссионер)</div>
+        <div class="definition-alt">В нашем случае: <strong>Сармант-ЮГ</strong> (да, та же компания!)</div>
+        <p>Тот, кто действует <strong>от своего имени, но за счёт принципала</strong>. Сармант не просто оформляет документы — он ещё выступает посредником: закупает товар у иностранных поставщиков от своего имени (в документах стоит «Сармант-ЮГ»), но за деньги принципала.</p>
+        <p>Поэтому в 1С операция называется <strong>«ПокупкаКомиссия»</strong> — это покупка по комиссионному договору.</p>
+    </div>
+
+    <div class="highlight">
+        <h3>Важный нюанс: двойная роль Сарманта</h3>
+        <p style="color: var(--text);">Сармант одновременно:<br>
+        <strong>1)</strong> Таможенный брокер (оформляет ДТ) — за это берёт брокерскую комиссию<br>
+        <strong>2)</strong> Агент/комиссионер (закупает товар от своего имени за счёт принципала) — за это отчитывается через ОтчётКомитенту</p>
+        <p style="color: var(--text-dim); margin-top: 10px;">Именно поэтому в 1С есть и ПоступлениеТоваровУслуг (покупка), и ОтчётКомитенту (отчёт перед принципалом), и ОтчётАгента (отчёт о своей агентской работе).</p>
+    </div>
+
+    <div class="definition">
+        <div class="definition-term">Клиент (импортёр на бумаге)</div>
+        <div class="definition-alt">В нашем случае: <strong>УТК ФС</strong>, УТК Акванур Фудсити, УТК Фалкон Продукт, УТК Коминс</div>
+        <p>Юридическое лицо, которое <strong>стоит в декларации как получатель груза</strong>. Это «прокладка» — специально созданная компания-импортёр. С конца декабря 2025 все принципалы используют <strong>одну УТК ФС</strong> вместо отдельных.</p>
+    </div>
+
+    <div class="analogy">
+        <div class="analogy-title">Зачем нужна прокладка (УТК)?</div>
+        <p>Принципалам не хочется светиться в таможенных документах напрямую (налоговые риски, проверки). Поэтому создаётся «техническая» компания-импортёр, через которую идёт весь груз. Как PO Box (абонентский ящик) — адрес есть, а бизнес по другому адресу.</p>
+    </div>
+
+    <div class="definition">
+        <div class="definition-term">Поставщик (seller)</div>
+        <div class="definition-alt">В нашем случае: <strong>ANKARA GYD</strong> (Турция) — для иранских товаров</div>
+        <p>Иностранная компания, которая продаёт товар. Указана в инвойсе и в декларации. ANKARA GYD — турецкая компания-посредник, которая <strong>перепродаёт иранские овощи/фрукты</strong>. Иран не может торговать напрямую с Россией по некоторым схемам, поэтому товар идёт через Турцию.</p>
+    </div>
+
+    <div class="definition">
+        <div class="definition-term">Питатель</div>
+        <div class="definition-alt">Неофициальное название всей группы принципалов</div>
+        <p>Это <strong>НЕ одна компания</strong>. Это группа из 6-8 связанных принципалов (ТК Евразия, Фалкон, Коминс, Альянс, Смарт Моушн Линк, Акванур, Верона Капитал), которые поставляют продукты питания. Они все работают через Сармант и через одного посредника ANKARA GYD.</p>
+    </div>
+
+</div>
+
+<!-- ============================================= -->
+<!-- SECTION 2: BIG SCHEME -->
+<!-- ============================================= -->
+<div class="section" id="scheme">
+    <div class="section-number">2</div>
+    <h2>Большая схема: путь товара от поля до Москвы</h2>
+
+    <p>Вот как перец, выращенный в Иране, оказывается на складе в Москве. Читай сверху вниз:</p>
+
+    <div class="diagram">
+        <div class="diagram-title">Полная цепочка поставки</div>
+
+        <div class="scheme-stack">
+
+            <!-- Level 1: Farms -->
+            <div class="scheme-level">
+                <div class="entity green" style="min-width: 400px;">
+                    <div class="entity-label">Уровень 1: Производитель</div>
+                    <div class="entity-name">Иранские фермеры</div>
+                    <div class="entity-detail">Выращивают перец, салат, баклажаны, киви, огурцы</div>
+                    <div class="entity-detail"><span class="tag tag-green">Иран, Азербайджан, Узбекистан, Туркменистан</span></div>
+                </div>
+            </div>
+
+            <div class="schema-connector">
+                <div>▼</div>
+                <div style="font-size: 0.8rem; color: var(--accent4);">Фермеры продают товар посреднику</div>
+            </div>
+
+            <!-- Level 2: ANKARA -->
+            <div class="scheme-level">
+                <div class="entity red" style="min-width: 400px;">
+                    <div class="entity-label">Уровень 2: Посредник</div>
+                    <div class="entity-name">ANKARA GYD (Турция)</div>
+                    <div class="entity-detail">Скупает у фермеров по <span class="price-low">$0.30/кг</span></div>
+                    <div class="entity-detail">Перепродаёт принципалам по <span class="price-high">$2.30/кг</span></div>
+                    <div class="entity-detail"><span class="tag tag-red">Наценка x3.5 — x9.5</span></div>
+                </div>
+            </div>
+
+            <div class="schema-connector">
+                <div>▼</div>
+                <div style="font-size: 0.8rem; color: var(--accent4);">Выписывает инвойс на Сармант (комиссионная покупка)</div>
+            </div>
+
+            <!-- Level 3: Sarmant -->
+            <div class="scheme-level">
+                <div class="entity blue" style="min-width: 400px;">
+                    <div class="entity-label">Уровень 3: Агент + Брокер</div>
+                    <div class="entity-name">Сармант-ЮГ</div>
+                    <div class="entity-detail">Покупает от своего имени (агентский договор)</div>
+                    <div class="entity-detail">Оформляет таможенную декларацию (ДТ)</div>
+                    <div class="entity-detail"><span class="tag tag-blue">Логос: таможенная стоимость</span> <span class="tag tag-purple">1С: реальная цена</span></div>
+                </div>
+            </div>
+
+            <div class="schema-connector">
+                <div>▼</div>
+                <div style="font-size: 0.8rem; color: var(--accent4);">Оформляет ДТ от имени «клиента» (УТК)</div>
+            </div>
+
+            <!-- Level 4: UTK -->
+            <div class="scheme-level">
+                <div class="entity orange" style="min-width: 400px;">
+                    <div class="entity-label">Уровень 4: «Прокладка»-импортёр</div>
+                    <div class="entity-name">УТК ФС</div>
+                    <div class="entity-detail">Юрлицо, стоящее в декларации как получатель</div>
+                    <div class="entity-detail">Раньше было 3 отдельных УТК, с дек 2025 — одна</div>
+                    <div class="entity-detail"><span class="tag tag-orange">В Логосе это «клиент» (list_company)</span></div>
+                </div>
+            </div>
+
+            <div class="schema-connector">
+                <div>▼</div>
+                <div style="font-size: 0.8rem; color: var(--accent4);">Товар передаётся реальному заказчику</div>
+            </div>
+
+            <!-- Level 5: Principals -->
+            <div class="scheme-level" style="gap: 10px;">
+                <div class="entity purple">
+                    <div class="entity-label">Принципал</div>
+                    <div class="entity-name">ТК Евразия</div>
+                    <div class="entity-detail">73,528 т · 35%</div>
+                </div>
+                <div class="entity purple">
+                    <div class="entity-label">Принципал</div>
+                    <div class="entity-name">Смарт Моушн</div>
+                    <div class="entity-detail">37,544 т · 18%</div>
+                </div>
+                <div class="entity purple">
+                    <div class="entity-label">Принципал</div>
+                    <div class="entity-name">Акванур</div>
+                    <div class="entity-detail">31,097 т · 15%</div>
+                </div>
+                <div class="entity purple">
+                    <div class="entity-label">Принципал</div>
+                    <div class="entity-name">Фалкон</div>
+                    <div class="entity-detail">28,076 т · 13%</div>
+                </div>
+                <div class="entity purple">
+                    <div class="entity-label">Принципал</div>
+                    <div class="entity-name">Коминс</div>
+                    <div class="entity-detail">19,187 т · 9%</div>
+                </div>
+                <div class="entity purple">
+                    <div class="entity-label">Принципал</div>
+                    <div class="entity-name">Альянс</div>
+                    <div class="entity-detail">18,786 т · 9%</div>
+                </div>
+            </div>
+
+            <div class="schema-connector">
+                <div>▼</div>
+                <div style="font-size: 0.8rem; color: var(--accent3);">Продают конечным покупателям</div>
+            </div>
+
+            <!-- Level 6: End consumers -->
+            <div class="scheme-level">
+                <div class="entity green" style="min-width: 400px; border-style: dashed;">
+                    <div class="entity-label">Конечные покупатели</div>
+                    <div class="entity-name">Школы, магазины, Фуд Сити, рестораны</div>
+                    <div class="entity-detail">Сюда товар попадает уже по розничным/оптовым ценам</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="analogy">
+        <div class="analogy-title">Вся схема одним предложением</div>
+        <p><strong>Иранский фермер</strong> продаёт перец турецкому посреднику <strong>ANKARA GYD</strong>, тот перепродаёт <strong>Сарманту</strong> (от имени <strong>УТК ФС</strong>), Сармант оформляет таможню и передаёт товар <strong>принципалу</strong> (ТК Евразия и др.), а принципал везёт его в <strong>школы и на Фуд Сити</strong>.</p>
+    </div>
+</div>
+
+<!-- ============================================= -->
+<!-- SECTION 3: MONEY FLOW -->
+<!-- ============================================= -->
+<div class="section" id="money">
+    <div class="section-number">3</div>
+    <h2>Как двигаются деньги (на примере 1 кг перца)</h2>
+
+    <p>Вот конкретный путь денег — от фермера до принципала. Все цифры реальные, из нашего анализа:</p>
+
+    <div class="diagram">
+        <div class="diagram-title">Путь 1 кг перца сладкого (Иран → Москва)</div>
+
+        <div class="money-flow">
+            <div class="money-node" style="border-color: var(--accent3);">
+                <div style="font-size: 0.8rem; color: var(--accent3);">Фермер в Иране</div>
+                <div style="font-weight: 800; font-size: 1.3rem; color: var(--accent3);">~$0.15</div>
+                <div style="font-size: 0.75rem; color: var(--text-dim);">его себестоимость</div>
+            </div>
+            <div class="money-arrow">
+                <div class="amount green">$0.30</div>
+                <div class="direction">→</div>
+                <div style="font-size: 0.7rem; color: var(--text-dim);">продаёт за</div>
+            </div>
+            <div class="money-node" style="border-color: var(--danger);">
+                <div style="font-size: 0.8rem; color: var(--danger);">ANKARA GYD</div>
+                <div style="font-weight: 800; font-size: 1.3rem; color: var(--danger);">$0.30 → $2.30</div>
+                <div style="font-size: 0.75rem; color: var(--text-dim);">наценка x7.5</div>
+            </div>
+            <div class="money-arrow">
+                <div class="amount red">$2.30</div>
+                <div class="direction">→</div>
+                <div style="font-size: 0.7rem; color: var(--text-dim);">продаёт за</div>
+            </div>
+            <div class="money-node" style="border-color: var(--accent);">
+                <div style="font-size: 0.8rem; color: var(--accent);">Сармант</div>
+                <div style="font-weight: 800; font-size: 1rem; color: var(--text-dim);">транзит</div>
+                <div style="font-size: 0.75rem; color: var(--text-dim);">+ брокерские услуги</div>
+            </div>
+            <div class="money-arrow">
+                <div class="amount orange">$2.30+</div>
+                <div class="direction">→</div>
+                <div style="font-size: 0.7rem; color: var(--text-dim);">передаёт</div>
+            </div>
+            <div class="money-node" style="border-color: var(--accent2);">
+                <div style="font-size: 0.8rem; color: var(--accent2);">Принципал</div>
+                <div style="font-weight: 800; font-size: 1.3rem; color: var(--accent2);">~179 руб/кг</div>
+                <div style="font-size: 0.75rem; color: var(--text-dim);">(АЛЬЯНС, самый дорогой)</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="highlight">
+        <h3>Где деньги утекают?</h3>
+        <p style="color: var(--text);">
+            Фермер получает <strong>~$0.15-0.30/кг</strong>. Принципал платит <strong>$2.30/кг</strong> (179 руб).
+            Разница — <strong>$2.00/кг</strong> — уходит в ANKARA GYD.
+            <br><br>
+            На объёме <strong>37,000 тонн перца за 2 месяца</strong> это: 37,000,000 кг × $2.00 = <strong>$74 миллиона</strong> за два месяца. Только на перце. Только наценка посредника.
+        </p>
+    </div>
+
+    <p>Но не все принципалы платят одинаково! Вот разброс по перцу:</p>
+
+    <table class="price-table">
+        <tr>
+            <th>Принципал</th>
+            <th>Цена (руб/кг)</th>
+            <th>Цена ($/кг)</th>
+            <th>Уровень</th>
+        </tr>
+        <tr>
+            <td><strong>АЛЬЯНС</strong> (ИНН 9726)</td>
+            <td class="price-high">179.07</td>
+            <td class="price-high">$2.30</td>
+            <td><span class="multiplier">x7.5 от закупки</span></td>
+        </tr>
+        <tr>
+            <td>АКВАНУР</td>
+            <td class="price-mid">109.83</td>
+            <td class="price-mid">$1.41</td>
+            <td><span class="tag tag-orange">средний</span></td>
+        </tr>
+        <tr>
+            <td>ТК ЕВРАЗИЯ</td>
+            <td class="price-mid">94.10</td>
+            <td class="price-mid">$1.21</td>
+            <td><span class="tag tag-orange">средний</span></td>
+        </tr>
+        <tr>
+            <td>ФАЛКОН</td>
+            <td>66.17</td>
+            <td>$0.85</td>
+            <td><span class="tag tag-green">низкий</span></td>
+        </tr>
+        <tr>
+            <td>КОМИНС</td>
+            <td>61.26</td>
+            <td>$0.79</td>
+            <td><span class="tag tag-green">низкий</span></td>
+        </tr>
+        <tr>
+            <td style="color: var(--text-dim);">Закупка ANKARA (базовая)</td>
+            <td class="price-low">~23</td>
+            <td class="price-low">$0.30</td>
+            <td><span class="tag tag-blue">для таможни</span></td>
+        </tr>
+    </table>
+
+    <div class="analogy">
+        <div class="analogy-title">Почему разные цены для разных принципалов?</div>
+        <p>Это как оптовый рынок: кто берёт больше — тот платит меньше. ФАЛКОН/КОМИНС, видимо, имеют лучшие условия (или другую схему расчётов). АЛЬЯНС платит больше всех — возможно, новый клиент, или другие коммерческие условия.</p>
+    </div>
+</div>
+
+
+<!-- ============================================= -->
+<!-- SECTION 4: TWO SYSTEMS -->
+<!-- ============================================= -->
+<div class="section" id="two-systems">
+    <div class="section-number">4</div>
+    <h2>Две системы — два глаза: Логос vs 1С</h2>
+
+    <p>Самое важное для понимания: <strong>мы смотрели на одну реальность из двух разных окон</strong>. И каждое окно показывало разные вещи.</p>
+
+    <div class="systems-compare">
+        <div class="system-card logos">
+            <h3>Логос (PostgreSQL)</h3>
+            <p style="color: var(--text); font-size: 0.9rem; margin-bottom: 14px;">Таможенная база — «вид снаружи»</p>
+            <ul>
+                <li><strong>Что хранит:</strong> таможенные декларации (ДТ)</li>
+                <li><strong>Цены:</strong> таможенная стоимость (для таможни)</li>
+                <li><strong>Кто виден:</strong> клиент (УТК), поставщик (ANKARA)</li>
+                <li><strong>Кто НЕ виден:</strong> принципалы</li>
+                <li><strong>Объёмы:</strong> все ДТ (включая дубли)</li>
+                <li><strong>Валюта:</strong> как в инвойсе (RUB для Ирана)</li>
+                <li><strong>Доступ:</strong> через SQL (psql)</li>
+            </ul>
+        </div>
+        <div class="system-card onesee">
+            <h3>1С (Бухгалтерия)</h3>
+            <p style="color: var(--text); font-size: 0.9rem; margin-bottom: 14px;">Бухгалтерская база — «вид изнутри»</p>
+            <ul>
+                <li><strong>Что хранит:</strong> ОтчётКомитенту, Поступления</li>
+                <li><strong>Цены:</strong> реальные коммерческие цены</li>
+                <li><strong>Кто виден:</strong> принципалы, поставщики, суммы</li>
+                <li><strong>Кто НЕ виден:</strong> таможенные детали</li>
+                <li><strong>Объёмы:</strong> проведённые документы (точнее)</li>
+                <li><strong>Валюта:</strong> как в договоре (USD/RUB/CNY)</li>
+                <li><strong>Доступ:</strong> через консоль запросов</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="diagram">
+        <div class="diagram-title">Что видит каждая система (один и тот же перец из Ирана)</div>
+
+        <div style="display: grid; grid-template-columns: 1fr 80px 1fr; gap: 0; align-items: start;">
+
+            <!-- Logos side -->
+            <div class="doc-mock">
+                <div class="doc-title">Логос: Декларация на товары (ДТ)</div>
+                <div class="field"><span class="field-name">Номер ДТ:</span> <span class="field-value">10228010/260126/1234567</span></div>
+                <div class="field"><span class="field-name">Клиент:</span> <span class="field-value">УТК ФС</span></div>
+                <div class="field"><span class="field-name">Поставщик:</span> <span class="field-value">ANKARA GYD</span></div>
+                <div class="field"><span class="field-name">Товар:</span> <span class="field-value">Перец сладкий (0709601001)</span></div>
+                <div class="field"><span class="field-name">Вес нетто:</span> <span class="field-value">20,000 кг</span></div>
+                <div class="field"><span class="field-name">Страна:</span> <span class="field-value">Иран (IR)</span></div>
+                <div class="field"><span class="field-name">Таможенная цена:</span> <span class="field-value highlight-green">$0.30/кг</span></div>
+                <div class="field"><span class="field-name">Валюта инвойса:</span> <span class="field-value">RUB</span></div>
+                <div class="field"><span class="field-name">Инвойсная сумма:</span> <span class="field-value">460,000 руб</span></div>
+                <br>
+                <div style="color: #64748b; font-style: italic;">❌ Принципал НЕ виден<br>❌ Реальная цена НЕ видна</div>
+            </div>
+
+            <!-- Arrow -->
+            <div style="display: flex; align-items: center; justify-content: center; height: 100%; padding-top: 120px;">
+                <div style="text-align: center;">
+                    <div style="font-size: 2rem;">↔</div>
+                    <div style="font-size: 0.7rem; color: var(--text-dim);">Связь<br>через<br>номер ДТ</div>
+                </div>
+            </div>
+
+            <!-- 1C side -->
+            <div class="doc-mock">
+                <div class="doc-title">1С: ПоступлениеТоваровУслуг</div>
+                <div class="field"><span class="field-name">Вид операции:</span> <span class="field-value">ПокупкаКомиссия</span></div>
+                <div class="field"><span class="field-name">Организация:</span> <span class="field-value">Сармант-ЮГ</span></div>
+                <div class="field"><span class="field-name">Контрагент:</span> <span class="field-value">ANKARA GYD (АЛЬЯНС)</span></div>
+                <div class="field"><span class="field-name">Товар:</span> <span class="field-value">Перец сладкий</span></div>
+                <div class="field"><span class="field-name">Количество:</span> <span class="field-value">20,000 кг</span></div>
+                <div class="field"><span class="field-name">Цена:</span> <span class="field-value highlight-red">$2.30/кг</span></div>
+                <div class="field"><span class="field-name">Сумма:</span> <span class="field-value highlight-red">$46,000</span></div>
+                <div class="field"><span class="field-name">Номер ДТ:</span> <span class="field-value">10228010/260126/1234567</span></div>
+                <br>
+                <div style="color: #64748b; font-style: italic;">✅ Реальная цена ВИДНА<br>✅ Контрагент с привязкой к принципалу</div>
+            </div>
+
+        </div>
+
+        <div style="text-align: center; margin-top: 30px; padding: 20px; background: rgba(239, 68, 68, 0.1); border-radius: 12px;">
+            <div style="font-size: 1.2rem; font-weight: 800; color: var(--danger);">
+                Один и тот же перец: <span class="price-low">$0.30/кг</span> в Логосе vs <span class="price-high">$2.30/кг</span> в 1С
+            </div>
+            <div style="color: var(--text-dim); margin-top: 6px;">
+                Разница x7.5 — это и есть наценка ANKARA GYD, которую видно ТОЛЬКО при сопоставлении двух систем
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- ============================================= -->
+<!-- SECTION 5: 1C DOCUMENTS -->
+<!-- ============================================= -->
+<div class="section" id="1c-docs">
+    <div class="section-number">5</div>
+    <h2>Что конкретно мы смотрели в 1С</h2>
+
+    <p>Ты как 1С-ник знаешь эти документы. Вот что они нам дали:</p>
+
+    <div class="definition">
+        <div class="definition-term">ОтчётКомитенту</div>
+        <div class="definition-alt">Что нашли: файл 1.xlsx (сводка) и файл 2.txt (детали по товарам)</div>
+        <p>Это документ, в котором Сармант (агент) отчитывается перед принципалом: «Я купил для тебя 20 тонн перца по такой-то цене, вот сумма». Тут видно:</p>
+        <ul style="margin-top: 10px; padding-left: 20px;">
+            <li style="color: var(--text);">Кто принципал (ТК Евразия, Фалкон, Коминс...)</li>
+            <li style="color: var(--text);">Какой товар и сколько кг</li>
+            <li style="color: var(--text);">Сумма без НДС в рублях — <strong>это и есть реальная цена</strong></li>
+            <li style="color: var(--text);">Страна происхождения</li>
+        </ul>
+        <p style="margin-top: 10px;"><strong>Именно отсюда мы узнали, что Питатель = 65,014 тонн, 5.33 млрд руб за 5 месяцев.</strong></p>
+    </div>
+
+    <div class="definition">
+        <div class="definition-term">ПоступлениеТоваровУслуг (ПокупкаКомиссия)</div>
+        <div class="definition-alt">Что нашли: файл 4.txt (детали), файл 6.xlsx (шапки документов)</div>
+        <p>Это момент, когда товар «поступает» в учёт Сарманта. Вид операции <strong>«ПокупкаКомиссия»</strong> означает: «Мы купили товар не для себя, а для комитента (принципала)». Тут видно:</p>
+        <ul style="margin-top: 10px; padding-left: 20px;">
+            <li style="color: var(--text);">Поставщик (ANKARA GYD — с указанием, для какого принципала!)</li>
+            <li style="color: var(--text);">Цена в валюте (USD или RUB) — <strong>реальная закупочная</strong></li>
+            <li style="color: var(--text);">Номер ДТ — <strong>ключ связи с Логосом!</strong></li>
+            <li style="color: var(--text);">Валюта и сумма документа</li>
+        </ul>
+        <p style="margin-top: 10px;"><strong>Именно здесь мы обнаружили ТРЁХ разных контрагентов ANKARA GYD с разными ценами.</strong></p>
+    </div>
+
+    <div class="highlight-green highlight">
+        <h3>Почему «ПокупкаКомиссия» — это ключ ко всему</h3>
+        <p style="color: var(--text);">
+            В обычной покупке (ПокупкаУСебя) поставщик = один для всех. Но в комиссионной схеме <strong>один и тот же поставщик ANKARA GYD заведён несколько раз</strong> — отдельно для каждой группы принципалов. И у каждого «клона» СВОИ ЦЕНЫ.<br><br>
+            Это не баг — это фича. Так Сармант видит, сколько именно стоит товар для каждого принципала.
+        </p>
+    </div>
+
+    <div class="definition">
+        <div class="definition-term">ОтчётАгента</div>
+        <div class="definition-alt">Что нашли: файл 5.txt (10,386 документов)</div>
+        <p>Это документ, в котором Сармант отчитывается о своей <em>агентской работе</em> (брокерские услуги, терминальное обслуживание, сертификация). ~70 отчётов в день. Пока не дал нам критической информации, но подтвердил масштаб операций.</p>
+    </div>
+</div>
+
+
+<!-- ============================================= -->
+<!-- SECTION 6: DOUBLE PRICING -->
+<!-- ============================================= -->
+<div class="section" id="double-price">
+    <div class="section-number">6</div>
+    <h2>Двойное ценообразование: как мы его обнаружили</h2>
+
+    <p>Это самое важное открытие. Давай по шагам:</p>
+
+    <div class="diagram">
+        <div class="diagram-title">Три «клона» ANKARA GYD в 1С</div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
+
+            <!-- Clone 1 -->
+            <div style="background: var(--bg); border: 2px solid var(--accent3); border-radius: 14px; padding: 20px;">
+                <div style="font-size: 0.8rem; color: var(--accent3); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Контрагент #1</div>
+                <div style="font-weight: 700; margin: 8px 0;">ANKARA GYD<br><small style="color: var(--text-dim);">(основной, для АКВАНУР)</small></div>
+                <div style="margin-top: 12px;">
+                    <div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid var(--border);">
+                        <span style="color: var(--text-dim);">Перец:</span> <span class="price-low">$0.30/кг</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid var(--border);">
+                        <span style="color: var(--text-dim);">Салат:</span> <span class="price-low">$0.42/кг</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid var(--border);">
+                        <span style="color: var(--text-dim);">Баклажаны:</span> <span class="price-low">$0.47/кг</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 4px 0;">
+                        <span style="color: var(--text-dim);">Огурцы:</span> <span class="price-low">$0.60/кг</span>
+                    </div>
+                </div>
+                <div style="margin-top: 12px; padding: 8px; background: rgba(52, 211, 153, 0.1); border-radius: 8px; text-align: center; font-size: 0.85rem;">
+                    <strong style="color: var(--accent3);">НИЗКИЕ цены</strong><br>
+                    <span style="color: var(--text-dim);">= таможенная стоимость в Логосе</span>
+                </div>
+            </div>
+
+            <!-- Clone 2 -->
+            <div style="background: var(--bg); border: 2px solid var(--danger); border-radius: 14px; padding: 20px;">
+                <div style="font-size: 0.8rem; color: var(--danger); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Контрагент #2</div>
+                <div style="font-weight: 700; margin: 8px 0;">ANKARA GYD<br><small style="color: var(--text-dim);">(АЛЬЯНС, СМАРТ, ЕВРАЗИЯ)</small></div>
+                <div style="margin-top: 12px;">
+                    <div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid var(--border);">
+                        <span style="color: var(--text-dim);">Перец:</span> <span class="price-high">$2.30/кг</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid var(--border);">
+                        <span style="color: var(--text-dim);">Салат:</span> <span class="price-high">$3.65/кг</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid var(--border);">
+                        <span style="color: var(--text-dim);">Баклажаны:</span> <span class="price-high">$2.78/кг</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 4px 0;">
+                        <span style="color: var(--text-dim);">Огурцы:</span> <span class="price-high">$2.25/кг</span>
+                    </div>
+                </div>
+                <div style="margin-top: 12px; padding: 8px; background: rgba(239, 68, 68, 0.1); border-radius: 8px; text-align: center; font-size: 0.85rem;">
+                    <strong style="color: var(--danger);">ВЫСОКИЕ цены (x3.5-9.5)</strong><br>
+                    <span style="color: var(--text-dim);">= реальная коммерческая цена</span>
+                </div>
+            </div>
+
+            <!-- Clone 3 -->
+            <div style="background: var(--bg); border: 2px solid var(--accent4); border-radius: 14px; padding: 20px;">
+                <div style="font-size: 0.8rem; color: var(--accent4); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Контрагент #3</div>
+                <div style="font-weight: 700; margin: 8px 0;">ANKARA GYD<br><small style="color: var(--text-dim);">(КОМИНС, ФАЛКОН)</small></div>
+                <div style="margin-top: 12px;">
+                    <div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid var(--border);">
+                        <span style="color: var(--text-dim);">Перец:</span> <span style="color: var(--text);">—</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid var(--border);">
+                        <span style="color: var(--text-dim);">Киви:</span> <span class="price-low">$0.47/кг</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid var(--border);">
+                        <span style="color: var(--text-dim);">Баклажаны:</span> <span class="price-high">$2.48/кг</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 4px 0;">
+                        <span style="color: var(--text-dim);">Огурцы:</span> <span style="color: var(--text);">—</span>
+                    </div>
+                </div>
+                <div style="margin-top: 12px; padding: 8px; background: rgba(251, 146, 60, 0.1); border-radius: 8px; text-align: center; font-size: 0.85rem;">
+                    <strong style="color: var(--accent4);">СМЕШАННЫЕ цены</strong><br>
+                    <span style="color: var(--text-dim);">переходный период / другие условия</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="analogy">
+        <div class="analogy-title">Почему это открытие критическое</div>
+        <p>Представь: ты анализируешь расходы компании и видишь, что она покупает бумагу A4 у одного поставщика. Заходишь в 1С и видишь, что поставщик «Канцтовары ООО» есть три раза — и для отдела продаж бумага стоит 300 руб/пачку, а для бухгалтерии 2,500 руб/пачку. Один поставщик, одна бумага, цена отличается в 8 раз. Вот что мы нашли.</p>
+    </div>
+
+    <p><strong>Ключевая связка:</strong> Базовая цена контрагента #1 в 1С <strong>ТОЧНО совпала</strong> с таможенной стоимостью в Логосе (поле <code>price_one_kg</code>). Это доказывает, что Логос показывает «декларационные» цены, а 1С — реальные коммерческие.</p>
+
+</div>
+
+
+<!-- ============================================= -->
+<!-- SECTION 7: ANALYSIS PROCESS -->
+<!-- ============================================= -->
+<div class="section" id="analysis">
+    <div class="section-number">7</div>
+    <h2>Процесс анализа по шагам</h2>
+
+    <p>Вот как мы шли — от общего к частному, от гипотез к доказательствам:</p>
+
+    <ul class="step-list">
+        <li>
+            <div class="step-title">Разведка: «Что вообще едет из Китая?»</div>
+            <p><strong>Инструмент:</strong> Логос (SQL-запросы к PostgreSQL)</p>
+            <p><strong>Что спросили:</strong> SELECT всех деклараций, где страна = Китай, код товара начинается на 07 (овощи) или 08 (фрукты). Группировка по товарам, месяцам, клиентам.</p>
+            <p><strong>Что узнали:</strong> Рынок — 80K тонн/год, лидеры — мандарины, томаты, чеснок. Два гиганта забирают 75%.</p>
+        </li>
+        <li>
+            <div class="step-title">Фокусировка: «А что происходит с Питателем?»</div>
+            <p><strong>Инструмент:</strong> Логос (цепочка JOIN через 5 таблиц)</p>
+            <p><strong>Что спросили:</strong> Нашли все компании Питателя по имени, потом через цепочку ДТ → грузовая единица → операция → заказ → клиент/принципал восстановили всю сеть.</p>
+            <p><strong>Что узнали:</strong> 6 принципалов, 208K тонн, товар идёт НЕ из Китая, а из Ирана/Азербайджана. Всё через ANKARA GYD.</p>
+        </li>
+        <li>
+            <div class="step-title">Сравнение цен: «Китай дешевле?»</div>
+            <p><strong>Инструмент:</strong> Логос (сопоставление таможенных цен)</p>
+            <p><strong>Что спросили:</strong> Сколько стоит перец/салат/огурцы из Ирана vs из Китая (по таможенной стоимости, price_one_kg).</p>
+            <p><strong>Что узнали:</strong> Китай дешевле на 18-73%. Но это цены «для таможни» — а реальные мы ещё не знали.</p>
+        </li>
+        <li>
+            <div class="step-title">Обогащение из 1С: «А сколько РЕАЛЬНО платят?»</div>
+            <p><strong>Инструмент:</strong> Консоль запросов 1С (5 запросов)</p>
+            <p><strong>Что спросили:</strong> ОтчётКомитенту (кто, сколько, по какой цене), ПоступлениеТоваровУслуг (закупки ANKARA GYD с деталями).</p>
+            <p><strong>Что узнали:</strong> Реальные цены в 3.5-9.5 раз выше таможенных! Три «клона» ANKARA GYD. Питатель = $164M/год.</p>
+        </li>
+        <li>
+            <div class="step-title">Синтез: бизнес-предложение</div>
+            <p><strong>Инструмент:</strong> Калькулятор + голова</p>
+            <p><strong>Что сделали:</strong> Совместили данные Логоса (объёмы, товары, таможенные цены Китая) и 1С (реальные цены Питателя) и посчитали потенциал экономии.</p>
+            <p><strong>Результат:</strong> При замене 20% объёма на Китай — экономия ~$18.7M/год для Питателя.</p>
+        </li>
+    </ul>
+</div>
+
+
+<!-- ============================================= -->
+<!-- SECTION 8: BUSINESS -->
+<!-- ============================================= -->
+<div class="section" id="business">
+    <div class="section-number">8</div>
+    <h2>Зачем всё это и что с этим делать</h2>
+
+    <p>Теперь у тебя есть <strong>полная картина</strong>, которую не видит ни один из участников по отдельности:</p>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin: 24px 0;">
+        <div style="background: var(--card); border-radius: 14px; padding: 24px; border-left: 4px solid var(--accent);">
+            <div style="font-size: 0.85rem; color: var(--accent); font-weight: 700; margin-bottom: 8px;">ДИРЕКТОР САРМАНТА</div>
+            <p style="color: var(--text-dim); font-size: 0.9rem;">Видит Логос (таможенные цены) + 1С (агентские отчёты). Знает объёмы и маржу Сарманта, но вряд ли сравнивает цены разных «клонов» ANKARA.</p>
+        </div>
+        <div style="background: var(--card); border-radius: 14px; padding: 24px; border-left: 4px solid var(--accent2);">
+            <div style="font-size: 0.85rem; color: var(--accent2); font-weight: 700; margin-bottom: 8px;">ФИНДИРЕКТОР ПИТАТЕЛЯ</div>
+            <p style="color: var(--text-dim); font-size: 0.9rem;">Видит свои закупочные цены и объёмы. Но НЕ видит, что другие принципалы платят за тот же товар совсем другие деньги. И не знает цены из Китая.</p>
+        </div>
+        <div style="background: var(--card); border-radius: 14px; padding: 24px; border-left: 4px solid var(--accent3);">
+            <div style="font-size: 0.85rem; color: var(--accent3); font-weight: 700; margin-bottom: 8px;">ТЫ</div>
+            <p style="color: var(--text-dim); font-size: 0.9rem;">Видишь <strong>ВСЁ</strong>: таможенные цены (Логос) + реальные цены всех принципалов (1С) + цены из Китая + объёмы + сезонность. Это и есть твоё конкурентное преимущество.</p>
+        </div>
+    </div>
+
+    <div class="highlight-green highlight">
+        <h3>Конкретный план действий</h3>
+        <div style="color: var(--text);">
+            <p><strong>К финдиректору Питателя ты идёшь с фактами:</strong></p>
+            <ol style="padding-left: 20px; margin-top: 10px;">
+                <li style="color: var(--text); margin-bottom: 8px;">«Вы покупаете перец по ~94-179 руб/кг (в зависимости от компании)»</li>
+                <li style="color: var(--text); margin-bottom: 8px;">«Тот же перец из Китая проходит таможню по 23 руб/кг»</li>
+                <li style="color: var(--text); margin-bottom: 8px;">«У меня есть выход на китайских поставщиков через Казахстан»</li>
+                <li style="color: var(--text); margin-bottom: 8px;">«Могу дать цену на 40-80% ниже текущей — вот расчёт на 3 пилотных товара»</li>
+            </ol>
+            <p style="margin-top: 14px;"><strong>Ты не спрашиваешь «что вам нужно?»</strong> — ты приходишь с готовым анализом и конкретным предложением.</p>
+        </div>
+    </div>
+
+    <div class="analogy">
+        <div class="analogy-title">Финальная аналогия</div>
+        <p>Представь, что ты работаешь IT-шником в ресторане. У тебя есть доступ к системе закупок (видишь цены поставщиков) и к кассе (видишь выручку). Ты заметил, что шеф покупает рыбу через посредника за x10 от оптовой цены. Ты знаешь рыбака, который продаёт напрямую. Ты идёшь к владельцу не с вопросом «вам рыба нужна?», а с конкретным предложением: «Я могу сэкономить вам 3 миллиона в год на рыбе. Вот цифры, вот поставщик, вот пилот на первую партию».</p>
+    </div>
+
+</div>
+
+
+</div><!-- /container -->
+
+<div class="footer">
+    Создано 27 февраля 2026 · Анализ базы Логос + 1С Сармант-ЮГ · Только для внутреннего использования
+</div>
+
+</body>
+</html>

@@ -1,0 +1,1932 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Аналитика импорта свежей продукции | Янв 2025 - Фев 2026</title>
+<style>
+:root {
+  --bg-primary: #0f172a;
+  --bg-card: #1e293b;
+  --bg-card-hover: #263348;
+  --bg-input: #334155;
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --accent-blue: #3b82f6;
+  --accent-blue-dim: rgba(59, 130, 246, 0.12);
+  --accent-green: #22c55e;
+  --accent-green-dim: rgba(34, 197, 94, 0.15);
+  --accent-red: #ef4444;
+  --accent-red-dim: rgba(239, 68, 68, 0.15);
+  --accent-purple: rgba(168, 85, 247, 0.18);
+  --accent-orange: #f97316;
+  --accent-yellow: #eab308;
+  --border-color: #334155;
+  --border-light: #475569;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.25);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  margin-bottom: 32px;
+  padding: 32px 24px;
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border-radius: var(--radius);
+  border: 1px solid var(--border-color);
+}
+.header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, #60a5fa, #a78bfa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.header p {
+  color: var(--text-secondary);
+  font-size: 15px;
+}
+
+/* Navigation tabs */
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 24px;
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 6px;
+  border: 1px solid var(--border-color);
+  flex-wrap: wrap;
+}
+.tab {
+  padding: 10px 20px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: all 0.2s;
+  border: none;
+  background: transparent;
+  white-space: nowrap;
+}
+.tab:hover { color: var(--text-primary); background: var(--bg-input); }
+.tab.active { color: #fff; background: var(--accent-blue); }
+
+/* Summary cards */
+.summary-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.summary-card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  border: 1px solid var(--border-color);
+  transition: border-color 0.2s;
+}
+.summary-card:hover { border-color: var(--accent-blue); }
+.summary-card .label {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+.summary-card .value {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.summary-card .sub {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* Section panels */
+.section {
+  display: none;
+  animation: fadeIn 0.3s;
+}
+.section.active { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: var(--text-primary);
+}
+
+/* Filter bar */
+.filter-bar {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+  align-items: flex-end;
+}
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.filter-group label {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.filter-group input[type="text"],
+.filter-group select {
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  padding: 8px 12px;
+  font-size: 14px;
+  font-family: inherit;
+  min-width: 180px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.filter-group input:focus,
+.filter-group select:focus { border-color: var(--accent-blue); }
+
+/* Multi-select dropdown */
+.multi-select {
+  position: relative;
+  min-width: 200px;
+}
+.multi-select-btn {
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  padding: 8px 12px;
+  font-size: 14px;
+  font-family: inherit;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  transition: border-color 0.2s;
+}
+.multi-select-btn:hover,
+.multi-select-btn.open { border-color: var(--accent-blue); }
+.multi-select-btn .arrow { font-size: 10px; transition: transform 0.2s; }
+.multi-select-btn.open .arrow { transform: rotate(180deg); }
+.multi-select-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow);
+  z-index: 100;
+  max-height: 260px;
+  overflow-y: auto;
+  padding: 6px 0;
+}
+.multi-select-dropdown.open { display: block; }
+.multi-select-dropdown label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  font-size: 13px;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background 0.15s;
+  text-transform: none;
+  letter-spacing: normal;
+}
+.multi-select-dropdown label:hover { background: var(--bg-input); }
+.multi-select-dropdown input[type="checkbox"] {
+  accent-color: var(--accent-blue);
+  width: 15px;
+  height: 15px;
+}
+.ms-actions {
+  display: flex;
+  gap: 8px;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 4px;
+}
+.ms-actions button {
+  font-size: 12px;
+  color: var(--accent-blue);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 2px 0;
+}
+.ms-actions button:hover { text-decoration: underline; }
+
+/* Tables */
+.table-wrapper {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+}
+.table-info {
+  padding: 12px 16px;
+  font-size: 13px;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.table-scroll {
+  overflow-x: auto;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+thead {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+thead th {
+  background: #1a2538;
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 12px 14px;
+  text-align: left;
+  border-bottom: 2px solid var(--border-color);
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  transition: color 0.2s;
+}
+thead th:hover { color: var(--accent-blue); }
+thead th .sort-icon { margin-left: 4px; font-size: 10px; opacity: 0.5; }
+thead th.sorted .sort-icon { opacity: 1; color: var(--accent-blue); }
+tbody td {
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(51,65,85,0.5);
+  white-space: nowrap;
+}
+tbody tr { transition: background 0.15s; }
+tbody tr:hover { background: var(--bg-card-hover); }
+tbody tr.cn-row { background: var(--accent-blue-dim); }
+tbody tr.cn-row:hover { background: rgba(59, 130, 246, 0.2); }
+tbody tr.purple-row { background: var(--accent-purple); }
+tbody tr.purple-row:hover { background: rgba(168, 85, 247, 0.25); }
+td.num { text-align: right; font-variant-numeric: tabular-nums; }
+td.price { font-weight: 500; }
+td.green-cell { color: var(--accent-green); }
+td.red-cell { color: var(--accent-red); }
+
+/* Price comparison grid */
+.price-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+.price-row-card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border-color);
+  padding: 16px 20px;
+}
+.price-row-card .product-title {
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: 10px;
+  color: var(--text-primary);
+}
+.price-bars {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+.price-bar-item {
+  flex: 1;
+  min-width: 100px;
+  max-width: 200px;
+}
+.price-bar-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+  text-align: center;
+}
+.price-bar-outer {
+  background: var(--bg-input);
+  border-radius: 4px;
+  height: 32px;
+  position: relative;
+  overflow: hidden;
+}
+.price-bar-inner {
+  height: 100%;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  min-width: 40px;
+  transition: width 0.4s ease;
+}
+.price-bar-inner.cheapest { background: var(--accent-green); }
+.price-bar-inner.expensive { background: var(--accent-red); }
+.price-bar-inner.mid { background: var(--accent-blue); }
+.price-bar-inner.na { background: var(--bg-input); color: var(--text-muted); }
+.price-no-data { font-size: 12px; color: var(--text-muted); text-align: center; padding: 6px; }
+
+/* Sparkline / bar chart area */
+.trend-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 14px;
+}
+.trend-card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border-color);
+  padding: 16px;
+}
+.trend-card .trend-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+.trend-card .trend-total {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+.mini-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 70px;
+}
+.mini-bar-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: flex-end;
+}
+.mini-bar {
+  width: 100%;
+  border-radius: 4px 4px 0 0;
+  transition: height 0.4s ease;
+  min-height: 2px;
+}
+.mini-bar-val {
+  font-size: 10px;
+  color: var(--text-secondary);
+  margin-bottom: 2px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.mini-bar-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* Color bar presets */
+.bar-oct { background: #3b82f6; }
+.bar-nov { background: #6366f1; }
+.bar-dec { background: #8b5cf6; }
+.bar-jan { background: #a855f7; }
+.bar-feb { background: #d946ef; }
+
+/* Extended 14-month bar colors */
+.bar-m0 { background: #06b6d4; }
+.bar-m1 { background: #0891b2; }
+.bar-m2 { background: #0e7490; }
+.bar-m3 { background: #14b8a6; }
+.bar-m4 { background: #10b981; }
+.bar-m5 { background: #22c55e; }
+.bar-m6 { background: #84cc16; }
+.bar-m7 { background: #eab308; }
+.bar-m8 { background: #f97316; }
+.bar-m9 { background: #3b82f6; }
+.bar-m10 { background: #6366f1; }
+.bar-m11 { background: #8b5cf6; }
+.bar-m12 { background: #a855f7; }
+.bar-m13 { background: #d946ef; }
+
+/* Forecast section */
+.forecast-banner {
+  background: linear-gradient(135deg, rgba(249,115,22,0.15) 0%, rgba(234,179,8,0.10) 100%);
+  border: 1px solid rgba(249,115,22,0.4);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin-bottom: 20px;
+}
+.forecast-banner h3 {
+  color: var(--accent-orange);
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+.forecast-banner p {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+.forecast-table-wrapper {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+}
+.forecast-table-scroll {
+  overflow-x: auto;
+  max-height: 75vh;
+  overflow-y: auto;
+}
+.forecast-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.forecast-table thead th {
+  background: #1a2538;
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 12px 14px;
+  text-align: left;
+  border-bottom: 2px solid var(--border-color);
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  cursor: pointer;
+}
+.forecast-table thead th:hover { color: var(--accent-blue); }
+.forecast-table tbody td {
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(51,65,85,0.5);
+  white-space: nowrap;
+}
+.forecast-table tbody tr { transition: background 0.15s; }
+.forecast-table tbody tr:hover { background: var(--bg-card-hover); }
+.forecast-bar-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.forecast-bar-bg {
+  flex: 1;
+  height: 22px;
+  background: var(--bg-input);
+  border-radius: 4px;
+  overflow: hidden;
+  min-width: 80px;
+  max-width: 200px;
+}
+.forecast-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  min-width: 2px;
+  transition: width 0.4s ease;
+}
+.forecast-bar-fill.feb-bar { background: #d946ef; }
+.forecast-bar-fill.mar-bar { background: #f97316; }
+.multiplier-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 700;
+}
+.multiplier-up { background: rgba(34,197,94,0.2); color: #4ade80; }
+.multiplier-down { background: rgba(239,68,68,0.2); color: #f87171; }
+.multiplier-flat { background: rgba(234,179,8,0.2); color: #fbbf24; }
+.spike-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(249,115,22,0.2);
+  color: #fb923c;
+  margin-left: 6px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-light); }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container { padding: 12px; }
+  .header h1 { font-size: 20px; }
+  .summary-row { grid-template-columns: repeat(2, 1fr); }
+  .tabs { gap: 2px; padding: 4px; }
+  .tab { padding: 8px 12px; font-size: 13px; }
+  .filter-bar { flex-direction: column; }
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+}
+.badge-blue { background: rgba(59,130,246,0.2); color: #60a5fa; }
+.badge-green { background: rgba(34,197,94,0.2); color: #4ade80; }
+.badge-orange { background: rgba(249,115,22,0.2); color: #fb923c; }
+.badge-purple { background: rgba(168,85,247,0.2); color: #c084fc; }
+
+.no-data-msg {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-muted);
+  font-size: 15px;
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+  <h1>Аналитика импорта свежей продукции</h1>
+  <p>Таможенный пост | Январь 2025 - Февраль 2026 | Данные системы Логос</p>
+</div>
+
+<!-- Summary cards -->
+<div class="summary-row" id="summaryRow"></div>
+
+<!-- Tabs -->
+<div class="tabs" id="tabsBar">
+  <button class="tab active" data-tab="products">Топ продуктов</button>
+  <button class="tab" data-tab="prices">Сравнение цен: Китай vs Другие</button>
+  <button class="tab" data-tab="trends">Месячные тренды</button>
+  <button class="tab" data-tab="forecast">Прогноз: Март 2026</button>
+  <button class="tab" data-tab="clients">Топ клиентов</button>
+</div>
+
+<!-- Section 1: Products table -->
+<div class="section active" id="sec-products">
+  <div class="section-title">Продуктовая аналитика по странам</div>
+  <div class="filter-bar">
+    <div class="filter-group">
+      <label>Поиск продукта</label>
+      <input type="text" id="prodSearch" placeholder="Введите название...">
+    </div>
+    <div class="filter-group">
+      <label>Страны</label>
+      <div class="multi-select" id="countryFilter"></div>
+    </div>
+    <div class="filter-group">
+      <label>Месяцы</label>
+      <div class="multi-select" id="monthFilter"></div>
+    </div>
+  </div>
+  <div class="table-wrapper">
+    <div class="table-info">
+      <span id="prodRowCount">Строк: 0</span>
+      <span id="prodTotals"></span>
+    </div>
+    <div class="table-scroll">
+      <table id="productsTable">
+        <thead>
+          <tr>
+            <th data-col="product">Продукт <span class="sort-icon">&#9650;&#9660;</span></th>
+            <th data-col="country">Страна <span class="sort-icon">&#9650;&#9660;</span></th>
+            <th data-col="tons" class="num">Тонны <span class="sort-icon">&#9650;&#9660;</span></th>
+            <th data-col="decl" class="num">Деклараций <span class="sort-icon">&#9650;&#9660;</span></th>
+            <th data-col="avg" class="num">Средн. $/кг <span class="sort-icon">&#9650;&#9660;</span></th>
+            <th data-col="min" class="num">Мин $/кг <span class="sort-icon">&#9650;&#9660;</span></th>
+            <th data-col="max" class="num">Макс $/кг <span class="sort-icon">&#9650;&#9660;</span></th>
+            <th data-col="value" class="num">Стоимость $ <span class="sort-icon">&#9650;&#9660;</span></th>
+          </tr>
+        </thead>
+        <tbody id="productsBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Section 2: Price comparison -->
+<div class="section" id="sec-prices">
+  <div class="section-title">Сравнение цен: Китай vs Другие страны (средняя цена $/кг за весь период)</div>
+  <div class="filter-bar">
+    <div class="filter-group">
+      <label>Сортировка</label>
+      <select id="priceSortSelect">
+        <option value="diff_desc">Разница цен (макс.)</option>
+        <option value="diff_asc">Разница цен (мин.)</option>
+        <option value="product">По продукту</option>
+      </select>
+    </div>
+  </div>
+  <div class="price-grid" id="priceGrid"></div>
+</div>
+
+<!-- Section 3: Monthly trends -->
+<div class="section" id="sec-trends">
+  <div class="section-title">Месячные тренды (тонны по месяцам)</div>
+  <div class="filter-bar">
+    <div class="filter-group">
+      <label>Страна</label>
+      <div class="multi-select" id="trendCountryFilter"></div>
+    </div>
+  </div>
+  <div class="trend-grid" id="trendGrid"></div>
+</div>
+
+<!-- Section 4: March Forecast -->
+<div class="section" id="sec-forecast">
+  <div class="forecast-banner">
+    <h3>Прогноз на Март 2026 (Китай)</h3>
+    <p>Оценка объёмов на основе исторического множителя Фев&rarr;Мар 2025. Формула: Фев 2026 (тонны) &times; (Мар 2025 / Фев 2025).</p>
+  </div>
+  <div class="section-title">Продукты, отсортированные по множителю роста Фев&rarr;Мар</div>
+  <div class="filter-bar">
+    <div class="filter-group">
+      <label>Сортировка</label>
+      <select id="forecastSortSelect">
+        <option value="multiplier_desc">Множитель (макс.)</option>
+        <option value="multiplier_asc">Множитель (мин.)</option>
+        <option value="forecast_desc">Прогноз тонн (макс.)</option>
+        <option value="product">По продукту</option>
+      </select>
+    </div>
+  </div>
+  <div class="forecast-table-wrapper">
+    <div class="table-info">
+      <span id="forecastInfo">Прогноз Март 2026</span>
+    </div>
+    <div class="forecast-table-scroll">
+      <table class="forecast-table" id="forecastTable">
+        <thead>
+          <tr>
+            <th data-fcol="product">Продукт</th>
+            <th data-fcol="feb25" class="num">Фев 2025 (т)</th>
+            <th data-fcol="mar25" class="num">Мар 2025 (т)</th>
+            <th data-fcol="multiplier" class="num">Множитель</th>
+            <th data-fcol="feb26" class="num">Фев 2026 (т)</th>
+            <th data-fcol="forecast" class="num">Прогноз Мар 2026 (т)</th>
+            <th>Визуализация Фев 2025 / Мар 2025</th>
+          </tr>
+        </thead>
+        <tbody id="forecastBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Section 5: Top clients -->
+<div class="section" id="sec-clients">
+  <div class="section-title">Топ клиентов по объёму импорта</div>
+  <div class="filter-bar">
+    <div class="filter-group">
+      <label>Поиск клиента</label>
+      <input type="text" id="clientSearch" placeholder="Введите название...">
+    </div>
+  </div>
+  <div class="table-wrapper">
+    <div class="table-info">
+      <span id="clientRowCount">Строк: 0</span>
+    </div>
+    <div class="table-scroll">
+      <table id="clientsTable">
+        <thead>
+          <tr>
+            <th data-col="client">Клиент <span class="sort-icon">&#9650;&#9660;</span></th>
+            <th data-col="country">Страна <span class="sort-icon">&#9650;&#9660;</span></th>
+            <th data-col="product">Продукт <span class="sort-icon">&#9650;&#9660;</span></th>
+            <th data-col="tons" class="num">Тонны <span class="sort-icon">&#9650;&#9660;</span></th>
+            <th data-col="decl" class="num">Деклараций <span class="sort-icon">&#9650;&#9660;</span></th>
+            <th data-col="avg" class="num">Средн. $/кг <span class="sort-icon">&#9650;&#9660;</span></th>
+          </tr>
+        </thead>
+        <tbody id="clientsBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<script>
+// ===================== DATA =====================
+const PRODUCTS = {
+  '0701':'Картофель','0702':'Томаты','0703':'Лук/Чеснок','0704':'Капуста',
+  '0705':'Салат/Латук','0706':'Морковь/Корнеплоды','0707':'Огурцы','0709':'Овощи прочие (перец, баклажаны, кабачки)',
+  '0802':'Орехи','0804':'Финики/Манго/Ананасы','0805':'Цитрусовые (мандарины, апельсины, лимоны)',
+  '0806':'Виноград','0807':'Арбузы/Дыни','0808':'Яблоки/Груши','0809':'Абрикосы/Вишни/Персики',
+  '0810':'Ягоды/Экзотика (клубника, киви, хурма)','0811':'Замороженные фрукты',
+  '0813':'Сухофрукты','0910':'Имбирь/Специи'
+};
+
+const COUNTRIES = {
+  'CN':'Китай','IR':'Иран','AZ':'Азербайджан','UZ':'Узбекистан',
+  'TM':'Туркменистан','TR':'Турция','TJ':'Таджикистан','EG':'Египет',
+  'GE':'Грузия','XX':'Неизвестно'
+};
+
+const MONTHS_ORDER = ['2025-10','2025-11','2025-12','2026-01','2026-02'];
+const MONTHS_LABELS = {'2025-10':'Окт','2025-11':'Ноя','2025-12':'Дек','2026-01':'Янв','2026-02':'Фев'};
+
+// Extended 14-month order for China trends
+const MONTHS_ORDER_14 = ['2025-01','2025-02','2025-03','2025-04','2025-05','2025-06','2025-07','2025-08','2025-09','2025-10','2025-11','2025-12','2026-01','2026-02'];
+const MONTHS_LABELS_14 = {
+  '2025-01':'Янв25','2025-02':'Фев25','2025-03':'Мар25','2025-04':'Апр25',
+  '2025-05':'Май25','2025-06':'Июн25','2025-07':'Июл25','2025-08':'Авг25',
+  '2025-09':'Сен25','2025-10':'Окт25','2025-11':'Ноя25','2025-12':'Дек25',
+  '2026-01':'Янв26','2026-02':'Фев26'
+};
+
+// China monthly trend data: product -> { month: tons }
+// Full 14 months: Jan 2025 - Feb 2026
+const CHINA_MONTHLY = {
+  apple:         {'2025-01':123,'2025-02':173,'2025-03':161,'2025-04':139,'2025-05':119,'2025-06':83,'2025-07':40,'2025-08':99,'2025-09':112,'2025-10':130,'2025-11':140,'2025-12':117,'2026-01':152,'2026-02':172},
+  broccoli_cauliflower: {'2025-01':117,'2025-02':100,'2025-03':91,'2025-04':159,'2025-05':121,'2025-06':40,'2025-07':6,'2025-08':5,'2025-09':18,'2025-10':60,'2025-11':11,'2025-12':16,'2026-01':34,'2026-02':24},
+  carrot:        {'2025-01':173,'2025-02':169,'2025-03':133,'2025-04':230,'2025-05':201,'2025-06':298,'2025-07':222,'2025-08':119,'2025-09':116,'2025-10':110,'2025-11':130,'2025-12':158,'2026-01':143,'2026-02':131},
+  cucumber:      {'2025-01':263,'2025-02':236,'2025-03':225,'2025-04':200,'2025-05':107,'2025-06':55,'2025-07':1,'2025-08':2,'2025-09':14,'2025-10':54,'2025-11':111,'2025-12':173,'2026-01':172,'2026-02':149},
+  eggplant:      {'2025-01':45,'2025-02':32,'2025-03':42,'2025-04':30,'2025-05':40,'2025-06':20,'2025-07':11,'2025-08':9,'2025-09':13,'2025-10':20,'2025-11':31,'2025-12':39,'2026-01':29,'2026-02':23},
+  garlic:        {'2025-01':394,'2025-02':315,'2025-03':296,'2025-04':271,'2025-05':160,'2025-06':98,'2025-07':115,'2025-08':149,'2025-09':193,'2025-10':150,'2025-11':100,'2025-12':51,'2026-01':50,'2026-02':73},
+  grape:         {'2025-01':254,'2025-02':178,'2025-03':140,'2025-04':64,'2025-05':91,'2025-06':116,'2025-07':95,'2025-08':64,'2025-09':194,'2025-10':322,'2025-11':437,'2025-12':265,'2026-01':110,'2026-02':128},
+  lemon:         {'2025-01':58,'2025-02':64,'2025-03':533,'2025-04':813,'2025-05':69,'2025-06':18,'2025-07':19,'2025-08':9,'2025-09':17,'2025-10':89,'2025-11':117,'2025-12':12,'2026-01':18,'2026-02':22},
+  lettuce:       {'2025-01':56,'2025-02':61,'2025-03':70,'2025-04':52,'2025-05':46,'2025-06':28,'2025-07':40,'2025-08':45,'2025-09':53,'2025-10':57,'2025-11':43,'2025-12':72,'2026-01':37,'2026-02':42},
+  mandarin:      {'2025-01':558,'2025-02':778,'2025-03':562,'2025-04':507,'2025-05':162,'2025-06':40,'2025-07':0,'2025-08':16,'2025-09':158,'2025-10':764,'2025-11':1039,'2025-12':2286,'2026-01':762,'2026-02':720},
+  mango:         {'2025-01':18,'2025-02':76,'2025-03':57,'2025-04':111,'2025-05':234,'2025-06':32,'2025-07':7,'2025-08':30,'2025-09':124,'2025-10':138,'2025-11':174,'2025-12':94,'2026-01':51,'2026-02':24},
+  mushroom_champ:{'2025-01':16,'2025-02':10,'2025-03':14,'2025-04':28,'2025-05':35,'2025-06':17,'2025-07':12,'2025-08':13,'2025-09':11,'2025-10':12,'2025-11':12,'2025-12':20,'2026-01':32,'2026-02':21},
+  mushroom_exotic:{'2025-01':10,'2025-02':4,'2025-03':12,'2025-04':12,'2025-05':15,'2025-06':2,'2025-07':3,'2025-08':3,'2025-09':3,'2025-10':16,'2025-11':4,'2025-12':6,'2026-01':21,'2026-02':11},
+  napa_chinese_cabbage:{'2025-01':109,'2025-02':132,'2025-03':250,'2025-04':101,'2025-05':63,'2025-06':21,'2025-07':21,'2025-08':23,'2025-09':23,'2025-10':49,'2025-11':73,'2025-12':90,'2026-01':82,'2026-02':90},
+  onion:         {'2025-01':41,'2025-02':69,'2025-03':46,'2025-04':133,'2025-05':182,'2025-06':268,'2025-07':292,'2025-08':109,'2025-09':57,'2025-10':10,'2025-11':42,'2025-12':62,'2026-01':110,'2026-02':88},
+  orange:        {'2025-01':54,'2025-02':130,'2025-03':87,'2025-04':30,'2025-05':31,'2025-06':7,'2025-07':11,'2025-08':9,'2025-09':6,'2025-10':33,'2025-11':81,'2025-12':125,'2026-01':127,'2026-02':130},
+  pear:          {'2025-01':83,'2025-02':60,'2025-03':71,'2025-04':30,'2025-05':24,'2025-06':7,'2025-07':8,'2025-08':67,'2025-09':131,'2025-10':203,'2025-11':83,'2025-12':22,'2026-01':45,'2026-02':25},
+  pepper:        {'2025-01':244,'2025-02':320,'2025-03':294,'2025-04':354,'2025-05':467,'2025-06':392,'2025-07':142,'2025-08':137,'2025-09':113,'2025-10':172,'2025-11':185,'2025-12':168,'2026-01':133,'2026-02':162},
+  pomelo:        {'2025-01':133,'2025-02':25,'2025-03':21,'2025-04':21,'2025-05':0,'2025-06':0,'2025-07':0,'2025-08':76,'2025-09':92,'2025-10':241,'2025-11':275,'2025-12':178,'2026-01':83,'2026-02':103},
+  strawberry:    {'2025-01':14,'2025-02':29,'2025-03':206,'2025-04':337,'2025-05':372,'2025-06':75,'2025-07':0,'2025-08':0,'2025-09':0,'2025-10':1,'2025-11':5,'2025-12':17,'2026-01':13,'2026-02':18},
+  tomato:        {'2025-01':378,'2025-02':474,'2025-03':828,'2025-04':896,'2025-05':538,'2025-06':264,'2025-07':141,'2025-08':110,'2025-09':119,'2025-10':231,'2025-11':213,'2025-12':267,'2026-01':236,'2026-02':216},
+  white_cabbage: {'2025-01':43,'2025-02':53,'2025-03':88,'2025-04':196,'2025-05':144,'2025-06':107,'2025-07':22,'2025-08':6,'2025-09':2,'2025-10':1,'2025-11':4,'2025-12':7,'2026-01':120,'2026-02':126},
+  zucchini:      {'2025-01':61,'2025-02':74,'2025-03':84,'2025-04':87,'2025-05':78,'2025-06':18,'2025-07':9,'2025-08':10,'2025-09':20,'2025-10':43,'2025-11':51,'2025-12':49,'2026-01':31,'2026-02':51},
+  ginger:        {'2025-01':4,'2025-02':12,'2025-03':23,'2025-04':4,'2025-05':5,'2025-06':3,'2025-07':2,'2025-08':7,'2025-09':17,'2025-10':29,'2025-11':9,'2025-12':7,'2026-01':6,'2026-02':5},
+  pineapple:     {'2025-01':19,'2025-02':31,'2025-03':13,'2025-04':11,'2025-05':8,'2025-06':2,'2025-07':3,'2025-08':3,'2025-09':7,'2025-10':11,'2025-11':12,'2025-12':65,'2026-01':11,'2026-02':11},
+  exotic_fruit:  {'2025-01':38,'2025-02':35,'2025-03':8,'2025-04':26,'2025-05':23,'2025-06':10,'2025-07':1,'2025-08':33,'2025-09':192,'2025-10':98,'2025-11':103,'2025-12':62,'2026-01':12,'2026-02':17}
+};
+
+// Display names for CHINA_MONTHLY products
+const CHINA_PRODUCT_NAMES = {
+  apple:'Яблоко',broccoli_cauliflower:'Брокколи/Цв.капуста',carrot:'Морковь',cucumber:'Огурцы',
+  eggplant:'Баклажан',garlic:'Чеснок',grape:'Виноград',lemon:'Лимон',lettuce:'Салат/Латук',
+  mandarin:'Мандарин',mango:'Манго',mushroom_champ:'Шампиньоны',mushroom_exotic:'Грибы экзот.',
+  napa_chinese_cabbage:'Пекинская капуста',onion:'Лук',orange:'Апельсин',pear:'Груша',
+  pepper:'Перец',pomelo:'Помело',strawberry:'Клубника',tomato:'Томат',white_cabbage:'Капуста бел.',
+  zucchini:'Кабачок',ginger:'Имбирь',pineapple:'Ананас',exotic_fruit:'Экзот. фрукты'
+};
+
+const RAW_DATA = [
+["0701","AZ","2025-12",2,34,0.300,0.300,0.300,10164],
+["0701","AZ","2026-01",7,107,0.300,0.300,0.300,32172],
+["0701","AZ","2026-02",2,33,0.300,0.300,0.300,9987],
+["0701","CN","2026-01",2,51,0.210,0.210,0.210,10811],
+["0701","CN","2026-02",1,22,0.210,0.210,0.210,4515],
+["0701","EG","2026-02",1,55,0.430,0.430,0.430,23650],
+["0701","IR","2025-11",3,61,0.240,0.240,0.240,14688],
+["0701","IR","2025-12",1,20,0.240,0.240,0.240,4890],
+["0702","AZ","2025-10",4,37,0.560,0.550,0.570,20584],
+["0702","AZ","2025-11",9,141,0.552,0.550,0.570,77355],
+["0702","AZ","2025-12",38,627,0.579,0.550,1.100,354610],
+["0702","AZ","2026-01",40,700,0.550,0.530,0.550,384789],
+["0702","AZ","2026-02",245,4230,0.550,0.510,0.570,2326043],
+["0702","CN","2025-10",64,231,0.665,0.490,0.680,153742],
+["0702","CN","2025-11",72,213,0.693,0.670,0.710,148257],
+["0702","CN","2025-12",84,267,0.700,0.690,0.700,187217],
+["0702","CN","2026-01",70,236,0.700,0.700,0.700,165064],
+["0702","CN","2026-02",60,216,0.700,0.700,0.700,151234],
+["0702","IR","2025-10",3,54,0.680,0.680,0.680,36897],
+["0702","IR","2025-11",19,342,0.681,0.670,0.710,232254],
+["0702","IR","2025-12",57,982,0.683,0.680,0.710,667965],
+["0702","IR","2026-01",54,948,0.683,0.650,0.740,644684],
+["0702","IR","2026-02",72,1217,0.683,0.680,0.720,828933],
+["0702","TJ","2025-12",2,18,1.100,1.100,1.100,19800],
+["0702","TM","2025-10",3,27,1.100,1.100,1.100,29700],
+["0702","TM","2025-11",127,1145,1.101,1.100,1.130,1260780],
+["0702","TM","2025-12",159,1458,1.101,1.080,1.120,1605570],
+["0702","TM","2026-01",182,1692,1.100,1.040,1.170,1861650],
+["0702","TM","2026-02",112,1049,1.098,1.070,1.100,1151620],
+["0702","TR","2025-10",3,62,0.670,0.670,0.670,41540],
+["0702","TR","2025-11",6,173,1.001,0.910,1.230,185080],
+["0702","TR","2026-01",2,65,1.230,1.230,1.230,79470],
+["0702","TR","2026-02",6,122,1.230,1.230,1.230,150466],
+["0702","UZ","2025-10",81,1230,0.775,0.500,0.900,960308],
+["0702","UZ","2025-11",71,1149,0.818,0.700,0.900,945164],
+["0702","UZ","2025-12",48,827,0.750,0.750,0.750,620147],
+["0702","UZ","2026-01",47,776,0.750,0.750,0.750,581800],
+["0702","UZ","2026-02",35,591,0.750,0.750,0.750,443288],
+["0703","AZ","2025-12",12,207,0.303,0.220,0.550,45711],
+["0703","AZ","2026-02",55,219,0.502,0.220,0.550,58900],
+["0703","CN","2025-10",42,165,0.693,0.230,0.800,118459],
+["0703","CN","2025-11",44,149,0.666,0.230,0.800,88995],
+["0703","CN","2025-12",52,129,0.624,0.230,0.800,63550],
+["0703","CN","2026-01",53,170,0.629,0.230,0.800,69901],
+["0703","CN","2026-02",52,175,0.632,0.230,0.770,85269],
+["0703","IR","2025-10",1,14,0.500,0.500,0.500,6950],
+["0703","TJ","2025-10",1,23,0.250,0.250,0.250,5650],
+["0703","UZ","2025-10",54,187,0.715,0.250,0.950,114071],
+["0703","UZ","2025-11",31,89,0.734,0.500,0.750,65685],
+["0703","UZ","2025-12",18,40,0.469,0.450,0.500,18812],
+["0703","UZ","2026-01",16,66,0.450,0.450,0.450,29925],
+["0703","UZ","2026-02",17,233,0.361,0.250,0.450,68911],
+["0704","AZ","2025-11",7,89,0.911,0.850,1.120,76145],
+["0704","CN","2025-10",69,109,0.509,0.250,0.710,55097],
+["0704","CN","2025-11",63,88,0.461,0.250,0.910,28576],
+["0704","CN","2025-12",76,112,0.471,0.250,0.910,36862],
+["0704","CN","2026-01",70,236,0.441,0.250,0.910,76646],
+["0704","CN","2026-02",71,239,0.440,0.250,0.910,72597],
+["0704","IR","2025-10",2,31,0.730,0.730,0.730,22382],
+["0704","IR","2025-11",2,34,0.730,0.730,0.730,24478],
+["0704","IR","2025-12",39,685,0.649,0.250,0.730,414011],
+["0704","IR","2026-01",32,482,0.703,0.250,0.770,336673],
+["0704","IR","2026-02",41,644,0.582,0.250,0.770,365185],
+["0704","UZ","2025-10",18,28,1.173,0.400,1.350,20033],
+["0704","UZ","2025-11",16,104,1.083,0.700,1.350,81878],
+["0704","UZ","2025-12",12,37,1.141,0.250,1.350,31790],
+["0704","UZ","2026-01",43,711,0.630,0.250,1.360,388562],
+["0704","UZ","2026-02",29,387,0.733,0.250,1.350,193855],
+["0705","AZ","2026-02",17,27,0.550,0.550,0.550,14781],
+["0705","CN","2025-10",43,59,0.630,0.560,0.700,35716],
+["0705","CN","2025-11",50,45,0.637,0.560,0.700,28144],
+["0705","CN","2025-12",69,75,0.639,0.560,0.700,46757],
+["0705","CN","2026-01",51,40,0.633,0.560,0.700,24822],
+["0705","CN","2026-02",49,45,0.641,0.560,0.700,27792],
+["0705","IR","2025-10",110,1073,0.591,0.570,0.630,633633],
+["0705","IR","2025-11",126,1229,0.591,0.560,0.650,726118],
+["0705","IR","2025-12",279,2593,0.597,0.450,0.660,1546195],
+["0705","IR","2026-01",276,2348,0.595,0.490,0.680,1395995],
+["0705","IR","2026-02",210,1918,0.592,0.580,0.620,1134497],
+["0706","CN","2025-10",50,130,0.180,0.180,0.180,23326],
+["0706","CN","2025-11",49,155,0.180,0.180,0.180,27825],
+["0706","CN","2025-12",62,181,0.180,0.180,0.180,32626],
+["0706","CN","2026-01",57,167,0.180,0.180,0.180,30136],
+["0706","CN","2026-02",57,160,0.180,0.180,0.180,28714],
+["0706","IR","2026-02",1,20,0.310,0.310,0.310,6127],
+["0706","TJ","2025-11",2,43,0.310,0.300,0.320,13486],
+["0706","TJ","2025-12",2,46,0.307,0.300,0.320,14031],
+["0706","UZ","2025-10",18,116,0.405,0.250,0.450,37342],
+["0706","UZ","2025-11",43,752,0.327,0.250,0.450,221286],
+["0706","UZ","2025-12",66,1091,0.338,0.250,0.410,343556],
+["0706","UZ","2026-01",75,1467,0.339,0.290,0.450,472390],
+["0706","UZ","2026-02",51,886,0.339,0.250,0.400,287515],
+["0707","AZ","2025-10",9,136,0.720,0.720,0.720,97834],
+["0707","AZ","2025-11",16,251,0.830,0.720,0.900,208233],
+["0707","AZ","2025-12",14,227,0.900,0.900,0.900,204728],
+["0707","AZ","2026-01",7,104,0.930,0.930,0.930,96501],
+["0707","AZ","2026-02",17,224,0.919,0.900,0.930,205288],
+["0707","CN","2025-10",30,54,0.609,0.600,0.610,32639],
+["0707","CN","2025-11",60,111,0.670,0.600,0.690,74923],
+["0707","CN","2025-12",76,173,0.680,0.670,0.680,117345],
+["0707","CN","2026-01",64,172,0.680,0.680,0.680,116819],
+["0707","CN","2026-02",55,149,0.680,0.680,0.680,101159],
+["0707","IR","2025-10",1,19,0.680,0.680,0.680,12777],
+["0707","IR","2025-11",66,1194,0.680,0.670,0.690,811813],
+["0707","IR","2025-12",112,1978,0.681,0.670,0.710,1345700],
+["0707","IR","2026-01",154,2651,0.680,0.580,0.700,1801369],
+["0707","IR","2026-02",204,3545,0.679,0.600,0.690,2408157],
+["0707","TR","2025-11",13,286,0.809,0.630,0.860,235222],
+["0707","TR","2025-12",15,577,0.930,0.930,0.930,536554],
+["0707","TR","2026-01",2,45,0.930,0.930,0.930,41850],
+["0707","UZ","2026-01",4,79,0.770,0.770,0.770,60906],
+["0707","UZ","2026-02",5,88,0.770,0.770,0.770,67783],
+["0709","AZ","2025-11",5,47,0.550,0.550,0.550,25825],
+["0709","AZ","2025-12",6,70,0.550,0.550,0.550,38720],
+["0709","AZ","2026-01",20,239,0.550,0.540,0.550,131362],
+["0709","AZ","2026-02",67,791,0.550,0.550,0.550,435042],
+["0709","CN","2025-10",72,275,0.723,0.430,1.380,171578],
+["0709","CN","2025-11",80,293,0.710,0.460,1.380,173797],
+["0709","CN","2025-12",91,297,0.719,0.470,1.380,181937],
+["0709","CN","2026-01",79,258,0.750,0.470,1.390,174963],
+["0709","CN","2026-02",72,280,0.713,0.470,1.390,173645],
+["0709","IR","2025-10",125,1713,0.460,0.400,0.600,790355],
+["0709","IR","2025-11",348,5035,0.443,0.350,0.600,2211987],
+["0709","IR","2025-12",584,8484,0.471,0.320,0.700,3882929],
+["0709","IR","2026-01",736,10388,0.471,0.330,0.720,4788967],
+["0709","IR","2026-02",524,7565,0.477,0.330,0.730,3544003],
+["0709","TR","2025-10",4,84,0.480,0.480,0.480,40536],
+["0709","TR","2025-11",18,382,0.548,0.480,0.910,210737],
+["0709","TR","2025-12",1,15,1.435,1.320,1.550,20875],
+["0709","TR","2026-01",4,70,1.185,1.050,1.320,81716],
+["0709","UZ","2025-10",119,1642,0.939,0.250,1.060,1548320],
+["0709","UZ","2025-11",93,1342,0.933,0.670,1.100,1256138],
+["0709","UZ","2025-12",53,777,0.686,0.400,0.950,543422],
+["0709","UZ","2026-01",19,206,0.670,0.600,0.800,138589],
+["0709","UZ","2026-02",11,106,0.669,0.600,0.680,71412],
+["0802","AZ","2025-11",6,106,2.400,2.200,2.500,258585],
+["0802","AZ","2025-12",2,44,2.500,2.500,2.500,110100],
+["0802","AZ","2026-01",2,32,2.380,2.200,2.500,78850],
+["0802","AZ","2026-02",9,174,2.440,2.200,2.500,431925],
+["0802","GE","2025-10",1,22,6.067,2.500,9.500,129901],
+["0802","GE","2025-11",3,66,5.825,2.500,9.500,308654],
+["0802","GE","2025-12",2,24,4.900,2.500,6.200,112480],
+["0802","GE","2026-01",1,11,4.900,2.500,6.200,33363],
+["0802","IR","2025-10",2,43,2.433,2.400,2.500,103301],
+["0802","IR","2025-11",4,87,2.437,2.400,2.510,209010],
+["0802","IR","2025-12",6,101,2.425,2.400,2.500,244130],
+["0802","IR","2026-01",2,38,2.460,2.400,2.500,93326],
+["0804","CN","2025-10",47,149,0.796,0.520,0.940,134373],
+["0804","CN","2025-11",47,186,0.783,0.520,0.940,168568],
+["0804","CN","2025-12",53,158,0.719,0.530,0.940,122188],
+["0804","CN","2026-01",34,67,0.856,0.530,1.950,64825],
+["0804","CN","2026-02",32,39,0.833,0.530,1.950,35885],
+["0804","IR","2025-10",32,653,0.600,0.590,0.600,391411],
+["0804","IR","2025-11",23,460,0.600,0.600,0.600,275951],
+["0804","IR","2025-12",10,182,0.600,0.600,0.600,108921],
+["0804","IR","2026-01",12,244,0.600,0.600,0.600,146618],
+["0804","IR","2026-02",24,507,0.600,0.600,0.610,304436],
+["0805","AZ","2025-10",11,109,0.572,0.400,2.100,47210],
+["0805","AZ","2025-11",6,91,0.520,0.520,0.520,47465],
+["0805","AZ","2026-02",22,334,0.520,0.520,0.520,173753],
+["0805","CN","2025-10",107,1127,0.486,0.420,0.520,550635],
+["0805","CN","2025-11",135,1512,0.491,0.430,0.530,740666],
+["0805","CN","2025-12",192,2601,0.495,0.430,0.530,1306058],
+["0805","CN","2026-01",98,990,0.488,0.430,0.530,488341],
+["0805","CN","2026-02",94,975,0.489,0.430,0.510,479125],
+["0805","EG","2025-10",3,88,0.900,0.900,0.900,78774],
+["0805","EG","2025-11",9,266,0.900,0.900,0.900,239128],
+["0805","EG","2025-12",15,619,0.862,0.680,0.900,531282],
+["0805","EG","2026-01",16,738,0.861,0.680,0.900,639124],
+["0805","EG","2026-02",5,309,0.900,0.900,0.900,277659],
+["0805","IR","2025-10",40,734,0.453,0.450,0.530,332374],
+["0805","IR","2025-11",39,728,0.450,0.440,0.460,327024],
+["0805","IR","2025-12",107,1994,0.492,0.440,3.640,905741],
+["0805","IR","2026-01",60,1121,0.598,0.350,3.640,515755],
+["0805","IR","2026-02",82,1554,0.565,0.420,3.640,718284],
+["0805","TJ","2025-11",3,23,0.800,0.800,0.800,18044],
+["0805","TR","2025-10",49,1614,0.461,0.460,0.490,743193],
+["0805","TR","2025-11",76,3131,0.534,0.430,1.000,1726870],
+["0805","TR","2025-12",55,1971,0.669,0.460,1.000,1315013],
+["0805","TR","2026-01",47,1625,0.703,0.650,1.000,1121142],
+["0805","TR","2026-02",30,928,0.722,0.650,1.000,633018],
+["0805","UZ","2025-10",81,55,2.288,2.100,3.100,125033],
+["0805","UZ","2025-11",30,56,2.167,2.100,2.200,120820],
+["0805","UZ","2025-12",23,252,1.335,1.300,2.100,328513],
+["0805","UZ","2026-01",19,187,1.341,1.300,2.100,257016],
+["0805","UZ","2026-02",13,147,1.300,1.300,1.300,190914],
+["0806","AZ","2025-10",6,113,0.700,0.700,0.700,79177],
+["0806","CN","2025-10",74,322,0.877,0.870,0.890,282979],
+["0806","CN","2025-11",83,437,0.880,0.870,0.910,387722],
+["0806","CN","2025-12",68,265,0.882,0.870,0.920,234702],
+["0806","CN","2026-01",57,110,0.880,0.880,0.890,96729],
+["0806","CN","2026-02",58,128,0.880,0.880,0.890,112725],
+["0806","IR","2025-10",31,500,0.831,0.830,0.840,415897],
+["0806","IR","2025-11",15,280,0.831,0.830,0.840,232658],
+["0806","IR","2025-12",8,137,0.859,0.830,1.060,114940],
+["0806","IR","2026-01",1,21,1.060,1.060,1.060,21942],
+["0806","IR","2026-02",1,21,1.060,1.060,1.060,22154],
+["0806","TJ","2025-10",23,451,0.700,0.700,0.700,315441],
+["0806","TJ","2025-11",51,991,0.710,0.700,1.200,694361],
+["0806","TJ","2025-12",51,1012,0.710,0.700,1.210,709397],
+["0806","TJ","2026-01",30,597,0.700,0.700,0.700,417821],
+["0806","TJ","2026-02",13,257,0.700,0.700,0.700,180026],
+["0806","TM","2025-10",2,19,1.100,1.100,1.100,20900],
+["0806","UZ","2025-10",420,6497,1.123,0.950,1.500,7282453],
+["0806","UZ","2025-11",168,2502,1.054,0.640,1.160,2636250],
+["0806","UZ","2025-12",125,1938,0.738,0.650,1.550,1352364],
+["0806","UZ","2026-01",73,1340,0.911,0.650,1.550,1048386],
+["0806","UZ","2026-02",34,643,0.713,0.650,1.100,441596],
+["0807","CN","2025-12",18,13,0.552,0.500,0.670,6973],
+["0807","CN","2026-02",11,13,0.557,0.500,0.670,7155],
+["0807","IR","2025-12",9,168,0.350,0.350,0.350,58835],
+["0807","IR","2026-01",17,331,0.351,0.350,0.360,116306],
+["0807","IR","2026-02",3,56,0.350,0.350,0.350,19670],
+["0807","UZ","2025-10",13,121,0.298,0.200,0.400,34889],
+["0807","UZ","2025-11",6,69,0.318,0.250,0.360,22891],
+["0807","UZ","2025-12",3,26,0.350,0.350,0.350,8962],
+["0808","AZ","2025-10",41,325,0.627,0.420,0.700,186114],
+["0808","AZ","2025-11",13,183,0.620,0.420,0.700,115832],
+["0808","AZ","2025-12",46,806,0.604,0.420,0.700,483573],
+["0808","AZ","2026-01",167,3195,0.588,0.420,0.700,1895288],
+["0808","AZ","2026-02",174,3445,0.594,0.420,0.700,2039459],
+["0808","CN","2025-10",55,333,0.454,0.440,0.460,151642],
+["0808","CN","2025-11",37,223,0.453,0.440,0.460,100928],
+["0808","CN","2025-12",31,139,0.487,0.450,0.500,68338],
+["0808","CN","2026-01",37,197,0.486,0.460,0.500,96812],
+["0808","CN","2026-02",33,196,0.495,0.460,0.500,97123],
+["0808","IR","2025-10",1,15,0.450,0.450,0.450,6885],
+["0808","IR","2026-01",1,19,0.460,0.460,0.460,8556],
+["0808","IR","2026-02",1,18,0.450,0.450,0.450,8289],
+["0808","TJ","2025-10",6,124,0.581,0.470,0.600,74315],
+["0808","UZ","2025-10",76,46,1.307,0.600,1.600,58811],
+["0808","UZ","2025-11",16,26,1.119,0.600,1.600,19064],
+["0808","UZ","2025-12",2,17,0.700,0.500,0.900,8986],
+["0808","UZ","2026-02",1,20,0.500,0.500,0.500,10046],
+["0809","AZ","2025-10",10,117,0.774,0.410,1.050,87012],
+["0809","AZ","2025-11",1,12,0.697,0.410,0.840,8754],
+["0809","IR","2025-10",25,338,0.519,0.450,0.600,177008],
+["0809","IR","2025-11",18,328,0.514,0.450,0.670,164336],
+["0809","IR","2025-12",4,60,0.450,0.450,0.450,27000],
+["0809","TR","2025-10",2,36,0.980,0.980,0.980,35711],
+["0809","UZ","2025-10",16,21,0.898,0.600,1.300,18922],
+["0810","AZ","2025-10",262,4406,0.692,0.530,0.850,3000887],
+["0810","AZ","2025-11",262,4647,0.723,0.530,0.850,3246914],
+["0810","AZ","2025-12",204,3543,0.695,0.530,1.250,2314440],
+["0810","AZ","2026-01",220,3890,0.650,0.530,0.800,2354695],
+["0810","AZ","2026-02",458,8119,0.584,0.530,0.830,4559566],
+["0810","CN","2025-10",60,139,1.397,0.620,3.800,142109],
+["0810","CN","2025-11",61,137,1.559,0.620,3.800,128361],
+["0810","CN","2025-12",57,90,1.615,0.630,3.800,102603],
+["0810","CN","2026-01",41,35,1.825,0.630,3.800,42905],
+["0810","CN","2026-02",47,43,1.760,0.630,3.800,62602],
+["0810","EG","2025-10",1,19,1.210,1.210,1.210,23293],
+["0810","IR","2025-10",76,1296,0.554,0.550,0.870,714417],
+["0810","IR","2025-11",88,1551,0.558,0.540,0.870,862459],
+["0810","IR","2025-12",186,3335,0.555,0.550,0.870,1850901],
+["0810","IR","2026-01",140,2507,0.549,0.300,1.040,1373750],
+["0810","IR","2026-02",198,3524,0.559,0.530,1.040,1952627],
+["0810","TJ","2025-10",2,41,0.690,0.690,0.690,28221],
+["0810","TJ","2025-11",4,61,0.893,0.690,1.500,43686],
+["0810","TJ","2025-12",1,10,0.690,0.690,0.690,6969],
+["0810","TR","2025-12",1,19,0.910,0.910,0.910,17636],
+["0810","UZ","2025-10",438,4635,1.218,0.750,1.600,5182499],
+["0810","UZ","2025-11",175,2199,1.083,0.640,1.510,2233751],
+["0810","UZ","2025-12",131,2048,0.699,0.650,0.710,1431893],
+["0810","UZ","2026-01",27,473,0.702,0.700,0.710,331948],
+["0810","UZ","2026-02",5,67,0.740,0.700,0.900,47346],
+["0811","UZ","2025-12",1,18,1.900,1.900,1.900,35112],
+["0813","AZ","2026-02",9,21,1.500,1.500,1.500,31509],
+["0813","CN","2025-11",2,15,2.584,2.560,2.590,38086],
+["0813","CN","2025-12",1,21,2.600,2.600,2.600,55770],
+["0813","TJ","2025-11",2,43,1.214,1.150,1.400,51040],
+["0813","TJ","2025-12",1,20,1.180,1.160,1.200,23628],
+["0813","UZ","2025-10",3,54,1.060,0.420,2.500,55178],
+["0813","UZ","2025-11",3,65,0.947,0.420,2.000,55406],
+["0813","UZ","2025-12",17,192,1.040,0.380,1.550,181072],
+["0813","UZ","2026-01",18,214,1.291,0.450,2.550,208039],
+["0813","UZ","2026-02",2,36,0.773,0.700,0.810,29030],
+["0910","CN","2025-10",20,29,1.443,1.430,1.450,41310]
+];
+
+const CLIENTS_DATA = [
+["САРМАНТ-ЮГ","IR","0709",12655,888,0.474],
+["ТСТ-ТРАНС","AZ","0810",12447,705,0.707],
+["САРМАНТ-ЮГ","IR","0810",5086,285,0.556],
+["ИП НОЧЕВНЫЙ Б.Р.","TR","0805",4707,105,0.613],
+["ТК ЕВРАЗИЯ","AZ","0808",4649,242,0.584],
+["ТСТ-ТРАНС","AZ","0702",4101,237,0.550],
+["ХУРМА ФРУТ","TR","0805",3972,124,0.599],
+["ТК ЕВРАЗИЯ","IR","0709",3890,273,0.464],
+["ВОСТОК-Ф","CN","0805",3496,332,0.492],
+["САРМАНТ-ЮГ","IR","0707",3451,199,0.679],
+["ФАЛКОН ПРОДУКТ","IR","0709",3419,235,0.486],
+["АТЛАС","TJ","0806",3308,168,0.706],
+["ГАРДЕН ЭКСПОРТ НОВОСИБИРСК","UZ","0806",3270,195,1.057],
+["АВЕРОН","AZ","0810",3172,175,0.663],
+["САРМАНТ-ЮГ","IR","0705",3056,346,0.591],
+["АКТИВПИПЛ","IR","0707",2760,151,0.680],
+["КОМИНС","AZ","0810",2560,149,0.607],
+["МЕГАТОРГ","UZ","0806",2337,162,1.185],
+["САРМАНТ-ЮГ","IR","0805",2265,120,0.579],
+["АРИМАС","IR","0709",2245,157,0.437],
+["БЕНУА","UZ","0810",2215,141,0.821],
+["АКВАНУР","IR","0709",2155,155,0.469],
+["ТК ЕВРАЗИЯ","AZ","0810",2079,115,0.535],
+["ГАРДЕН ЭКСПОРТ НОВОСИБИРСК","UZ","0709",2037,144,0.897],
+["ФАЛКОН ПРОДУКТ","IR","0810",1903,106,0.551],
+["КОМИНС","IR","0705",1884,204,0.600],
+["ТК ЕВРАЗИЯ","UZ","0706",1843,87,0.334],
+["ИНТЕР ТРЕЙД","EG","0805",1840,46,0.880],
+["ДРАКОН","CN","0805",1801,136,0.496],
+["ГАРДЕН ЭКСПОРТ НОВОСИБИРСК","UZ","0810",1761,157,1.177],
+["ВОСТОК-Ф","CN","0709",693,192,0.604],
+["ДРАКОН","CN","0806",633,68,0.886],
+["ФРУТОМИКС","CN","0805",1222,107,0.486],
+["ФРУТОМИКС","CN","0702",509,101,0.695]
+];
+
+const HIGHLIGHTED_CLIENTS = [
+  'САРМАНТ-ЮГ','ТК ЕВРАЗИЯ','ФАЛКОН ПРОДУКТ','КОМИНС','АКВАНУР','АЛЬЯНС','СМАРТ МОУШН ЛИНК'
+];
+
+// ===================== UTILITIES =====================
+
+function fmt(n, d) { return n == null ? '-' : Number(n).toLocaleString('ru-RU', {minimumFractionDigits: d||0, maximumFractionDigits: d||0}); }
+function fmtUsd(n) { return n == null ? '-' : '$' + Number(n).toLocaleString('ru-RU', {minimumFractionDigits: 3, maximumFractionDigits: 3}); }
+function fmtVal(n) { return n == null ? '-' : '$' + Number(n).toLocaleString('ru-RU', {minimumFractionDigits: 0, maximumFractionDigits: 0}); }
+function prodName(code) { return PRODUCTS[code] || code; }
+function countryName(code) { return COUNTRIES[code] || code; }
+
+// ===================== AGGREGATE DATA =====================
+
+// Parse raw data into objects
+const DATA = RAW_DATA.map(r => ({
+  tnved: r[0], country: r[1], month: r[2],
+  decl: r[3], tons: r[4],
+  avg: r[5], min: r[6], max: r[7], value: r[8]
+}));
+
+// Get unique values
+const ALL_COUNTRIES = [...new Set(DATA.map(d => d.country))].sort();
+const ALL_MONTHS = MONTHS_ORDER.filter(m => DATA.some(d => d.month === m));
+const ALL_TNVED = [...new Set(DATA.map(d => d.tnved))].sort();
+
+// ===================== SUMMARY =====================
+
+function computeSummary(data) {
+  let totalTons = 0, totalDecl = 0, totalValue = 0, weightedPrice = 0;
+  const countries = new Set();
+  data.forEach(d => {
+    totalTons += d.tons;
+    totalDecl += d.decl;
+    totalValue += d.value;
+    weightedPrice += d.avg * d.tons;
+    countries.add(d.country);
+  });
+  return {
+    totalTons, totalDecl, totalValue,
+    avgPrice: totalTons > 0 ? weightedPrice / totalTons : 0,
+    countryCount: countries.size
+  };
+}
+
+function renderSummary() {
+  const s = computeSummary(DATA);
+  document.getElementById('summaryRow').innerHTML = `
+    <div class="summary-card">
+      <div class="label">Всего тонн</div>
+      <div class="value">${fmt(s.totalTons)}</div>
+      <div class="sub">Окт 2025 - Фев 2026</div>
+    </div>
+    <div class="summary-card">
+      <div class="label">Деклараций</div>
+      <div class="value">${fmt(s.totalDecl)}</div>
+      <div class="sub">обработано</div>
+    </div>
+    <div class="summary-card">
+      <div class="label">Стран-поставщиков</div>
+      <div class="value">${s.countryCount}</div>
+      <div class="sub">уникальных</div>
+    </div>
+    <div class="summary-card">
+      <div class="label">Средняя цена</div>
+      <div class="value">${fmtUsd(s.avgPrice)}</div>
+      <div class="sub">за кг (взвешенная)</div>
+    </div>
+    <div class="summary-card">
+      <div class="label">Общая стоимость</div>
+      <div class="value">${fmtVal(s.totalValue)}</div>
+      <div class="sub">таможенная</div>
+    </div>
+  `;
+}
+
+// ===================== MULTI-SELECT COMPONENT =====================
+
+function createMultiSelect(containerId, items, onChange, allLabel) {
+  const container = document.getElementById(containerId);
+  const selected = new Set(items.map(i => i.value));
+
+  const btn = document.createElement('div');
+  btn.className = 'multi-select-btn';
+  btn.innerHTML = `<span class="ms-text">${allLabel || 'Все'}</span><span class="arrow">&#9660;</span>`;
+
+  const dropdown = document.createElement('div');
+  dropdown.className = 'multi-select-dropdown';
+
+  const actions = document.createElement('div');
+  actions.className = 'ms-actions';
+  const btnAll = document.createElement('button');
+  btnAll.textContent = 'Все';
+  const btnNone = document.createElement('button');
+  btnNone.textContent = 'Ничего';
+  actions.appendChild(btnAll);
+  actions.appendChild(btnNone);
+  dropdown.appendChild(actions);
+
+  items.forEach(item => {
+    const lbl = document.createElement('label');
+    const cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.value = item.value;
+    cb.checked = true;
+    lbl.appendChild(cb);
+    lbl.appendChild(document.createTextNode(' ' + item.label));
+    dropdown.appendChild(lbl);
+
+    cb.addEventListener('change', () => {
+      if (cb.checked) selected.add(item.value); else selected.delete(item.value);
+      updateText();
+      onChange([...selected]);
+    });
+  });
+
+  function updateText() {
+    if (selected.size === items.length) {
+      btn.querySelector('.ms-text').textContent = allLabel || 'Все';
+    } else if (selected.size === 0) {
+      btn.querySelector('.ms-text').textContent = 'Ничего не выбрано';
+    } else if (selected.size <= 2) {
+      btn.querySelector('.ms-text').textContent = [...selected].map(v => {
+        const found = items.find(i => i.value === v);
+        return found ? found.label : v;
+      }).join(', ');
+    } else {
+      btn.querySelector('.ms-text').textContent = `Выбрано: ${selected.size}`;
+    }
+  }
+
+  btnAll.addEventListener('click', () => {
+    items.forEach(item => selected.add(item.value));
+    dropdown.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = true);
+    updateText();
+    onChange([...selected]);
+  });
+  btnNone.addEventListener('click', () => {
+    selected.clear();
+    dropdown.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = false);
+    updateText();
+    onChange([...selected]);
+  });
+
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isOpen = dropdown.classList.contains('open');
+    document.querySelectorAll('.multi-select-dropdown.open').forEach(d => d.classList.remove('open'));
+    document.querySelectorAll('.multi-select-btn.open').forEach(b => b.classList.remove('open'));
+    if (!isOpen) {
+      dropdown.classList.add('open');
+      btn.classList.add('open');
+    }
+  });
+
+  container.appendChild(btn);
+  container.appendChild(dropdown);
+
+  return {
+    getSelected: () => [...selected],
+    setAll: () => { btnAll.click(); }
+  };
+}
+
+// Close dropdowns on outside click
+document.addEventListener('click', () => {
+  document.querySelectorAll('.multi-select-dropdown.open').forEach(d => d.classList.remove('open'));
+  document.querySelectorAll('.multi-select-btn.open').forEach(b => b.classList.remove('open'));
+});
+
+// ===================== TAB SWITCHING =====================
+
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('sec-' + tab.dataset.tab).classList.add('active');
+  });
+});
+
+// ===================== SECTION 1: PRODUCTS TABLE =====================
+
+let prodSortCol = 'tons';
+let prodSortAsc = false;
+let selectedCountries = [...ALL_COUNTRIES];
+let selectedMonths = [...ALL_MONTHS];
+let prodSearchText = '';
+
+const countryMS = createMultiSelect('countryFilter',
+  ALL_COUNTRIES.map(c => ({value: c, label: countryName(c)})),
+  (sel) => { selectedCountries = sel; renderProductsTable(); },
+  'Все страны'
+);
+
+const monthMS = createMultiSelect('monthFilter',
+  ALL_MONTHS.map(m => ({value: m, label: MONTHS_LABELS[m] || m})),
+  (sel) => { selectedMonths = sel; renderProductsTable(); },
+  'Все месяцы'
+);
+
+document.getElementById('prodSearch').addEventListener('input', function() {
+  prodSearchText = this.value.toLowerCase();
+  renderProductsTable();
+});
+
+function aggregateProducts() {
+  const filtered = DATA.filter(d =>
+    selectedCountries.includes(d.country) &&
+    selectedMonths.includes(d.month)
+  );
+
+  // Group by product + country
+  const groups = {};
+  filtered.forEach(d => {
+    const key = d.tnved + '|' + d.country;
+    if (!groups[key]) {
+      groups[key] = { tnved: d.tnved, country: d.country, tons: 0, decl: 0, value: 0, weightedAvg: 0, min: Infinity, max: -Infinity };
+    }
+    const g = groups[key];
+    g.tons += d.tons;
+    g.decl += d.decl;
+    g.value += d.value;
+    g.weightedAvg += d.avg * d.tons;
+    g.min = Math.min(g.min, d.min);
+    g.max = Math.max(g.max, d.max);
+  });
+
+  return Object.values(groups).map(g => {
+    g.avg = g.tons > 0 ? g.weightedAvg / g.tons : 0;
+    if (g.min === Infinity) g.min = 0;
+    if (g.max === -Infinity) g.max = 0;
+    return g;
+  }).filter(g => {
+    if (!prodSearchText) return true;
+    const name = prodName(g.tnved).toLowerCase();
+    return name.includes(prodSearchText) || g.tnved.includes(prodSearchText);
+  });
+}
+
+function renderProductsTable() {
+  const rows = aggregateProducts();
+
+  // Sort
+  rows.sort((a, b) => {
+    let va, vb;
+    switch(prodSortCol) {
+      case 'product': va = prodName(a.tnved); vb = prodName(b.tnved); break;
+      case 'country': va = countryName(a.country); vb = countryName(b.country); break;
+      case 'tons': va = a.tons; vb = b.tons; break;
+      case 'decl': va = a.decl; vb = b.decl; break;
+      case 'avg': va = a.avg; vb = b.avg; break;
+      case 'min': va = a.min; vb = b.min; break;
+      case 'max': va = a.max; vb = b.max; break;
+      case 'value': va = a.value; vb = b.value; break;
+      default: va = a.tons; vb = b.tons;
+    }
+    if (typeof va === 'string') return prodSortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
+    return prodSortAsc ? va - vb : vb - va;
+  });
+
+  const tbody = document.getElementById('productsBody');
+  const totalTons = rows.reduce((s, r) => s + r.tons, 0);
+  const totalDecl = rows.reduce((s, r) => s + r.decl, 0);
+  const totalVal = rows.reduce((s, r) => s + r.value, 0);
+
+  document.getElementById('prodRowCount').textContent = `Строк: ${rows.length}`;
+  document.getElementById('prodTotals').textContent = `Итого: ${fmt(totalTons)} т | ${fmt(totalDecl)} декл. | ${fmtVal(totalVal)}`;
+
+  if (rows.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8" class="no-data-msg">Нет данных для выбранных фильтров</td></tr>';
+    return;
+  }
+
+  let html = '';
+  rows.forEach(r => {
+    const cls = r.country === 'CN' ? ' class="cn-row"' : '';
+    html += `<tr${cls}>
+      <td>${prodName(r.tnved)} <span class="badge badge-blue">${r.tnved}</span></td>
+      <td>${countryName(r.country)} <span style="color:var(--text-muted)">(${r.country})</span></td>
+      <td class="num">${fmt(r.tons)}</td>
+      <td class="num">${fmt(r.decl)}</td>
+      <td class="num price">${fmtUsd(r.avg)}</td>
+      <td class="num">${fmtUsd(r.min)}</td>
+      <td class="num">${fmtUsd(r.max)}</td>
+      <td class="num">${fmtVal(r.value)}</td>
+    </tr>`;
+  });
+  tbody.innerHTML = html;
+
+  // Update sort indicators
+  document.querySelectorAll('#productsTable thead th').forEach(th => {
+    th.classList.toggle('sorted', th.dataset.col === prodSortCol);
+  });
+}
+
+document.querySelectorAll('#productsTable thead th').forEach(th => {
+  th.addEventListener('click', () => {
+    const col = th.dataset.col;
+    if (prodSortCol === col) prodSortAsc = !prodSortAsc;
+    else { prodSortCol = col; prodSortAsc = false; }
+    renderProductsTable();
+  });
+});
+
+// ===================== SECTION 2: PRICE COMPARISON =====================
+
+function computePriceComparison() {
+  const COMPARE_COUNTRIES = ['CN','IR','AZ','UZ','TM'];
+  const productPrices = {};
+
+  DATA.forEach(d => {
+    if (!COMPARE_COUNTRIES.includes(d.country)) return;
+    if (!productPrices[d.tnved]) productPrices[d.tnved] = {};
+    if (!productPrices[d.tnved][d.country]) {
+      productPrices[d.tnved][d.country] = { weightedSum: 0, totalTons: 0 };
+    }
+    productPrices[d.tnved][d.country].weightedSum += d.avg * d.tons;
+    productPrices[d.tnved][d.country].totalTons += d.tons;
+  });
+
+  const result = [];
+  Object.keys(productPrices).sort().forEach(tnved => {
+    const prices = {};
+    let hasMultiple = false;
+    let countWithData = 0;
+    COMPARE_COUNTRIES.forEach(c => {
+      const entry = productPrices[tnved][c];
+      if (entry && entry.totalTons > 0) {
+        prices[c] = entry.weightedSum / entry.totalTons;
+        countWithData++;
+      } else {
+        prices[c] = null;
+      }
+    });
+    if (countWithData >= 2) hasMultiple = true;
+
+    const validPrices = Object.values(prices).filter(v => v !== null);
+    const minP = Math.min(...validPrices);
+    const maxP = Math.max(...validPrices);
+    const diff = maxP - minP;
+
+    result.push({ tnved, prices, minP, maxP, diff, hasMultiple, countWithData });
+  });
+
+  return { data: result, countries: COMPARE_COUNTRIES };
+}
+
+function renderPriceComparison() {
+  const { data, countries } = computePriceComparison();
+  const sortType = document.getElementById('priceSortSelect').value;
+
+  let sorted = data.filter(d => d.hasMultiple);
+  switch(sortType) {
+    case 'diff_desc': sorted.sort((a,b) => b.diff - a.diff); break;
+    case 'diff_asc': sorted.sort((a,b) => a.diff - b.diff); break;
+    case 'product': sorted.sort((a,b) => prodName(a.tnved).localeCompare(prodName(b.tnved))); break;
+  }
+
+  const grid = document.getElementById('priceGrid');
+  if (sorted.length === 0) {
+    grid.innerHTML = '<div class="no-data-msg">Нет данных для сравнения</div>';
+    return;
+  }
+
+  let html = '';
+  sorted.forEach(item => {
+    const validPrices = countries.map(c => item.prices[c]).filter(v => v !== null);
+    const localMin = Math.min(...validPrices);
+    const localMax = Math.max(...validPrices);
+
+    html += `<div class="price-row-card">
+      <div class="product-title">${prodName(item.tnved)} <span class="badge badge-blue">${item.tnved}</span>
+        <span style="float:right;font-size:13px;color:var(--text-muted)">Разброс: ${fmtUsd(item.diff)}/кг</span>
+      </div>
+      <div class="price-bars">`;
+
+    countries.forEach(c => {
+      const p = item.prices[c];
+      const label = countryName(c);
+      if (p === null) {
+        html += `<div class="price-bar-item">
+          <div class="price-bar-label">${label}</div>
+          <div class="price-bar-outer"><div class="price-bar-inner na" style="width:100%">нет данных</div></div>
+        </div>`;
+      } else {
+        const pct = localMax > 0 ? Math.max(10, (p / localMax) * 100) : 10;
+        let cls = 'mid';
+        if (p === localMin) cls = 'cheapest';
+        else if (p === localMax) cls = 'expensive';
+
+        html += `<div class="price-bar-item">
+          <div class="price-bar-label">${label}</div>
+          <div class="price-bar-outer"><div class="price-bar-inner ${cls}" style="width:${pct}%">${fmtUsd(p)}</div></div>
+        </div>`;
+      }
+    });
+
+    html += `</div></div>`;
+  });
+
+  grid.innerHTML = html;
+}
+
+document.getElementById('priceSortSelect').addEventListener('change', renderPriceComparison);
+
+// ===================== SECTION 3: MONTHLY TRENDS =====================
+
+let trendCountries = [...ALL_COUNTRIES];
+
+const trendCountryMS = createMultiSelect('trendCountryFilter',
+  ALL_COUNTRIES.map(c => ({value: c, label: countryName(c)})),
+  (sel) => { trendCountries = sel; renderTrends(); },
+  'Все страны'
+);
+
+const BAR_COLORS = ['bar-oct','bar-nov','bar-dec','bar-jan','bar-feb'];
+const BAR_COLORS_14 = ['bar-m0','bar-m1','bar-m2','bar-m3','bar-m4','bar-m5','bar-m6','bar-m7','bar-m8','bar-m9','bar-m10','bar-m11','bar-m12','bar-m13'];
+
+function renderTrends() {
+  // Detect if only China is selected -> use extended 14-month data
+  const chinaOnly = trendCountries.length === 1 && trendCountries[0] === 'CN';
+
+  if (chinaOnly) {
+    renderTrendsChina14();
+    return;
+  }
+
+  const filtered = DATA.filter(d => trendCountries.includes(d.country));
+
+  // Aggregate by product & month
+  const byProduct = {};
+  filtered.forEach(d => {
+    if (!byProduct[d.tnved]) byProduct[d.tnved] = {};
+    if (!byProduct[d.tnved][d.month]) byProduct[d.tnved][d.month] = 0;
+    byProduct[d.tnved][d.month] += d.tons;
+  });
+
+  // Sort products by total tons descending
+  const products = Object.keys(byProduct).sort((a, b) => {
+    const ta = ALL_MONTHS.reduce((s, m) => s + (byProduct[a][m] || 0), 0);
+    const tb = ALL_MONTHS.reduce((s, m) => s + (byProduct[b][m] || 0), 0);
+    return tb - ta;
+  });
+
+  const grid = document.getElementById('trendGrid');
+  if (products.length === 0) {
+    grid.innerHTML = '<div class="no-data-msg">Нет данных для выбранных фильтров</div>';
+    return;
+  }
+
+  let html = '';
+  products.forEach(tnved => {
+    const months = byProduct[tnved];
+    const values = ALL_MONTHS.map(m => months[m] || 0);
+    const maxVal = Math.max(...values, 1);
+    const total = values.reduce((s,v) => s + v, 0);
+
+    // Find trend
+    const firstNonZero = values.find(v => v > 0) || 0;
+    const lastNonZero = [...values].reverse().find(v => v > 0) || 0;
+    let trendIcon = '';
+    if (lastNonZero > firstNonZero * 1.2) trendIcon = '<span style="color:var(--accent-green)"> &#8593;</span>';
+    else if (lastNonZero < firstNonZero * 0.8) trendIcon = '<span style="color:var(--accent-red)"> &#8595;</span>';
+    else trendIcon = '<span style="color:var(--accent-yellow)"> &#8594;</span>';
+
+    html += `<div class="trend-card">
+      <div class="trend-title">${prodName(tnved)} <span class="badge badge-blue">${tnved}</span>${trendIcon}</div>
+      <div class="trend-total">Итого: ${fmt(total)} т</div>
+      <div class="mini-bars">`;
+
+    values.forEach((v, i) => {
+      const pct = maxVal > 0 ? Math.max(2, (v / maxVal) * 100) : 2;
+      html += `<div class="mini-bar-col">
+        <div class="mini-bar-val">${v > 0 ? fmt(v) : ''}</div>
+        <div class="mini-bar ${BAR_COLORS[i]}" style="height:${pct}%"></div>
+        <div class="mini-bar-label">${MONTHS_LABELS[ALL_MONTHS[i]]}</div>
+      </div>`;
+    });
+
+    html += `</div></div>`;
+  });
+
+  grid.innerHTML = html;
+}
+
+// Extended 14-month China trends view
+function renderTrendsChina14() {
+  const grid = document.getElementById('trendGrid');
+
+  // Sort products by total tons descending
+  const products = Object.keys(CHINA_MONTHLY).sort((a, b) => {
+    const ta = MONTHS_ORDER_14.reduce((s, m) => s + (CHINA_MONTHLY[a][m] || 0), 0);
+    const tb = MONTHS_ORDER_14.reduce((s, m) => s + (CHINA_MONTHLY[b][m] || 0), 0);
+    return tb - ta;
+  });
+
+  if (products.length === 0) {
+    grid.innerHTML = '<div class="no-data-msg">Нет данных</div>';
+    return;
+  }
+
+  let html = '<div style="margin-bottom:12px;padding:10px 16px;background:rgba(59,130,246,0.1);border-radius:8px;border:1px solid rgba(59,130,246,0.3);font-size:13px;color:var(--text-secondary);grid-column:1/-1;">' +
+    'Показаны 14 месяцев данных по Китаю (Янв 2025 &mdash; Фев 2026). Для просмотра мультистрановых 5-мес. данных выберите другие страны.</div>';
+
+  products.forEach(prod => {
+    const months = CHINA_MONTHLY[prod];
+    const values = MONTHS_ORDER_14.map(m => months[m] || 0);
+    const maxVal = Math.max(...values, 1);
+    const total = values.reduce((s,v) => s + v, 0);
+
+    // YoY comparison: Jan25 vs Jan26, Feb25 vs Feb26
+    const jan25 = months['2025-01'] || 0;
+    const jan26 = months['2026-01'] || 0;
+    const feb25 = months['2025-02'] || 0;
+    const feb26 = months['2026-02'] || 0;
+
+    let yoyHtml = '';
+    if (jan25 > 0 && jan26 > 0) {
+      const janPct = ((jan26 - jan25) / jan25 * 100).toFixed(0);
+      const janColor = janPct >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
+      const janArrow = janPct >= 0 ? '&#8593;' : '&#8595;';
+      yoyHtml += `<span style="font-size:11px;color:${janColor};margin-left:8px;">Янв YoY: ${janArrow} ${janPct > 0 ? '+' : ''}${janPct}%</span>`;
+    }
+    if (feb25 > 0 && feb26 > 0) {
+      const febPct = ((feb26 - feb25) / feb25 * 100).toFixed(0);
+      const febColor = febPct >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
+      const febArrow = febPct >= 0 ? '&#8593;' : '&#8595;';
+      yoyHtml += `<span style="font-size:11px;color:${febColor};margin-left:8px;">Фев YoY: ${febArrow} ${febPct > 0 ? '+' : ''}${febPct}%</span>`;
+    }
+
+    // Find trend
+    const firstNonZero = values.find(v => v > 0) || 0;
+    const lastNonZero = [...values].reverse().find(v => v > 0) || 0;
+    let trendIcon = '';
+    if (lastNonZero > firstNonZero * 1.2) trendIcon = '<span style="color:var(--accent-green)"> &#8593;</span>';
+    else if (lastNonZero < firstNonZero * 0.8) trendIcon = '<span style="color:var(--accent-red)"> &#8595;</span>';
+    else trendIcon = '<span style="color:var(--accent-yellow)"> &#8594;</span>';
+
+    const prodLabel = CHINA_PRODUCT_NAMES[prod] || prod;
+
+    html += `<div class="trend-card">
+      <div class="trend-title">${prodLabel} <span class="badge badge-blue">CN</span>${trendIcon}${yoyHtml}</div>
+      <div class="trend-total">Итого за 14 мес.: ${fmt(total)} т</div>
+      <div class="mini-bars" style="height:80px;">`;
+
+    values.forEach((v, i) => {
+      const pct = maxVal > 0 ? Math.max(2, (v / maxVal) * 100) : 2;
+      html += `<div class="mini-bar-col">
+        <div class="mini-bar-val">${v > 0 ? v : ''}</div>
+        <div class="mini-bar ${BAR_COLORS_14[i]}" style="height:${pct}%"></div>
+        <div class="mini-bar-label">${MONTHS_LABELS_14[MONTHS_ORDER_14[i]]}</div>
+      </div>`;
+    });
+
+    html += `</div></div>`;
+  });
+
+  grid.innerHTML = html;
+}
+
+// ===================== SECTION 4: MARCH FORECAST =====================
+
+let forecastSortType = 'multiplier_desc';
+
+function computeForecastData() {
+  const rows = [];
+  Object.keys(CHINA_MONTHLY).forEach(prod => {
+    const d = CHINA_MONTHLY[prod];
+    const feb25 = d['2025-02'] || 0;
+    const mar25 = d['2025-03'] || 0;
+    const feb26 = d['2026-02'] || 0;
+
+    let multiplier = null;
+    let forecast = null;
+    if (feb25 > 0) {
+      multiplier = mar25 / feb25;
+      forecast = Math.round(feb26 * multiplier);
+    }
+
+    rows.push({
+      product: prod,
+      name: CHINA_PRODUCT_NAMES[prod] || prod,
+      feb25,
+      mar25,
+      multiplier,
+      feb26,
+      forecast,
+      isSpike: multiplier !== null && multiplier >= 2.0
+    });
+  });
+  return rows;
+}
+
+function renderForecast() {
+  let rows = computeForecastData();
+
+  switch(forecastSortType) {
+    case 'multiplier_desc':
+      rows.sort((a, b) => (b.multiplier || 0) - (a.multiplier || 0));
+      break;
+    case 'multiplier_asc':
+      rows.sort((a, b) => (a.multiplier || 999) - (b.multiplier || 999));
+      break;
+    case 'forecast_desc':
+      rows.sort((a, b) => (b.forecast || 0) - (a.forecast || 0));
+      break;
+    case 'product':
+      rows.sort((a, b) => a.name.localeCompare(b.name));
+      break;
+  }
+
+  // Compute max values for visual bars
+  const maxFeb25 = Math.max(...rows.map(r => r.feb25), 1);
+  const maxMar25 = Math.max(...rows.map(r => r.mar25), 1);
+  const maxBar = Math.max(maxFeb25, maxMar25);
+
+  const totalForecast = rows.reduce((s, r) => s + (r.forecast || 0), 0);
+  const totalFeb26 = rows.reduce((s, r) => s + r.feb26, 0);
+  const spikeProducts = rows.filter(r => r.isSpike);
+
+  document.getElementById('forecastInfo').innerHTML =
+    `Прогноз Мар 2026: <strong>${fmt(totalForecast)} т</strong> (Фев 2026: ${fmt(totalFeb26)} т) | ` +
+    `Продуктов с резким ростом (x2+): <strong>${spikeProducts.length}</strong>`;
+
+  const tbody = document.getElementById('forecastBody');
+  let html = '';
+
+  rows.forEach(r => {
+    const multStr = r.multiplier !== null ? r.multiplier.toFixed(2) + 'x' : 'н/д';
+    let multClass = 'multiplier-flat';
+    if (r.multiplier !== null) {
+      if (r.multiplier >= 1.2) multClass = 'multiplier-up';
+      else if (r.multiplier < 0.8) multClass = 'multiplier-down';
+    }
+
+    const spikeTag = r.isSpike ? '<span class="spike-badge">резкий рост!</span>' : '';
+
+    const feb25Pct = maxBar > 0 ? Math.max(2, (r.feb25 / maxBar) * 100) : 2;
+    const mar25Pct = maxBar > 0 ? Math.max(2, (r.mar25 / maxBar) * 100) : 2;
+
+    html += `<tr>
+      <td>${r.name}${spikeTag}</td>
+      <td class="num">${fmt(r.feb25)}</td>
+      <td class="num">${fmt(r.mar25)}</td>
+      <td class="num"><span class="multiplier-badge ${multClass}">${multStr}</span></td>
+      <td class="num">${fmt(r.feb26)}</td>
+      <td class="num" style="font-weight:700;color:var(--accent-orange)">${r.forecast !== null ? fmt(r.forecast) : 'н/д'}</td>
+      <td>
+        <div style="display:flex;gap:4px;align-items:center;">
+          <span style="font-size:11px;color:var(--text-muted);min-width:32px;">Фев:</span>
+          <div class="forecast-bar-bg">
+            <div class="forecast-bar-fill feb-bar" style="width:${feb25Pct}%"></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:4px;align-items:center;margin-top:3px;">
+          <span style="font-size:11px;color:var(--text-muted);min-width:32px;">Мар:</span>
+          <div class="forecast-bar-bg">
+            <div class="forecast-bar-fill mar-bar" style="width:${mar25Pct}%"></div>
+          </div>
+        </div>
+      </td>
+    </tr>`;
+  });
+
+  tbody.innerHTML = html;
+}
+
+document.getElementById('forecastSortSelect').addEventListener('change', function() {
+  forecastSortType = this.value;
+  renderForecast();
+});
+
+// Sortable columns for forecast table
+document.querySelectorAll('#forecastTable thead th').forEach(th => {
+  th.addEventListener('click', () => {
+    const col = th.dataset.fcol;
+    if (!col) return;
+    switch(col) {
+      case 'product': forecastSortType = 'product'; break;
+      case 'multiplier': forecastSortType = forecastSortType === 'multiplier_desc' ? 'multiplier_asc' : 'multiplier_desc'; break;
+      case 'forecast': forecastSortType = 'forecast_desc'; break;
+      case 'feb25': forecastSortType = 'multiplier_asc'; break;
+      case 'mar25': forecastSortType = 'multiplier_desc'; break;
+      case 'feb26': forecastSortType = 'forecast_desc'; break;
+      default: return;
+    }
+    document.getElementById('forecastSortSelect').value = forecastSortType;
+    renderForecast();
+  });
+});
+
+// ===================== SECTION 5: CLIENTS TABLE =====================
+
+let clientSortCol = 'tons';
+let clientSortAsc = false;
+let clientSearchText = '';
+
+const clientsProcessed = CLIENTS_DATA.map(r => ({
+  client: r[0], country: r[1], tnved: r[2],
+  tons: r[3], decl: r[4], avg: r[5]
+}));
+
+document.getElementById('clientSearch').addEventListener('input', function() {
+  clientSearchText = this.value.toLowerCase();
+  renderClientsTable();
+});
+
+function renderClientsTable() {
+  let rows = clientsProcessed.filter(r => {
+    if (!clientSearchText) return true;
+    return r.client.toLowerCase().includes(clientSearchText) ||
+           prodName(r.tnved).toLowerCase().includes(clientSearchText) ||
+           countryName(r.country).toLowerCase().includes(clientSearchText);
+  });
+
+  rows.sort((a, b) => {
+    let va, vb;
+    switch(clientSortCol) {
+      case 'client': va = a.client; vb = b.client; break;
+      case 'country': va = countryName(a.country); vb = countryName(b.country); break;
+      case 'product': va = prodName(a.tnved); vb = prodName(b.tnved); break;
+      case 'tons': va = a.tons; vb = b.tons; break;
+      case 'decl': va = a.decl; vb = b.decl; break;
+      case 'avg': va = a.avg; vb = b.avg; break;
+      default: va = a.tons; vb = b.tons;
+    }
+    if (typeof va === 'string') return clientSortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
+    return clientSortAsc ? va - vb : vb - va;
+  });
+
+  document.getElementById('clientRowCount').textContent = `Строк: ${rows.length}`;
+
+  const tbody = document.getElementById('clientsBody');
+  if (rows.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" class="no-data-msg">Нет данных</td></tr>';
+    return;
+  }
+
+  let html = '';
+  rows.forEach(r => {
+    const isPurple = HIGHLIGHTED_CLIENTS.some(hc => r.client.includes(hc));
+    const cls = isPurple ? ' class="purple-row"' : '';
+    const badge = isPurple ? ' <span class="badge badge-purple">группа</span>' : '';
+
+    html += `<tr${cls}>
+      <td>${r.client}${badge}</td>
+      <td>${countryName(r.country)} <span style="color:var(--text-muted)">(${r.country})</span></td>
+      <td>${prodName(r.tnved)} <span class="badge badge-blue">${r.tnved}</span></td>
+      <td class="num">${fmt(r.tons)}</td>
+      <td class="num">${fmt(r.decl)}</td>
+      <td class="num price">${fmtUsd(r.avg)}</td>
+    </tr>`;
+  });
+  tbody.innerHTML = html;
+
+  document.querySelectorAll('#clientsTable thead th').forEach(th => {
+    th.classList.toggle('sorted', th.dataset.col === clientSortCol);
+  });
+}
+
+document.querySelectorAll('#clientsTable thead th').forEach(th => {
+  th.addEventListener('click', () => {
+    const col = th.dataset.col;
+    if (clientSortCol === col) clientSortAsc = !clientSortAsc;
+    else { clientSortCol = col; clientSortAsc = false; }
+    renderClientsTable();
+  });
+});
+
+// ===================== INIT =====================
+
+renderSummary();
+renderProductsTable();
+renderPriceComparison();
+renderTrends();
+renderForecast();
+renderClientsTable();
+
+</script>
+</body>
+</html>

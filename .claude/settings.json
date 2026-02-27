@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(PGPASSWORD=gsoftGSOFT \"/c/Program Files/pgAdmin 4/runtime/psql.exe\" -h 172.16.15.34 -p 5432 -U gsoft -d logistic -c \":*)",
+      "WebFetch(domain:foodcity.ru)",
+      "WebFetch(domain:evrofresh.ru)",
+      "WebFetch(domain:rosfrukt.ru)",
+      "WebFetch(domain:fooddesk.ru)",
+      "WebFetch(domain:ura.news)",
+      "WebFetch(domain:foodsprice.ru)",
+      "WebFetch(domain:www.minimum-price.ru)",
+      "WebFetch(domain:opttorg-horeca.ru)",
+      "WebFetch(domain:rogozhka.ru)",
+      "WebFetch(domain:finance.rambler.ru)",
+      "WebFetch(domain:tsenomer.ru)",
+      "WebFetch(domain:procen.ru)",
+      "WebFetch(domain:eurocredit.ru)",
+      "Bash(PGPASSWORD=gsoftGSOFT \"/c/Program Files/pgAdmin 4/runtime/psql.exe\" -h 172.16.15.34 -p 5432 -U gsoft -d logistic --csv -c \":*)"
+    ]
+  }
+}

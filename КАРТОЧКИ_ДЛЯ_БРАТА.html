@@ -1,0 +1,2041 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Что везти из Китая — карточки для брата</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --card-hover: #263548;
+            --accent: #38bdf8;
+            --accent2: #a78bfa;
+            --green: #34d399;
+            --orange: #fb923c;
+            --red: #ef4444;
+            --yellow: #fbbf24;
+            --pink: #f472b6;
+            --text: #e2e8f0;
+            --dim: #94a3b8;
+            --border: #334155;
+            --purple: #a78bfa;
+            --gold: #f59e0b;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 50%, #1a1a2e 100%);
+            border-bottom: 1px solid var(--border);
+            padding: 50px 20px 35px;
+            text-align: center;
+        }
+        .hero h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--green), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+        .hero .sub { color: var(--dim); font-size: 1.05rem; margin-bottom: 4px; }
+        .hero .date { color: var(--dim); font-size: 0.85rem; opacity: 0.7; }
+
+        /* ===== FILTER BAR ===== */
+        .filter-bar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 14px 20px;
+        }
+        .filter-inner {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .filter-label {
+            font-size: 0.75rem;
+            color: var(--dim);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            margin-right: 4px;
+            white-space: nowrap;
+        }
+        .filter-sep {
+            width: 1px;
+            height: 28px;
+            background: var(--border);
+            margin: 0 6px;
+        }
+        .fbtn {
+            padding: 5px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--dim);
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            white-space: nowrap;
+        }
+        .fbtn:hover { border-color: var(--accent); color: var(--text); }
+        .fbtn.active { background: var(--accent); color: #0f172a; border-color: var(--accent); font-weight: 600; }
+        .fbtn.active-green { background: var(--green); color: #0f172a; border-color: var(--green); font-weight: 600; }
+        .fbtn.active-orange { background: var(--orange); color: #0f172a; border-color: var(--orange); font-weight: 600; }
+        .fbtn.active-yellow { background: var(--yellow); color: #0f172a; border-color: var(--yellow); font-weight: 600; }
+        .fbtn.active-purple { background: var(--purple); color: #0f172a; border-color: var(--purple); font-weight: 600; }
+
+        .tag-chip {
+            padding: 3px 10px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--dim);
+            font-size: 0.72rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        .tag-chip:hover { border-color: var(--pink); color: var(--text); }
+        .tag-chip.active { background: var(--pink); color: #0f172a; border-color: var(--pink); font-weight: 600; }
+
+        .search-input {
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: rgba(0,0,0,0.3);
+            color: var(--text);
+            font-size: 0.85rem;
+            font-family: inherit;
+            outline: none;
+            width: 180px;
+            transition: border-color 0.2s;
+        }
+        .search-input:focus { border-color: var(--accent); }
+        .search-input::placeholder { color: var(--dim); }
+
+        /* ===== SELECTION BAR ===== */
+        .selection-bar {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .selection-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .sel-count {
+            font-size: 0.95rem;
+            color: var(--dim);
+        }
+        .sel-count strong { color: var(--accent); }
+        .sel-btn {
+            padding: 6px 16px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--dim);
+            font-size: 0.8rem;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+        .sel-btn:hover { border-color: var(--accent); color: var(--text); }
+        .gen-btn {
+            padding: 10px 24px;
+            border-radius: 24px;
+            border: none;
+            background: linear-gradient(135deg, var(--green), var(--accent));
+            color: #0f172a;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+        .gen-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(52,211,153,0.3); }
+        .gen-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        /* ===== GRID ===== */
+        .grid-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px 60px;
+        }
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        @media (max-width: 1100px) { .cards-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 700px) {
+            .cards-grid { grid-template-columns: 1fr; }
+            .filter-inner { flex-direction: column; align-items: flex-start; }
+            .filter-sep { display: none; }
+        }
+
+        /* ===== CARD ===== */
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s, opacity 0.3s;
+        }
+        .card:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,0,0,0.4); }
+        .card.hidden { display: none; }
+        .card.selected { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(56,189,248,0.25); }
+
+        .card-header {
+            padding: 18px 18px 12px;
+            border-bottom: 1px solid var(--border);
+        }
+        .card-header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+        .card-name-en {
+            font-size: 0.78rem;
+            color: var(--dim);
+            margin-top: 2px;
+        }
+        .card-checkbox {
+            flex-shrink: 0;
+            width: 22px;
+            height: 22px;
+            accent-color: var(--accent);
+            cursor: pointer;
+            margin-top: 3px;
+        }
+        .badges {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        .badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+        .badge-p1 { background: rgba(239,68,68,0.15); color: var(--red); }
+        .badge-p2 { background: rgba(251,191,36,0.15); color: var(--yellow); }
+        .badge-p3 { background: rgba(148,163,184,0.15); color: var(--dim); }
+        .badge-top { background: rgba(52,211,153,0.2); color: var(--green); }
+        .badge-good { background: rgba(251,191,36,0.15); color: var(--yellow); }
+        .badge-caution { background: rgba(251,146,60,0.2); color: var(--orange); }
+        .badge-risky { background: rgba(239,68,68,0.15); color: var(--red); }
+        .badge-no { background: rgba(148,163,184,0.15); color: var(--dim); }
+        .badge-pitatel { background: rgba(56,189,248,0.15); color: var(--accent); }
+        .badge-free { background: rgba(52,211,153,0.15); color: var(--green); }
+        .badge-both { background: rgba(167,139,250,0.15); color: var(--purple); }
+
+        /* ===== METRICS ROW ===== */
+        .metrics-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background: var(--border);
+        }
+        .metric-box {
+            background: var(--card);
+            padding: 12px 10px;
+            text-align: center;
+        }
+        .metric-label {
+            font-size: 0.65rem;
+            color: var(--dim);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-bottom: 4px;
+        }
+        .metric-value {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+        .metric-sub {
+            font-size: 0.7rem;
+            color: var(--dim);
+        }
+        .metric-value.green { color: var(--green); }
+        .metric-value.accent { color: var(--accent); }
+        .metric-value.orange { color: var(--orange); }
+        .metric-value.yellow { color: var(--yellow); }
+
+        /* ===== 14-MONTH BAR CHART ===== */
+        .chart-14m {
+            padding: 10px 14px 6px;
+            border-bottom: 1px solid var(--border);
+        }
+        .chart-14m-title {
+            font-size: 0.68rem;
+            color: var(--dim);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-bottom: 6px;
+            text-align: center;
+        }
+        .chart-14m-bars {
+            display: flex;
+            align-items: flex-end;
+            gap: 2px;
+            height: 50px;
+            justify-content: center;
+        }
+        .chart-14m-bar {
+            flex: 1;
+            max-width: 22px;
+            min-width: 4px;
+            border-radius: 2px 2px 0 0;
+            transition: height 0.3s;
+            position: relative;
+            cursor: default;
+        }
+        .chart-14m-bar.year2025 { background: var(--dim); opacity: 0.5; }
+        .chart-14m-bar.year2025.highlight { opacity: 0.8; background: var(--accent); }
+        .chart-14m-bar.month-mar-25 { background: var(--orange); opacity: 0.85; }
+        .chart-14m-bar.year2026 { background: var(--green); }
+        .chart-14m-bar.month-feb-26 { background: var(--yellow); }
+        .chart-14m-labels {
+            display: flex;
+            gap: 2px;
+            justify-content: center;
+            margin-top: 2px;
+        }
+        .chart-14m-labels span {
+            flex: 1;
+            max-width: 22px;
+            min-width: 4px;
+            font-size: 0.5rem;
+            color: var(--dim);
+            text-align: center;
+            opacity: 0.7;
+        }
+        .chart-14m-labels span.label-bright { opacity: 1; color: var(--text); font-weight: 600; }
+        .chart-14m-vals {
+            display: flex;
+            gap: 2px;
+            justify-content: center;
+            margin-top: 1px;
+        }
+        .chart-14m-vals span {
+            flex: 1;
+            max-width: 22px;
+            min-width: 4px;
+            font-size: 0.42rem;
+            color: var(--dim);
+            text-align: center;
+            opacity: 0.6;
+        }
+
+        /* ===== MARCH FORECAST ===== */
+        .march-forecast {
+            padding: 10px 18px;
+            border-bottom: 1px solid var(--border);
+            background: rgba(0,0,0,0.1);
+        }
+        .march-forecast-title {
+            font-size: 0.7rem;
+            color: var(--dim);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .march-forecast-title .mf-icon {
+            font-size: 0.85rem;
+        }
+        .march-forecast-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+        .mf-item {
+            text-align: center;
+            padding: 6px 4px;
+            border-radius: 8px;
+            background: rgba(0,0,0,0.2);
+        }
+        .mf-item-label {
+            font-size: 0.58rem;
+            color: var(--dim);
+            text-transform: uppercase;
+            letter-spacing: 0.2px;
+            margin-bottom: 2px;
+        }
+        .mf-item-value {
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+        .mf-item-sub {
+            font-size: 0.6rem;
+            color: var(--dim);
+        }
+        .mf-color-green { color: var(--green); }
+        .mf-color-red { color: var(--red); }
+        .mf-color-gold { color: var(--gold); }
+        .mf-color-dim { color: var(--dim); }
+        .mf-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.62rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+        .mf-badge-spike { background: rgba(245,158,11,0.2); color: var(--gold); }
+        .mf-badge-grow { background: rgba(52,211,153,0.2); color: var(--green); }
+        .mf-badge-decline { background: rgba(239,68,68,0.15); color: var(--red); }
+        .mf-badge-stable { background: rgba(148,163,184,0.15); color: var(--dim); }
+
+        /* ===== CARD DETAILS ===== */
+        .card-details {
+            padding: 14px 18px;
+        }
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 0;
+            font-size: 0.82rem;
+            border-bottom: 1px solid rgba(51,65,85,0.4);
+        }
+        .detail-row:last-child { border-bottom: none; }
+        .detail-label { color: var(--dim); }
+        .detail-value { font-weight: 600; text-align: right; }
+        .detail-value.green { color: var(--green); }
+        .detail-value.red { color: var(--red); }
+        .detail-value.orange { color: var(--orange); }
+        .detail-value.yellow { color: var(--yellow); }
+        .detail-value.accent { color: var(--accent); }
+
+        .stars { color: var(--yellow); letter-spacing: 1px; }
+        .stars .empty { color: var(--border); }
+
+        .transport-ok { color: var(--green); }
+        .transport-risky { color: var(--red); }
+
+        .march-spike { color: var(--red); font-weight: 700; }
+        .march-stable { color: var(--green); }
+        .march-decline { color: var(--orange); }
+        .march-growing { color: var(--accent); }
+
+        /* ===== COLLAPSIBLE ===== */
+        .collapsible {
+            margin-top: 6px;
+        }
+        .collapsible-toggle {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            font-size: 0.78rem;
+            color: var(--accent);
+            padding: 4px 0;
+            user-select: none;
+            border: none;
+            background: none;
+            font-family: inherit;
+        }
+        .collapsible-toggle:hover { color: var(--text); }
+        .collapsible-toggle .arrow {
+            transition: transform 0.2s;
+            font-size: 0.65rem;
+        }
+        .collapsible-toggle.open .arrow { transform: rotate(90deg); }
+        .collapsible-body {
+            display: none;
+            padding: 8px 0 4px;
+            font-size: 0.8rem;
+            color: var(--dim);
+            line-height: 1.5;
+        }
+        .collapsible-body.open { display: block; }
+
+        /* ===== CARD FOOTER ===== */
+        .card-footer {
+            padding: 14px 18px;
+            border-top: 1px solid var(--border);
+            background: rgba(0,0,0,0.15);
+        }
+        .footer-label {
+            font-size: 0.72rem;
+            color: var(--dim);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-bottom: 6px;
+        }
+        .brother-task {
+            font-size: 0.82rem;
+            color: var(--text);
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        .keywords-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .keywords {
+            font-size: 0.9rem;
+            color: var(--yellow);
+            flex: 1;
+            font-weight: 600;
+        }
+        .copy-btn {
+            padding: 4px 12px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--dim);
+            font-size: 0.72rem;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .copy-btn:hover { border-color: var(--yellow); color: var(--yellow); }
+        .copy-btn.copied { border-color: var(--green); color: var(--green); }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 999;
+            backdrop-filter: blur(4px);
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal-overlay.open { display: flex; }
+        .modal {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .modal-header {
+            padding: 24px 28px 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-header h2 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--green), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .modal-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--dim);
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .modal-close:hover { border-color: var(--red); color: var(--red); }
+        .modal-body {
+            padding: 20px 28px;
+            overflow-y: auto;
+            flex: 1;
+        }
+        .modal-text {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 0.82rem;
+            line-height: 1.6;
+            color: var(--text);
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .modal-footer {
+            padding: 16px 28px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        .modal-copy-btn {
+            padding: 10px 28px;
+            border-radius: 24px;
+            border: none;
+            background: linear-gradient(135deg, var(--green), var(--accent));
+            color: #0f172a;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            transition: transform 0.15s;
+        }
+        .modal-copy-btn:hover { transform: translateY(-1px); }
+        .modal-copy-btn.copied { background: var(--green); }
+
+        /* ===== EMPTY STATE ===== */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--dim);
+            display: none;
+        }
+        .empty-state.visible { display: block; }
+        .empty-state .empty-icon { font-size: 3rem; margin-bottom: 12px; opacity: 0.3; }
+        .empty-state p { font-size: 1rem; }
+
+        /* ===== TNVED CHIP ===== */
+        .tnved {
+            font-size: 0.7rem;
+            color: var(--dim);
+            background: rgba(0,0,0,0.3);
+            padding: 1px 8px;
+            border-radius: 8px;
+            font-family: 'Consolas', monospace;
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--dim); }
+
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: var(--green);
+            color: #0f172a;
+            padding: 10px 24px;
+            border-radius: 24px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            z-index: 9999;
+            transition: transform 0.3s;
+            pointer-events: none;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+    </style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+    <h1>Что везти из Китая -- карточки для брата</h1>
+    <div class="sub">Выбери товары, отправь задание брату</div>
+    <div class="date">27 февраля 2026</div>
+</div>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+    <div class="filter-inner">
+        <div class="filter-group">
+            <span class="filter-label">Трек:</span>
+            <button class="fbtn active" data-filter="track" data-value="all">Все</button>
+            <button class="fbtn" data-filter="track" data-value="pitatel">Питатель</button>
+            <button class="fbtn" data-filter="track" data-value="free">Свободная</button>
+            <button class="fbtn" data-filter="track" data-value="both">Оба</button>
+        </div>
+        <div class="filter-sep"></div>
+        <div class="filter-group">
+            <span class="filter-label">Приоритет:</span>
+            <button class="fbtn active" data-filter="priority" data-value="all">Все</button>
+            <button class="fbtn" data-filter="priority" data-value="1">P1</button>
+            <button class="fbtn" data-filter="priority" data-value="2">P2</button>
+            <button class="fbtn" data-filter="priority" data-value="3">P3</button>
+        </div>
+        <div class="filter-sep"></div>
+        <div class="filter-group">
+            <span class="filter-label">Вердикт:</span>
+            <button class="fbtn active" data-filter="verdict" data-value="all">Все</button>
+            <button class="fbtn" data-filter="verdict" data-value="top">ТОП</button>
+            <button class="fbtn" data-filter="verdict" data-value="good">Хорошо</button>
+            <button class="fbtn" data-filter="verdict" data-value="caution">Осторожно</button>
+        </div>
+        <div class="filter-sep"></div>
+        <div class="filter-group" id="tags-group">
+            <span class="filter-label">Теги:</span>
+        </div>
+        <div class="filter-sep"></div>
+        <input type="text" class="search-input" placeholder="Поиск..." id="search-input">
+    </div>
+</div>
+
+<!-- SELECTION BAR -->
+<div class="selection-bar">
+    <div class="selection-left">
+        <span class="sel-count">Выбрано: <strong id="sel-count-num">0</strong> товаров</span>
+        <button class="sel-btn" id="btn-select-all">Выбрать все видимые</button>
+        <button class="sel-btn" id="btn-deselect-all">Снять выделение</button>
+    </div>
+    <button class="gen-btn" id="btn-generate" disabled>Сформировать задание для брата</button>
+</div>
+
+<!-- CARDS GRID -->
+<div class="grid-container">
+    <div class="cards-grid" id="cards-grid"></div>
+    <div class="empty-state" id="empty-state">
+        <div class="empty-icon">&#128269;</div>
+        <p>Ничего не найдено. Попробуйте изменить фильтры.</p>
+    </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay">
+    <div class="modal">
+        <div class="modal-header">
+            <h2>Задание для брата</h2>
+            <button class="modal-close" id="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="modal-text" id="modal-text"></div>
+        </div>
+        <div class="modal-footer">
+            <button class="modal-copy-btn" id="modal-copy-btn">Копировать в буфер</button>
+        </div>
+    </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== MONTH LABELS for 14-month chart (Jan 2025 - Feb 2026) =====
+const MONTH_LABELS_14 = ['Я25','Ф25','М25','А25','М25','И25','И25','А25','С25','О25','Н25','Д25','Я26','Ф26'];
+const MONTH_LABELS_SHORT = ['Я','Ф','М','А','М','И','И','А','С','О','Н','Д','Я','Ф'];
+
+// ===== DATA =====
+const PRODUCTS = [
+  {
+    id: 'napa_cabbage',
+    name: 'Капуста пекинская',
+    nameEn: 'Napa / Chinese cabbage',
+    tnved: '0704908',
+    track: 'pitatel',
+    priority: 1,
+    verdict: 'top',
+    chinaCustomsUsd: 0.27,
+    chinaCustomsRub: 21,
+    pitatelPaysRub: 116,
+    pitatelPaysNote: 'ТК Евразия -- цветная капуста из Ирана',
+    moscowWholesaleRub: [15, 200],
+    moscowRetailRub: [25, 350],
+    margin: 'x2-5',
+    savingsForPitatel: '~80%',
+    monthlyTons14: [109,132,250,101,63,21,21,23,23,49,73,90,82,90],
+    shelfLife: '14-30 дней',
+    transportDays: '15-25 дней',
+    transportOk: true,
+    taste: 'Традиционно китайский продукт. Пекинская капуста -- основа китайской кухни, превосходное качество.',
+    tasteRating: 4,
+    risks: 'Минимальные. Пекинская капуста традиционно китайская. Март 2025 -- 250 т (x1.9 от февраля!) -- ВЗРЫВ.',
+    brotherTask: 'FOB цена за тонну пекинской капусты, мин. партия, упаковка, сроки отгрузки В МАРТЕ (!)',
+    searchKeywords1688: '大白菜 / 娃娃菜 / 新鲜白菜',
+    tags: ['school', 'volume', 'march', 'trending']
+  },
+  {
+    id: 'mandarin',
+    name: 'Мандарины',
+    nameEn: 'Mandarins / Tangerines',
+    tnved: '080521',
+    track: 'both',
+    priority: 1,
+    verdict: 'top',
+    chinaCustomsUsd: 0.51,
+    chinaCustomsRub: 40,
+    pitatelPaysRub: 118,
+    pitatelPaysNote: 'Акванур, через ANKARA GYD',
+    moscowWholesaleRub: [110, 200],
+    moscowRetailRub: [200, 400],
+    margin: 'x2-3',
+    savingsForPitatel: '~65%',
+    monthlyTons14: [558,778,562,507,162,40,0,16,158,764,1039,2286,762,720],
+    shelfLife: '30-60 дней',
+    transportDays: '15-25 дней из Китая',
+    transportOk: true,
+    taste: 'Роскачество подтвердило безопасность. Халлабон/Декопон -- сочные, 13-18 Brix. Конкурентны с иранскими.',
+    tasteRating: 4,
+    risks: 'Минимальные. Цитрусовые отлично переносят транспорт.',
+    brotherTask: 'FOB цена за тонну, сорт (Халлабон / Понкан / Сатсума), мин. партия, откуда отгрузка',
+    searchKeywords1688: '柑橘 / 蜜桔 / 砂糖桔',
+    tags: ['citrus', 'school', 'volume', 'march']
+  },
+  {
+    id: 'lemon',
+    name: 'Лимоны',
+    nameEn: 'Lemons',
+    tnved: '080550',
+    track: 'free',
+    priority: 1,
+    verdict: 'top',
+    chinaCustomsUsd: 0.49,
+    chinaCustomsRub: 38,
+    pitatelPaysRub: null,
+    pitatelPaysNote: 'Питатель не берёт',
+    moscowWholesaleRub: [80, 150],
+    moscowRetailRub: [150, 200],
+    margin: 'x2-3',
+    savingsForPitatel: null,
+    monthlyTons14: [58,64,533,813,69,18,19,9,17,89,117,12,18,22],
+    shelfLife: '30-60 дней',
+    transportDays: '15-25 дней',
+    transportOk: true,
+    taste: 'Стандартное качество. Без замечаний.',
+    tasteRating: 4,
+    risks: 'Минимальные. Мартовский бум -- 64 т (фев) -> 533 т (мар) в 2025.',
+    brotherTask: 'FOB за тонну, доступность в МАРТЕ (!), сроки отгрузки, сорт',
+    searchKeywords1688: '柠檬 / 新鲜柠檬',
+    tags: ['citrus', 'march', 'seasonal']
+  },
+  {
+    id: 'garlic',
+    name: 'Чеснок',
+    nameEn: 'Garlic',
+    tnved: '070320',
+    track: 'both',
+    priority: 1,
+    verdict: 'top',
+    chinaCustomsUsd: 0.74,
+    chinaCustomsRub: 58,
+    pitatelPaysRub: null,
+    pitatelPaysNote: 'Новая позиция -- для школьного питания',
+    moscowWholesaleRub: [110, 330],
+    moscowRetailRub: [200, 400],
+    margin: 'x2-4',
+    savingsForPitatel: null,
+    monthlyTons14: [394,315,296,271,160,98,115,149,193,150,100,51,50,73],
+    shelfLife: '3-6 месяцев',
+    transportDays: '15-25 дней',
+    transportOk: true,
+    taste: 'Мягче, менее острый. 60-70% российского импорта и так из Китая. Для школ -- ОК.',
+    tasteRating: 3,
+    risks: 'Репутация "китайский чеснок" -- средняя, но рынок привык. Лучший из Шаньдуна.',
+    brotherTask: 'FOB за тонну, калибр (5.0+, 5.5+, 6.0+), упаковка (сетка/ящик), провинция',
+    searchKeywords1688: '大蒜 / 新鲜大蒜 / 山东大蒜',
+    tags: ['school', 'volume', 'yearround']
+  },
+  {
+    id: 'white_cabbage',
+    name: 'Капуста белокочанная',
+    nameEn: 'White cabbage',
+    tnved: '0704901',
+    track: 'pitatel',
+    priority: 2,
+    verdict: 'top',
+    chinaCustomsUsd: 0.25,
+    chinaCustomsRub: 20,
+    pitatelPaysRub: 116,
+    pitatelPaysNote: 'ТК Евразия -- из Ирана',
+    moscowWholesaleRub: [15, 60],
+    moscowRetailRub: [25, 80],
+    margin: 'x2-3',
+    savingsForPitatel: '~80%',
+    monthlyTons14: [43,53,88,196,144,107,22,6,2,1,4,7,120,126],
+    shelfLife: '30-60 дней',
+    transportDays: '15-25 дней',
+    transportOk: true,
+    taste: 'Без заметных различий с отечественной. Корнеплод.',
+    tasteRating: 4,
+    risks: 'Минимальные. Апрель 2025 -- пик 196 т. Март 2025 -- 88 т (рост с 53 т). Стабильный рост.',
+    brotherTask: 'FOB цена за тонну белокочанной, мин. партия, калибр, упаковка',
+    searchKeywords1688: '卷心菜 / 包菜 / 圆白菜',
+    tags: ['school', 'volume', 'march']
+  },
+  {
+    id: 'orange',
+    name: 'Апельсины',
+    nameEn: 'Oranges',
+    tnved: '080510',
+    track: 'pitatel',
+    priority: 2,
+    verdict: 'top',
+    chinaCustomsUsd: 0.43,
+    chinaCustomsRub: 34,
+    pitatelPaysRub: 103,
+    pitatelPaysNote: 'ТК Евразия -- из Ирана. Фалкон: 29 руб/кг (!)',
+    moscowWholesaleRub: [100, 200],
+    moscowRetailRub: [150, 200],
+    margin: 'x2-3',
+    savingsForPitatel: 'до 67%',
+    monthlyTons14: [54,130,87,30,31,7,11,9,6,33,81,125,127,130],
+    shelfLife: '30-60 дней',
+    transportDays: '15-25 дней',
+    transportOk: true,
+    taste: 'Стандартное качество. Нэвел и Валенсия.',
+    tasteRating: 4,
+    risks: 'Минимальные. Спад к весне.',
+    brotherTask: 'FOB, сорт (Нэвел / Валенсия), калибр',
+    searchKeywords1688: '橙子 / 脐橙 / 新鲜橙',
+    tags: ['citrus', 'school']
+  },
+  {
+    id: 'strawberry',
+    name: 'Клубника',
+    nameEn: 'Strawberry',
+    tnved: '081010',
+    track: 'free',
+    priority: 2,
+    verdict: 'good',
+    chinaCustomsUsd: 1.05,
+    chinaCustomsRub: 82,
+    pitatelPaysRub: null,
+    pitatelPaysNote: null,
+    moscowWholesaleRub: [276, 600],
+    moscowRetailRub: [600, 1200],
+    margin: 'x3-5',
+    savingsForPitatel: null,
+    monthlyTons14: [14,29,206,337,372,75,0,0,0,1,5,17,13,18],
+    shelfLife: '5-10 дней',
+    transportDays: '15-25 дней',
+    transportOk: false,
+    taste: 'Зависит от сорта. Нежный товар.',
+    tasteRating: 3,
+    risks: 'ВЫСОКИЕ. Очень нежный товар. Потери до 20-30%. Но маржа перекрывает. К 8 Марта -- золотая жила.',
+    brotherTask: 'FOB, сроки поставки В МАРТЕ, сорт, упаковка (критично!)',
+    searchKeywords1688: '草莓 / 新鲜草莓',
+    tags: ['march', 'premium', 'risky']
+  },
+  {
+    id: 'mango',
+    name: 'Манго',
+    nameEn: 'Mango',
+    tnved: '080450',
+    track: 'free',
+    priority: 2,
+    verdict: 'good',
+    chinaCustomsUsd: 0.93,
+    chinaCustomsRub: 73,
+    pitatelPaysRub: null,
+    pitatelPaysNote: null,
+    moscowWholesaleRub: [200, 500],
+    moscowRetailRub: [300, 600],
+    margin: 'x3-5',
+    savingsForPitatel: null,
+    monthlyTons14: [18,76,57,111,234,32,7,30,124,138,174,94,51,24],
+    shelfLife: '10-15 дней',
+    transportDays: '15-25 дней',
+    transportOk: true,
+    taste: 'Хайнань = качественное манго. Хорошие отзывы.',
+    tasteRating: 4,
+    risks: 'Средние. Выбор правильного сорта критичен. HoReCa + Фуд Сити.',
+    brotherTask: 'FOB, сорт (Kent / Nam Doc Mai / Keitt), откуда (Хайнань?)',
+    searchKeywords1688: '芒果 / 新鲜芒果 / 海南芒果',
+    tags: ['premium', 'horeca']
+  },
+  {
+    id: 'broccoli',
+    name: 'Брокколи / цветная капуста',
+    nameEn: 'Broccoli / Cauliflower',
+    tnved: '070410',
+    track: 'pitatel',
+    priority: 3,
+    verdict: 'good',
+    chinaCustomsUsd: 0.70,
+    chinaCustomsRub: 55,
+    pitatelPaysRub: 116,
+    pitatelPaysNote: 'ТК Евразия -- цветная капуста из Ирана',
+    moscowWholesaleRub: [80, 200],
+    moscowRetailRub: [120, 350],
+    margin: 'x2-3',
+    savingsForPitatel: '~50%',
+    monthlyTons14: [117,100,91,159,121,40,6,5,18,60,11,16,34,24],
+    shelfLife: '7-14 дней',
+    transportDays: '15-25 дней',
+    transportOk: false,
+    taste: 'Сопоставимо с иранской. Для школ -- ОК.',
+    tasteRating: 3,
+    risks: 'Нежный товар, проверить сохранность при транспортировке. Небольшие объёмы.',
+    brotherTask: 'FOB цена за тонну брокколи И цветной капусты отдельно, упаковка, условия хранения при транспорте',
+    searchKeywords1688: '西兰花 / 花椰菜 / 新鲜西兰花',
+    tags: ['school', 'niche']
+  },
+  {
+    id: 'apple',
+    name: 'Яблоки',
+    nameEn: 'Apples',
+    tnved: '080810',
+    track: 'pitatel',
+    priority: 3,
+    verdict: 'caution',
+    chinaCustomsUsd: 0.50,
+    chinaCustomsRub: 39,
+    pitatelPaysRub: 46,
+    pitatelPaysNote: 'ТК Евразия, из Азербайджана',
+    moscowWholesaleRub: [90, 200],
+    moscowRetailRub: [148, 250],
+    margin: 'x2',
+    savingsForPitatel: '~15%',
+    monthlyTons14: [123,173,161,139,119,83,40,99,112,130,140,117,152,172],
+    shelfLife: '30-90 дней',
+    transportDays: '15-25 дней',
+    transportOk: true,
+    taste: 'Фуджи -- хранятся отлично, но вкус хуже азербайджанских. Для школ ОК.',
+    tasteRating: 3,
+    risks: 'Экономия всего ~15%. Репутация "китайские яблоки" средняя.',
+    brotherTask: 'FOB, сорт Фуджи, калибр, упаковка',
+    searchKeywords1688: '苹果 / 富士苹果 / 新鲜苹果',
+    tags: ['school']
+  },
+  {
+    id: 'grape',
+    name: 'Виноград',
+    nameEn: 'Grapes',
+    tnved: '080610',
+    track: 'free',
+    priority: 3,
+    verdict: 'good',
+    chinaCustomsUsd: 0.88,
+    chinaCustomsRub: 69,
+    pitatelPaysRub: null,
+    pitatelPaysNote: null,
+    moscowWholesaleRub: [100, 300],
+    moscowRetailRub: [243, 400],
+    margin: 'x2-3',
+    savingsForPitatel: null,
+    monthlyTons14: [254,178,140,64,91,116,95,64,194,322,437,265,110,128],
+    shelfLife: '14-30 дней',
+    transportDays: '15-25 дней',
+    transportOk: true,
+    taste: 'Стандартное качество. Зимний товар.',
+    tasteRating: 4,
+    risks: 'Объёмы падают к весне. Зимний товар.',
+    brotherTask: 'FOB, сорт (Red Globe?), упаковка',
+    searchKeywords1688: '葡萄 / 红提 / 新鲜葡萄',
+    tags: ['winter']
+  },
+  {
+    id: 'pear',
+    name: 'Груши',
+    nameEn: 'Pears',
+    tnved: '080830',
+    track: 'free',
+    priority: 3,
+    verdict: 'good',
+    chinaCustomsUsd: 0.46,
+    chinaCustomsRub: 36,
+    pitatelPaysRub: null,
+    pitatelPaysNote: null,
+    moscowWholesaleRub: [150, 180],
+    moscowRetailRub: [180, 250],
+    margin: 'x2-3',
+    savingsForPitatel: null,
+    monthlyTons14: [83,60,71,30,24,7,8,67,131,203,83,22,45,25],
+    shelfLife: '30-60 дней',
+    transportDays: '15-25 дней',
+    transportOk: true,
+    taste: 'Китайские Я-груши популярны, хрустящие, сочные.',
+    tasteRating: 4,
+    risks: 'Небольшие объёмы.',
+    brotherTask: 'FOB, сорт (Я-груша / Пакхам)',
+    searchKeywords1688: '梨 / 鸭梨 / 新鲜梨',
+    tags: ['yearround']
+  },
+  {
+    id: 'pomelo',
+    name: 'Помело',
+    nameEn: 'Pomelo',
+    tnved: '080540',
+    track: 'free',
+    priority: 3,
+    verdict: 'good',
+    chinaCustomsUsd: 0.43,
+    chinaCustomsRub: 34,
+    pitatelPaysRub: null,
+    pitatelPaysNote: null,
+    moscowWholesaleRub: [110, 150],
+    moscowRetailRub: [150, 200],
+    margin: 'x2-3',
+    savingsForPitatel: null,
+    monthlyTons14: [133,25,21,21,0,0,0,76,92,241,275,178,83,103],
+    shelfLife: '30-60 дней',
+    transportDays: '15-25 дней',
+    transportOk: true,
+    taste: 'Традиционно китайский продукт. Отличное качество.',
+    tasteRating: 5,
+    risks: 'Зимний продукт, к весне спад.',
+    brotherTask: 'FOB, медовое vs зелёное, упаковка',
+    searchKeywords1688: '柚子 / 蜜柚',
+    tags: ['citrus', 'winter']
+  },
+  {
+    id: 'mushroom_exotic',
+    name: 'Грибы (шиитаке, эноки)',
+    nameEn: 'Exotic mushrooms (shiitake, enoki)',
+    tnved: '070959',
+    track: 'free',
+    priority: 3,
+    verdict: 'good',
+    chinaCustomsUsd: 1.17,
+    chinaCustomsRub: 91,
+    pitatelPaysRub: null,
+    pitatelPaysNote: null,
+    moscowWholesaleRub: [600, 1200],
+    moscowRetailRub: [1500, 2500],
+    margin: 'x10-20',
+    savingsForPitatel: null,
+    monthlyTons14: [10,4,12,12,15,2,3,3,3,16,4,6,21,11],
+    shelfLife: '7-14 дней (свежие)',
+    transportDays: '15-25 дней',
+    transportOk: false,
+    taste: 'Китай = мировой стандарт. Азиатские рестораны, METRO, Азбука Вкуса.',
+    tasteRating: 5,
+    risks: 'Маленькие объёмы. Нишевый товар для HoReCa. Свежие -- рискованно, замороженные -- безопаснее.',
+    brotherTask: 'FOB свежие vs замороженные, шиитаке и эноки отдельно, упаковка для ритейла',
+    searchKeywords1688: '香菇 / 金针菇 / 新鲜蘑菇',
+    tags: ['premium', 'horeca', 'niche']
+  },
+  {
+    id: 'mushroom_champ',
+    name: 'Шампиньоны',
+    nameEn: 'Champignon mushrooms',
+    tnved: '070951',
+    track: 'pitatel',
+    priority: 3,
+    verdict: 'caution',
+    chinaCustomsUsd: 0.90,
+    chinaCustomsRub: 70,
+    pitatelPaysRub: null,
+    pitatelPaysNote: null,
+    moscowWholesaleRub: [100, 200],
+    moscowRetailRub: [200, 350],
+    margin: 'x2',
+    savingsForPitatel: null,
+    monthlyTons14: [16,10,14,28,35,17,12,13,11,12,12,20,32,21],
+    shelfLife: '5-10 дней',
+    transportDays: '15-25 дней',
+    transportOk: false,
+    taste: 'Стандартное качество.',
+    tasteRating: 3,
+    risks: 'Очень нежный товар. Есть российское производство.',
+    brotherTask: 'FOB, свежие vs замороженные, упаковка, условия транспортировки',
+    searchKeywords1688: '蘑菇 / 双孢菇 / 白蘑菇',
+    tags: ['school', 'niche']
+  },
+  {
+    id: 'carrot',
+    name: 'Морковь',
+    nameEn: 'Carrots',
+    tnved: '070610',
+    track: 'pitatel',
+    priority: 3,
+    verdict: 'caution',
+    chinaCustomsUsd: 0.18,
+    chinaCustomsRub: 14,
+    pitatelPaysRub: 23,
+    pitatelPaysNote: 'ТК Евразия, из Узбекистана. Уже дёшево.',
+    moscowWholesaleRub: [24, 40],
+    moscowRetailRub: [39, 65],
+    margin: 'x1.5-2',
+    savingsForPitatel: '~39%',
+    monthlyTons14: [173,169,133,230,201,298,222,119,116,110,130,158,143,131],
+    shelfLife: '30-90 дней',
+    transportDays: '15-25 дней',
+    transportOk: true,
+    taste: 'Без различий. Корнеплод.',
+    tasteRating: 4,
+    risks: 'Абсолютная маржа маленькая (9 руб/кг). Довесок, не основной товар.',
+    brotherTask: 'FOB, калибр, упаковка (мешок/ящик)',
+    searchKeywords1688: '胡萝卜 / 新鲜胡萝卜',
+    tags: ['school', 'volume']
+  },
+  {
+    id: 'ginger',
+    name: 'Имбирь',
+    nameEn: 'Ginger',
+    tnved: '091010',
+    track: 'free',
+    priority: 3,
+    verdict: 'good',
+    chinaCustomsUsd: 1.45,
+    chinaCustomsRub: 113,
+    pitatelPaysRub: null,
+    pitatelPaysNote: null,
+    moscowWholesaleRub: [170, 450],
+    moscowRetailRub: [400, 500],
+    margin: 'x2-3',
+    savingsForPitatel: null,
+    monthlyTons14: [4,12,23,4,5,3,2,7,17,29,9,7,6,5],
+    shelfLife: '60-90 дней',
+    transportDays: '15-25 дней',
+    transportOk: true,
+    taste: 'Китай = мировой производитель #1. Стандарт.',
+    tasteRating: 5,
+    risks: 'Небольшие объёмы. Нишевый.',
+    brotherTask: 'FOB, свежий корень, упаковка',
+    searchKeywords1688: '生姜 / 新鲜生姜',
+    tags: ['niche', 'yearround']
+  },
+  {
+    id: 'tomato',
+    name: 'Помидоры',
+    nameEn: 'Tomatoes',
+    tnved: '070200',
+    track: 'free',
+    priority: 3,
+    verdict: 'caution',
+    chinaCustomsUsd: 0.35,
+    chinaCustomsRub: 27,
+    pitatelPaysRub: null,
+    pitatelPaysNote: null,
+    moscowWholesaleRub: [60, 200],
+    moscowRetailRub: [100, 350],
+    margin: 'x2-3',
+    savingsForPitatel: null,
+    monthlyTons14: [378,474,828,896,538,264,141,110,119,231,213,267,236,216],
+    shelfLife: '7-14 дней',
+    transportDays: '15-25 дней',
+    transportOk: false,
+    taste: 'Нежный товар. Зависит от сорта.',
+    tasteRating: 3,
+    risks: 'Очень нежный товар. Высокие потери при транспортировке.',
+    brotherTask: 'FOB, сорт (черри / сливка / обычный), упаковка',
+    searchKeywords1688: '番茄 / 西红柿 / 新鲜番茄',
+    tags: ['volume', 'risky']
+  },
+  {
+    id: 'cucumber',
+    name: 'Огурцы',
+    nameEn: 'Cucumbers',
+    tnved: '070700',
+    track: 'free',
+    priority: 3,
+    verdict: 'caution',
+    chinaCustomsUsd: 0.30,
+    chinaCustomsRub: 23,
+    pitatelPaysRub: null,
+    pitatelPaysNote: null,
+    moscowWholesaleRub: [40, 150],
+    moscowRetailRub: [80, 250],
+    margin: 'x2-3',
+    savingsForPitatel: null,
+    monthlyTons14: [263,236,225,200,107,55,1,2,14,54,111,173,172,149],
+    shelfLife: '7-14 дней',
+    transportDays: '15-25 дней',
+    transportOk: false,
+    taste: 'Стандартное качество.',
+    tasteRating: 3,
+    risks: 'Нежный товар. Зимний спрос.',
+    brotherTask: 'FOB, калибр, упаковка',
+    searchKeywords1688: '黄瓜 / 新鲜黄瓜',
+    tags: ['volume']
+  },
+  {
+    id: 'pepper',
+    name: 'Перец болгарский',
+    nameEn: 'Bell pepper',
+    tnved: '070960',
+    track: 'free',
+    priority: 3,
+    verdict: 'caution',
+    chinaCustomsUsd: 0.40,
+    chinaCustomsRub: 31,
+    pitatelPaysRub: null,
+    pitatelPaysNote: null,
+    moscowWholesaleRub: [80, 250],
+    moscowRetailRub: [150, 400],
+    margin: 'x2-4',
+    savingsForPitatel: null,
+    monthlyTons14: [244,320,294,354,467,392,142,137,113,172,185,168,133,162],
+    shelfLife: '14-21 дней',
+    transportDays: '15-25 дней',
+    transportOk: true,
+    taste: 'Стандартное качество.',
+    tasteRating: 3,
+    risks: 'Средние объёмы.',
+    brotherTask: 'FOB, цвет (красный / желтый / зелёный), калибр',
+    searchKeywords1688: '甜椒 / 彩椒 / 灯笼椒',
+    tags: ['volume']
+  },
+  {
+    id: 'eggplant',
+    name: 'Баклажаны',
+    nameEn: 'Eggplant',
+    tnved: '070930',
+    track: 'free',
+    priority: 3,
+    verdict: 'caution',
+    chinaCustomsUsd: 0.35,
+    chinaCustomsRub: 27,
+    pitatelPaysRub: null,
+    pitatelPaysNote: null,
+    moscowWholesaleRub: [60, 150],
+    moscowRetailRub: [100, 250],
+    margin: 'x2-3',
+    savingsForPitatel: null,
+    monthlyTons14: [45,32,42,30,40,20,11,9,13,20,31,39,29,23],
+    shelfLife: '7-14 дней',
+    transportDays: '15-25 дней',
+    transportOk: true,
+    taste: 'Стандартное качество.',
+    tasteRating: 3,
+    risks: 'Небольшие объёмы.',
+    brotherTask: 'FOB, калибр, упаковка',
+    searchKeywords1688: '茄子 / 新鲜茄子',
+    tags: ['niche']
+  },
+  {
+    id: 'lettuce',
+    name: 'Салат листовой',
+    nameEn: 'Lettuce',
+    tnved: '070519',
+    track: 'free',
+    priority: 3,
+    verdict: 'caution',
+    chinaCustomsUsd: 0.45,
+    chinaCustomsRub: 35,
+    pitatelPaysRub: null,
+    pitatelPaysNote: null,
+    moscowWholesaleRub: [80, 200],
+    moscowRetailRub: [150, 350],
+    margin: 'x2-3',
+    savingsForPitatel: null,
+    monthlyTons14: [56,61,70,52,46,28,40,45,53,57,43,72,37,42],
+    shelfLife: '5-7 дней',
+    transportDays: '15-25 дней',
+    transportOk: false,
+    taste: 'Стандартное качество.',
+    tasteRating: 3,
+    risks: 'Очень нежный товар. Короткий срок хранения.',
+    brotherTask: 'FOB, вид (айсберг / романо / руккола), упаковка',
+    searchKeywords1688: '生菜 / 新鲜生菜',
+    tags: ['niche', 'risky']
+  },
+  {
+    id: 'zucchini',
+    name: 'Кабачки',
+    nameEn: 'Zucchini',
+    tnved: '070993',
+    track: 'free',
+    priority: 3,
+    verdict: 'caution',
+    chinaCustomsUsd: 0.30,
+    chinaCustomsRub: 23,
+    pitatelPaysRub: null,
+    pitatelPaysNote: null,
+    moscowWholesaleRub: [40, 120],
+    moscowRetailRub: [80, 200],
+    margin: 'x2-3',
+    savingsForPitatel: null,
+    monthlyTons14: [61,74,84,87,78,18,9,10,20,43,51,49,31,51],
+    shelfLife: '14-21 дней',
+    transportDays: '15-25 дней',
+    transportOk: true,
+    taste: 'Стандартное качество.',
+    tasteRating: 3,
+    risks: 'Средние объёмы.',
+    brotherTask: 'FOB, калибр, упаковка',
+    searchKeywords1688: '西葫芦 / 新鲜西葫芦',
+    tags: ['niche']
+  },
+  {
+    id: 'onion',
+    name: 'Лук репчатый',
+    nameEn: 'Onion',
+    tnved: '070310',
+    track: 'pitatel',
+    priority: 3,
+    verdict: 'caution',
+    chinaCustomsUsd: 0.20,
+    chinaCustomsRub: 16,
+    pitatelPaysRub: null,
+    pitatelPaysNote: null,
+    moscowWholesaleRub: [15, 40],
+    moscowRetailRub: [25, 60],
+    margin: 'x1.5-2',
+    savingsForPitatel: null,
+    monthlyTons14: [41,69,46,133,182,268,292,109,57,10,42,62,110,88],
+    shelfLife: '30-90 дней',
+    transportDays: '15-25 дней',
+    transportOk: true,
+    taste: 'Без различий.',
+    tasteRating: 4,
+    risks: 'Маленькая маржа. Довесок.',
+    brotherTask: 'FOB, калибр, упаковка (сетка/ящик)',
+    searchKeywords1688: '洋葱 / 新鲜洋葱',
+    tags: ['school', 'volume']
+  },
+  {
+    id: 'exotic_fruit',
+    name: 'Экзотические фрукты',
+    nameEn: 'Exotic fruits (dragon fruit, lychee, etc.)',
+    tnved: '0810',
+    track: 'free',
+    priority: 3,
+    verdict: 'good',
+    chinaCustomsUsd: 1.20,
+    chinaCustomsRub: 94,
+    pitatelPaysRub: null,
+    pitatelPaysNote: null,
+    moscowWholesaleRub: [300, 800],
+    moscowRetailRub: [500, 1500],
+    margin: 'x3-5',
+    savingsForPitatel: null,
+    monthlyTons14: [38,35,8,26,23,10,1,33,192,98,103,62,12,17],
+    shelfLife: '7-14 дней',
+    transportDays: '15-25 дней',
+    transportOk: false,
+    taste: 'Отличное качество. Питайя, личи, лонган.',
+    tasteRating: 5,
+    risks: 'Нежные товары. Нишевый рынок. HoReCa.',
+    brotherTask: 'FOB по каждому виду: питайя, личи, лонган, рамбутан. Упаковка, условия транспорта.',
+    searchKeywords1688: '火龙果 / 荔枝 / 龙眼',
+    tags: ['premium', 'horeca', 'niche']
+  },
+  {
+    id: 'pineapple',
+    name: 'Ананасы',
+    nameEn: 'Pineapples',
+    tnved: '080430',
+    track: 'free',
+    priority: 3,
+    verdict: 'good',
+    chinaCustomsUsd: 0.50,
+    chinaCustomsRub: 39,
+    pitatelPaysRub: null,
+    pitatelPaysNote: null,
+    moscowWholesaleRub: [80, 200],
+    moscowRetailRub: [150, 300],
+    margin: 'x2-3',
+    savingsForPitatel: null,
+    monthlyTons14: [19,31,13,11,8,2,3,3,7,11,12,65,11,11],
+    shelfLife: '14-21 дней',
+    transportDays: '15-25 дней',
+    transportOk: true,
+    taste: 'Стандартное качество.',
+    tasteRating: 4,
+    risks: 'Небольшие объёмы.',
+    brotherTask: 'FOB, сорт, калибр, упаковка',
+    searchKeywords1688: '菠萝 / 凤梨 / 新鲜菠萝',
+    tags: ['niche']
+  }
+];
+
+const TAG_LABELS = {
+    citrus: 'Цитрусовые',
+    school: 'Школьное питание',
+    volume: 'Большие объемы',
+    march: 'Март',
+    seasonal: 'Сезонный',
+    premium: 'Премиум',
+    horeca: 'HoReCa',
+    niche: 'Нишевый',
+    winter: 'Зимний',
+    yearround: 'Круглый год',
+    risky: 'Рисковый',
+    trending: 'Тренд'
+};
+
+const VERDICT_LABELS = { top: 'ТОП', good: 'Хорошо', caution: 'Осторожно', risky: 'Рисковый', no: 'Нет' };
+const TRACK_LABELS = { pitatel: 'Питатель', free: 'Свободная', both: 'Оба трека' };
+
+// ===== STATE =====
+let activeFilters = { track: 'all', priority: 'all', verdict: 'all' };
+let activeTags = new Set();
+let searchQuery = '';
+let selectedIds = new Set();
+
+// ===== INIT =====
+document.addEventListener('DOMContentLoaded', () => {
+    buildTagChips();
+    renderCards();
+    bindFilters();
+    bindSelectionButtons();
+    bindModal();
+});
+
+// ===== TAG CHIPS =====
+function buildTagChips() {
+    const group = document.getElementById('tags-group');
+    const allTags = new Set();
+    PRODUCTS.forEach(p => p.tags.forEach(t => allTags.add(t)));
+    Array.from(allTags).sort().forEach(tag => {
+        const btn = document.createElement('button');
+        btn.className = 'tag-chip';
+        btn.dataset.tag = tag;
+        btn.textContent = TAG_LABELS[tag] || tag;
+        btn.addEventListener('click', () => {
+            if (activeTags.has(tag)) {
+                activeTags.delete(tag);
+                btn.classList.remove('active');
+            } else {
+                activeTags.add(tag);
+                btn.classList.add('active');
+            }
+            applyFilters();
+        });
+        group.appendChild(btn);
+    });
+}
+
+// ===== MARCH FORECAST CALCULATION =====
+function computeMarchForecast(p) {
+    const d = p.monthlyTons14;
+    // Indices: 0=Jan25, 1=Feb25, 2=Mar25, ..., 12=Jan26, 13=Feb26
+    const feb25 = d[1];
+    const mar25 = d[2];
+    const feb26 = d[13];
+
+    // Feb->Mar 2025 multiplier
+    let multiplier = null;
+    if (feb25 > 0) {
+        multiplier = mar25 / feb25;
+    }
+
+    // Estimated Mar 2026
+    let estMar26 = null;
+    if (multiplier !== null && feb26 > 0) {
+        estMar26 = Math.round(feb26 * multiplier);
+    } else if (feb26 > 0 && mar25 > 0) {
+        estMar26 = mar25; // fallback: use last year's Mar
+    }
+
+    // Determine color/badge
+    let badgeType = 'stable';
+    let colorClass = 'mf-color-dim';
+    if (multiplier !== null) {
+        if (multiplier >= 2.0) {
+            badgeType = 'spike';
+            colorClass = 'mf-color-gold';
+        } else if (multiplier >= 1.1) {
+            badgeType = 'grow';
+            colorClass = 'mf-color-green';
+        } else if (multiplier <= 0.7) {
+            badgeType = 'decline';
+            colorClass = 'mf-color-red';
+        }
+    }
+
+    const badgeLabels = {
+        spike: 'Всплеск',
+        grow: 'Рост',
+        decline: 'Спад',
+        stable: 'Стабильно'
+    };
+
+    return { mar25, feb25, multiplier, estMar26, feb26, badgeType, colorClass, badgeLabel: badgeLabels[badgeType] };
+}
+
+// ===== RENDER CARDS =====
+function renderCards() {
+    const grid = document.getElementById('cards-grid');
+    grid.innerHTML = '';
+    PRODUCTS.forEach(p => {
+        grid.appendChild(createCard(p));
+    });
+}
+
+function createCard(p) {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.dataset.id = p.id;
+    card.dataset.track = p.track;
+    card.dataset.priority = p.priority;
+    card.dataset.verdict = p.verdict;
+    card.dataset.tags = p.tags.join(',');
+    card.dataset.name = p.name.toLowerCase();
+
+    const starsHtml = buildStars(p.tasteRating);
+
+    const verdictClass = 'badge-' + p.verdict;
+    const trackClass = 'badge-' + p.track;
+    const prioClass = 'badge-p' + p.priority;
+
+    // ===== 14-MONTH BAR CHART =====
+    const d = p.monthlyTons14;
+    const maxTons = Math.max(...d, 1);
+    const barChartHtml = build14MonthChart(d, maxTons);
+
+    // ===== MARCH FORECAST =====
+    const mf = computeMarchForecast(p);
+    const marchForecastHtml = buildMarchForecast(mf);
+
+    // Pitatel section
+    let pitatelHtml = '';
+    if (p.pitatelPaysRub) {
+        pitatelHtml += `<div class="detail-row">
+            <span class="detail-label">Питатель платит</span>
+            <span class="detail-value accent">${p.pitatelPaysRub} руб/кг</span>
+        </div>`;
+    }
+    if (p.pitatelPaysNote) {
+        pitatelHtml += `<div class="detail-row">
+            <span class="detail-label">Примечание</span>
+            <span class="detail-value" style="font-size:0.75rem; max-width:60%; text-align:right;">${p.pitatelPaysNote}</span>
+        </div>`;
+    }
+    if (p.savingsForPitatel) {
+        pitatelHtml += `<div class="detail-row">
+            <span class="detail-label">Экономия для Питателя</span>
+            <span class="detail-value green">${p.savingsForPitatel}</span>
+        </div>`;
+    }
+
+    card.innerHTML = `
+        <!-- HEADER -->
+        <div class="card-header">
+            <div class="card-header-top">
+                <div>
+                    <div class="card-title">${p.name}</div>
+                    <div class="card-name-en">${p.nameEn} <span class="tnved">${p.tnved}</span></div>
+                </div>
+                <input type="checkbox" class="card-checkbox" data-id="${p.id}" title="Выбрать для задания">
+            </div>
+            <div class="badges">
+                <span class="badge ${prioClass}">P${p.priority}</span>
+                <span class="badge ${verdictClass}">${VERDICT_LABELS[p.verdict]}</span>
+                <span class="badge ${trackClass}">${TRACK_LABELS[p.track]}</span>
+            </div>
+        </div>
+
+        <!-- METRICS -->
+        <div class="metrics-row">
+            <div class="metric-box">
+                <div class="metric-label">Китай (там.)</div>
+                <div class="metric-value green">$${p.chinaCustomsUsd}</div>
+                <div class="metric-sub">${p.chinaCustomsRub} руб/кг</div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-label">Москва опт</div>
+                <div class="metric-value accent">${p.moscowWholesaleRub[0]}-${p.moscowWholesaleRub[1]}</div>
+                <div class="metric-sub">руб/кг</div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-label">Маржа</div>
+                <div class="metric-value yellow">${p.margin}</div>
+                <div class="metric-sub">множитель</div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-label">Фев 2026</div>
+                <div class="metric-value accent">${d[13]}</div>
+                <div class="metric-sub">тонн</div>
+            </div>
+        </div>
+
+        <!-- 14-MONTH CHART -->
+        ${barChartHtml}
+
+        <!-- MARCH FORECAST -->
+        ${marchForecastHtml}
+
+        <!-- DETAILS -->
+        <div class="card-details">
+            ${pitatelHtml}
+            <div class="detail-row">
+                <span class="detail-label">Розница Мск</span>
+                <span class="detail-value">${p.moscowRetailRub[0]}-${p.moscowRetailRub[1]} руб/кг</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Срок хранения</span>
+                <span class="detail-value">${p.shelfLife}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Транспорт</span>
+                <span class="detail-value ${p.transportOk ? 'transport-ok' : 'transport-risky'}">${p.transportOk ? 'OK' : 'Рисковый'} (${p.transportDays})</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Вкус</span>
+                <span class="detail-value"><span class="stars">${starsHtml}</span></span>
+            </div>
+
+            <!-- Taste collapsible -->
+            <div class="collapsible">
+                <button class="collapsible-toggle" onclick="toggleCollapsible(this)">
+                    <span class="arrow">&#9654;</span> Подробности вкуса
+                </button>
+                <div class="collapsible-body">${p.taste}</div>
+            </div>
+
+            <!-- Risks collapsible -->
+            <div class="collapsible">
+                <button class="collapsible-toggle" onclick="toggleCollapsible(this)">
+                    <span class="arrow">&#9654;</span> Риски
+                </button>
+                <div class="collapsible-body">${p.risks}</div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="card-footer">
+            <div class="footer-label">Задание для брата</div>
+            <div class="brother-task">${p.brotherTask}</div>
+            <div class="keywords-row">
+                <span class="keywords">${p.searchKeywords1688}</span>
+                <button class="copy-btn" onclick="copyKeywords(this, '${p.searchKeywords1688.replace(/'/g, "\\'")}')">Копировать</button>
+            </div>
+        </div>
+    `;
+
+    // Checkbox logic
+    const checkbox = card.querySelector('.card-checkbox');
+    if (selectedIds.has(p.id)) {
+        checkbox.checked = true;
+        card.classList.add('selected');
+    }
+    checkbox.addEventListener('change', () => {
+        if (checkbox.checked) {
+            selectedIds.add(p.id);
+            card.classList.add('selected');
+        } else {
+            selectedIds.delete(p.id);
+            card.classList.remove('selected');
+        }
+        updateSelectionCount();
+    });
+
+    return card;
+}
+
+function build14MonthChart(data, maxTons) {
+    const monthNames = ['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек','Янв','Фев'];
+    const monthShort = ['Я','Ф','М','А','М','И','И','А','С','О','Н','Д','Я','Ф'];
+
+    let barsHtml = '';
+    let labelsHtml = '';
+    let valsHtml = '';
+
+    for (let i = 0; i < 14; i++) {
+        const val = data[i];
+        const h = Math.max(1, (val / maxTons) * 48);
+        const isYear2026 = i >= 12;
+        const isMar25 = i === 2;
+        const isFeb26 = i === 13;
+
+        let cls = isYear2026 ? 'year2026' : 'year2025';
+        if (isMar25) cls = 'year2025 month-mar-25';
+        if (isFeb26) cls += ' month-feb-26';
+
+        const fullName = monthNames[i] + (i < 12 ? ' 25' : ' 26');
+        barsHtml += `<div class="chart-14m-bar ${cls}" style="height:${h}px" title="${fullName}: ${val} т"></div>`;
+
+        const isBright = i >= 12 || i === 2;
+        labelsHtml += `<span class="${isBright ? 'label-bright' : ''}">${monthShort[i]}</span>`;
+        valsHtml += `<span>${val > 0 ? val : ''}</span>`;
+    }
+
+    return `
+        <div class="chart-14m">
+            <div class="chart-14m-title">Объёмы, тонн/мес (Янв 2025 -- Фев 2026)</div>
+            <div class="chart-14m-bars">${barsHtml}</div>
+            <div class="chart-14m-labels">${labelsHtml}</div>
+            <div class="chart-14m-vals">${valsHtml}</div>
+        </div>
+    `;
+}
+
+function buildMarchForecast(mf) {
+    const multStr = mf.multiplier !== null ? 'x' + mf.multiplier.toFixed(1) : '--';
+    const estStr = mf.estMar26 !== null ? mf.estMar26 + ' т' : '--';
+    const mar25Str = mf.mar25 + ' т';
+
+    return `
+        <div class="march-forecast">
+            <div class="march-forecast-title">
+                <span class="mf-icon">&#128200;</span> Прогноз на Март 2026
+                <span class="mf-badge mf-badge-${mf.badgeType}">${mf.badgeLabel}</span>
+            </div>
+            <div class="march-forecast-grid">
+                <div class="mf-item">
+                    <div class="mf-item-label">Март 2025</div>
+                    <div class="mf-item-value">${mar25Str}</div>
+                    <div class="mf-item-sub">факт</div>
+                </div>
+                <div class="mf-item">
+                    <div class="mf-item-label">Фев->Мар 25</div>
+                    <div class="mf-item-value ${mf.colorClass}">${multStr}</div>
+                    <div class="mf-item-sub">множитель</div>
+                </div>
+                <div class="mf-item">
+                    <div class="mf-item-label">Март 2026 (прогн.)</div>
+                    <div class="mf-item-value ${mf.colorClass}">${estStr}</div>
+                    <div class="mf-item-sub">${mf.feb26} т * ${multStr}</div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function buildStars(rating) {
+    let html = '';
+    for (let i = 1; i <= 5; i++) {
+        html += i <= rating ? '&#9733;' : '<span class="empty">&#9733;</span>';
+    }
+    return html;
+}
+
+// ===== COLLAPSIBLE =====
+function toggleCollapsible(btn) {
+    btn.classList.toggle('open');
+    const body = btn.nextElementSibling;
+    body.classList.toggle('open');
+}
+
+// ===== COPY KEYWORDS =====
+function copyKeywords(btn, text) {
+    navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = 'Готово!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+            btn.textContent = 'Копировать';
+            btn.classList.remove('copied');
+        }, 2000);
+    });
+}
+
+// ===== FILTERS =====
+function bindFilters() {
+    document.querySelectorAll('.fbtn[data-filter]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const filterType = btn.dataset.filter;
+            const value = btn.dataset.value;
+
+            // Deactivate siblings
+            document.querySelectorAll(`.fbtn[data-filter="${filterType}"]`).forEach(b => {
+                b.classList.remove('active', 'active-green', 'active-orange', 'active-yellow', 'active-purple');
+            });
+
+            // Activate this
+            let activeClass = 'active';
+            if (filterType === 'verdict') {
+                if (value === 'top') activeClass = 'active-green';
+                else if (value === 'good') activeClass = 'active-yellow';
+                else if (value === 'caution') activeClass = 'active-orange';
+            }
+            if (filterType === 'track') {
+                if (value === 'pitatel') activeClass = 'active';
+                else if (value === 'free') activeClass = 'active-green';
+                else if (value === 'both') activeClass = 'active-purple';
+            }
+            btn.classList.add(value === 'all' ? 'active' : activeClass);
+
+            activeFilters[filterType] = value;
+            applyFilters();
+        });
+    });
+
+    document.getElementById('search-input').addEventListener('input', (e) => {
+        searchQuery = e.target.value.toLowerCase().trim();
+        applyFilters();
+    });
+}
+
+function applyFilters() {
+    const cards = document.querySelectorAll('.card');
+    let visibleCount = 0;
+
+    cards.forEach(card => {
+        let show = true;
+
+        // Track filter
+        if (activeFilters.track !== 'all' && card.dataset.track !== activeFilters.track) {
+            show = false;
+        }
+
+        // Priority filter
+        if (activeFilters.priority !== 'all' && card.dataset.priority !== activeFilters.priority) {
+            show = false;
+        }
+
+        // Verdict filter
+        if (activeFilters.verdict !== 'all' && card.dataset.verdict !== activeFilters.verdict) {
+            show = false;
+        }
+
+        // Tags filter
+        if (activeTags.size > 0) {
+            const cardTags = card.dataset.tags.split(',');
+            let hasAny = false;
+            activeTags.forEach(t => { if (cardTags.includes(t)) hasAny = true; });
+            if (!hasAny) show = false;
+        }
+
+        // Search
+        if (searchQuery && !card.dataset.name.includes(searchQuery)) {
+            show = false;
+        }
+
+        card.classList.toggle('hidden', !show);
+        if (show) visibleCount++;
+    });
+
+    document.getElementById('empty-state').classList.toggle('visible', visibleCount === 0);
+}
+
+// ===== SELECTION =====
+function bindSelectionButtons() {
+    document.getElementById('btn-select-all').addEventListener('click', () => {
+        document.querySelectorAll('.card:not(.hidden) .card-checkbox').forEach(cb => {
+            cb.checked = true;
+            selectedIds.add(cb.dataset.id);
+            cb.closest('.card').classList.add('selected');
+        });
+        updateSelectionCount();
+    });
+
+    document.getElementById('btn-deselect-all').addEventListener('click', () => {
+        document.querySelectorAll('.card-checkbox').forEach(cb => {
+            cb.checked = false;
+            cb.closest('.card').classList.remove('selected');
+        });
+        selectedIds.clear();
+        updateSelectionCount();
+    });
+}
+
+function updateSelectionCount() {
+    document.getElementById('sel-count-num').textContent = selectedIds.size;
+    document.getElementById('btn-generate').disabled = selectedIds.size === 0;
+}
+
+// ===== MODAL / GENERATE =====
+function bindModal() {
+    document.getElementById('btn-generate').addEventListener('click', generateAssignment);
+    document.getElementById('modal-close').addEventListener('click', closeModal);
+    document.getElementById('modal-overlay').addEventListener('click', (e) => {
+        if (e.target === e.currentTarget) closeModal();
+    });
+    document.getElementById('modal-copy-btn').addEventListener('click', copyAssignment);
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeModal();
+    });
+}
+
+function generateAssignment() {
+    const selected = PRODUCTS.filter(p => selectedIds.has(p.id));
+    if (selected.length === 0) return;
+
+    // Group by priority
+    const byPriority = {};
+    selected.forEach(p => {
+        if (!byPriority[p.priority]) byPriority[p.priority] = [];
+        byPriority[p.priority].push(p);
+    });
+
+    let text = `ЗАДАНИЕ ДЛЯ БРАТА -- пробить цены в Китае\nДата: 27.02.2026\nВсего товаров: ${selected.length}\n`;
+    text += '='.repeat(50) + '\n';
+
+    const prioLabels = { 1: 'ПРИОРИТЕТ 1 (срочно!)', 2: 'ПРИОРИТЕТ 2 (важно)', 3: 'ПРИОРИТЕТ 3 (по возможности)' };
+
+    Object.keys(byPriority).sort().forEach(prio => {
+        text += `\n${prioLabels[prio] || 'ПРИОРИТЕТ ' + prio}\n`;
+        text += '-'.repeat(40) + '\n';
+
+        byPriority[prio].forEach((p, i) => {
+            const mf = computeMarchForecast(p);
+            text += `\n${i + 1}. ${p.name} (${p.tnved}) -- ${p.nameEn}\n`;
+            text += `   Цена на таможне: $${p.chinaCustomsUsd}/кг (${p.chinaCustomsRub} руб/кг)\n`;
+            text += `   Москва опт: ${p.moscowWholesaleRub[0]}-${p.moscowWholesaleRub[1]} руб/кг\n`;
+            text += `   Маржа: ${p.margin}\n`;
+            text += `   Транспорт: ${p.transportOk ? 'OK' : 'РИСКОВЫЙ'} (${p.transportDays})\n`;
+            text += `   Срок хранения: ${p.shelfLife}\n`;
+            text += `   Фев 2026: ${p.monthlyTons14[13]} т\n`;
+            if (mf.estMar26 !== null) {
+                text += `   Прогноз Март 2026: ~${mf.estMar26} т (${mf.badgeLabel})\n`;
+            }
+            text += `   \n`;
+            text += `   ЗАДАНИЕ: ${p.brotherTask}\n`;
+            text += `   Ключевые слова для 1688: ${p.searchKeywords1688}\n`;
+        });
+    });
+
+    text += '\n' + '='.repeat(50);
+    text += '\nОБЩИЕ ВОПРОСЫ ДЛЯ КАЖДОГО ПОСТАВЩИКА:';
+    text += '\n- FOB цена за тонну (или кг)';
+    text += '\n- Минимальная партия (MOQ)';
+    text += '\n- Сроки отгрузки';
+    text += '\n- Откуда отгрузка (порт)';
+    text += '\n- Есть ли опыт экспорта в Россию';
+    text += '\n- Сертификаты качества (фитосанитарный)';
+    text += '\n' + '='.repeat(50);
+
+    document.getElementById('modal-text').textContent = text;
+    document.getElementById('modal-overlay').classList.add('open');
+}
+
+function closeModal() {
+    document.getElementById('modal-overlay').classList.remove('open');
+}
+
+function copyAssignment() {
+    const text = document.getElementById('modal-text').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById('modal-copy-btn');
+        btn.textContent = 'Скопировано!';
+        btn.classList.add('copied');
+        showToast('Задание скопировано в буфер обмена');
+        setTimeout(() => {
+            btn.textContent = 'Копировать в буфер';
+            btn.classList.remove('copied');
+        }, 2500);
+    });
+}
+
+function showToast(msg) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2500);
+}
+</script>
+</body>
+</html>

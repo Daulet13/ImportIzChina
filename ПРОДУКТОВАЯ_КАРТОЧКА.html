@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Продуктовая карточка — что везти из Китая</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --accent: #38bdf8;
+            --accent2: #a78bfa;
+            --green: #34d399;
+            --orange: #fb923c;
+            --red: #ef4444;
+            --yellow: #fbbf24;
+            --pink: #f472b6;
+            --text: #e2e8f0;
+            --dim: #94a3b8;
+            --border: #334155;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+
+        .hero {
+            background: linear-gradient(135deg, #1e293b, #0f172a, #1a1a2e);
+            border-bottom: 1px solid var(--border);
+            padding: 50px 20px 40px;
+            text-align: center;
+        }
+        .hero h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--green), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+        .hero .sub { color: var(--dim); font-size: 1.1rem; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 40px 20px; }
+
+        /* CRITICAL WARNING */
+        .warning-box {
+            background: linear-gradient(135deg, rgba(251,146,60,0.15), rgba(239,68,68,0.1));
+            border: 2px solid var(--orange);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 50px;
+        }
+        .warning-box h2 { color: var(--orange); font-size: 1.4rem; margin-bottom: 14px; }
+        .warning-box p { color: var(--text); margin-bottom: 10px; }
+        .warning-box .key-point {
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin-top: 16px;
+        }
+
+        /* Section headers */
+        .section { margin-bottom: 60px; }
+        .section h2 {
+            font-size: 1.6rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .section .desc { color: var(--dim); margin-bottom: 24px; font-size: 1.05rem; }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .badge-green { background: rgba(52,211,153,0.15); color: var(--green); }
+        .badge-yellow { background: rgba(251,191,36,0.15); color: var(--yellow); }
+        .badge-red { background: rgba(239,68,68,0.15); color: var(--red); }
+        .badge-blue { background: rgba(56,189,248,0.15); color: var(--accent); }
+        .badge-orange { background: rgba(251,146,60,0.15); color: var(--orange); }
+
+        /* Product cards */
+        .product-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .product-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        .product-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 4px 20px rgba(56,189,248,0.1);
+        }
+        .product-card.top-pick { border-color: var(--green); border-width: 2px; }
+        .product-card.good { border-color: var(--yellow); }
+        .product-card.risky { border-color: var(--orange); }
+        .product-card.nope { border-color: var(--red); opacity: 0.8; }
+
+        .pc-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 24px 14px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .pc-header h3 { font-size: 1.3rem; }
+        .pc-header .emoji { font-size: 1.5rem; margin-right: 8px; }
+
+        .pc-body {
+            padding: 0 24px 20px;
+        }
+
+        .pc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 14px;
+            margin-bottom: 16px;
+        }
+
+        .pc-metric {
+            background: var(--bg);
+            border-radius: 10px;
+            padding: 14px 16px;
+        }
+        .pc-metric .label {
+            font-size: 0.75rem;
+            color: var(--dim);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+        .pc-metric .value {
+            font-size: 1.15rem;
+            font-weight: 700;
+        }
+        .pc-metric .note {
+            font-size: 0.8rem;
+            color: var(--dim);
+            margin-top: 2px;
+        }
+        .val-green { color: var(--green); }
+        .val-red { color: var(--red); }
+        .val-orange { color: var(--orange); }
+        .val-yellow { color: var(--yellow); }
+        .val-blue { color: var(--accent); }
+
+        .pc-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .pc-verdict {
+            background: var(--bg);
+            border-radius: 10px;
+            padding: 14px 18px;
+            border-left: 4px solid var(--border);
+        }
+        .pc-verdict.positive { border-color: var(--green); }
+        .pc-verdict.caution { border-color: var(--yellow); }
+        .pc-verdict.negative { border-color: var(--red); }
+        .pc-verdict .verdict-title {
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+        .pc-verdict.positive .verdict-title { color: var(--green); }
+        .pc-verdict.caution .verdict-title { color: var(--yellow); }
+        .pc-verdict.negative .verdict-title { color: var(--red); }
+
+        /* March spike highlight */
+        .march-spike {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(52,211,153,0.1);
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--green);
+        }
+
+        /* Brother action card */
+        .action-card {
+            background: linear-gradient(135deg, rgba(56,189,248,0.08), rgba(167,139,250,0.05));
+            border: 1px solid var(--accent);
+            border-radius: 16px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+        .action-card h3 {
+            color: var(--accent);
+            font-size: 1.2rem;
+            margin-bottom: 14px;
+        }
+        .action-list {
+            list-style: none;
+            padding: 0;
+        }
+        .action-list li {
+            padding: 10px 0 10px 30px;
+            position: relative;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .action-list li::before {
+            content: '>';
+            position: absolute;
+            left: 8px;
+            color: var(--accent);
+            font-weight: 800;
+        }
+
+        /* Summary table */
+        .summary-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 20px 0;
+            font-size: 0.9rem;
+        }
+        .summary-table th {
+            background: var(--bg);
+            padding: 10px 14px;
+            text-align: left;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--dim);
+            border-bottom: 2px solid var(--border);
+            position: sticky;
+            top: 0;
+        }
+        .summary-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        .summary-table tr:hover td { background: rgba(56,189,248,0.03); }
+
+        .footnote {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            font-size: 0.9rem;
+            color: var(--dim);
+        }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        @media (max-width: 768px) { .two-col { grid-template-columns: 1fr; } }
+
+        .strategy-box {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 24px;
+        }
+        .strategy-box h4 {
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        .strategy-box p { color: var(--dim); font-size: 0.95rem; }
+
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--dim);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--border);
+        }
+    </style>
+</head>
+<body>
+
+<div class="hero">
+    <h1>Что везти из Китая — продуктовая карточка</h1>
+    <p class="sub">Два трека: под Питателя + под свободную продажу в марте. Данные из Логоса + московские цены.</p>
+    <p style="color: var(--dim); font-size: 0.85rem; margin-top: 8px;">27 февраля 2026 | Для брата — пробивать цены в Китае</p>
+</div>
+
+<div class="container">
+
+<!-- ===== CRITICAL INSIGHT ===== -->
+<div class="warning-box">
+    <h2>Важное открытие: Китай заменяет НЕ всё</h2>
+    <p>Исследование вкусовых характеристик и логистики показало: <strong>большинство товаров Питателя из Ирана НЕЛЬЗЯ заменить китайскими</strong>. Причины:</p>
+    <div class="pc-grid" style="margin-top: 14px;">
+        <div class="pc-metric">
+            <div class="label">Логистика</div>
+            <div class="value val-red">15-25 дней</div>
+            <div class="note">из Китая до Москвы (vs 5-7 из Ирана)</div>
+        </div>
+        <div class="pc-metric">
+            <div class="label">Скоропорт</div>
+            <div class="value val-red">Сгниёт</div>
+            <div class="note">салат, огурцы, баклажаны — не доедут</div>
+        </div>
+        <div class="pc-metric">
+            <div class="label">Фитосанитария</div>
+            <div class="value val-orange">Проблемы</div>
+            <div class="note">томаты из Китая — 18 случаев вируса, блокировки РСН</div>
+        </div>
+    </div>
+    <div class="key-point">
+        <strong style="color: var(--green);">Но есть 5-6 позиций, где Китай реально работает.</strong> Именно на них и надо фокусироваться. Плюс — мартовские сезонные товары для свободной продажи.
+    </div>
+</div>
+
+
+<!-- ===== TRACK A: FOR PITATEL ===== -->
+<div class="section">
+    <h2 style="color: var(--accent2);">Трек А: Товары для предложения Питателю</h2>
+    <p class="desc">Позиции, где Китай реально может конкурировать с текущими поставщиками Питателя. Только те, что переживут дорогу и не вызовут вопросов по качеству.</p>
+
+    <div class="product-grid">
+
+        <!-- ====== MANDARIN ====== -->
+        <div class="product-card top-pick">
+            <div class="pc-header">
+                <h3>Мандарины</h3>
+                <div>
+                    <span class="badge badge-green">ТОП выбор</span>
+                    <span class="badge badge-blue">Питатель + свободная продажа</span>
+                </div>
+            </div>
+            <div class="pc-body">
+                <div class="pc-grid">
+                    <div class="pc-metric">
+                        <div class="label">Питатель платит (1С)</div>
+                        <div class="value val-red">118 руб/кг</div>
+                        <div class="note">$1.51 | Акванур, через ANKARA GYD</div>
+                    </div>
+                    <div class="pc-metric">
+                        <div class="label">Таможенная цена Китай</div>
+                        <div class="value val-green">$0.51/кг</div>
+                        <div class="note">~40 руб/кг | 1,482 т/мес через Сармант</div>
+                    </div>
+                    <div class="pc-metric">
+                        <div class="label">Опт Москва (Фуд Сити)</div>
+                        <div class="value val-yellow">110-200 руб/кг</div>
+                        <div class="note">розница: 200-400 руб/кг</div>
+                    </div>
+                    <div class="pc-metric">
+                        <div class="label">Март 2025 (динамика)</div>
+                        <div class="value">562 т</div>
+                        <div class="note">стабильно, без скачков</div>
+                    </div>
+                </div>
+                <div class="pc-verdict positive">
+                    <div class="verdict-title">Почему подходит</div>
+                    <p style="color: var(--text); margin: 0;">Цитрусовые <strong>отлично переносят 15-25 дней транспортировки</strong>. Роскачество подтвердило безопасность китайских мандаринов. Потребители привыкли. Уже идёт огромным потоком — 1,482 т/мес. Разница с ценой Питателя: <strong>~65% экономия</strong>.</p>
+                </div>
+                <div style="margin-top: 10px; font-size: 0.85rem; color: var(--dim);">
+                    <strong>Вкус:</strong> Китайские мандарины (сорт Халлабон/Декопон) — сочные, 13-18 Brix сахара. Конкурентны с иранскими. Положительные отзывы.
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== CABBAGE ====== -->
+        <div class="product-card top-pick">
+            <div class="pc-header">
+                <h3>Капуста (все виды)</h3>
+                <div>
+                    <span class="badge badge-green">ТОП выбор</span>
+                    <span class="badge badge-blue">Питатель</span>
+                </div>
+            </div>
+            <div class="pc-body">
+                <div class="pc-grid">
+                    <div class="pc-metric">
+                        <div class="label">Питатель платит (1С) — цветная</div>
+                        <div class="value val-red">116 руб/кг</div>
+                        <div class="note">ТК Евразия. Из Ирана.</div>
+                    </div>
+                    <div class="pc-metric">
+                        <div class="label">Таможенная цена Китай</div>
+                        <div class="value val-green">$0.27/кг</div>
+                        <div class="note">~21 руб/кг | 418 т за янв-фев 2026</div>
+                    </div>
+                    <div class="pc-metric">
+                        <div class="label">Опт Москва</div>
+                        <div class="value val-yellow">15-200 руб/кг</div>
+                        <div class="note">белокоч 15-30 | цветная 85-130 | брокколи 120-200</div>
+                    </div>
+                    <div class="pc-metric">
+                        <div class="label">Март — РОСТ!</div>
+                        <div class="value val-green" style="font-size: 1.4rem;">x1.8</div>
+                        <div class="note">185 т (фев) → 338 т (мар) в 2025</div>
+                    </div>
+                </div>
+                <div class="pc-verdict positive">
+                    <div class="verdict-title">Почему подходит</div>
+                    <p style="color: var(--text); margin: 0;">Капуста <strong>отлично переносит транспортировку</strong> (особенно белокочанная и пекинская). Китай — крупнейший мировой производитель. <strong>Экономия для Питателя: ~80%</strong> на цветной капусте. Пекинская — вообще традиционный китайский продукт.</p>
+                </div>
+                <div style="margin-top: 10px; font-size: 0.85rem; color: var(--dim);">
+                    <strong>Вкус:</strong> Без заметных различий для белокочанной и пекинской. Цветная — сопоставима. Брокколи — стандарт.
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== GARLIC ====== -->
+        <div class="product-card top-pick">
+            <div class="pc-header">
+                <h3>Чеснок</h3>
+                <div>
+                    <span class="badge badge-green">ТОП выбор</span>
+                    <span class="badge badge-blue">Питатель + свободная продажа</span>
+                </div>
+            </div>
+            <div class="pc-body">
+                <div class="pc-grid">
+                    <div class="pc-metric">
+                        <div class="label">Питатель — нет в основном потоке</div>
+                        <div class="value val-yellow">Новая позиция</div>
+                        <div class="note">Питатель чеснок из Ирана пока не берёт массово</div>
+                    </div>
+                    <div class="pc-metric">
+                        <div class="label">Таможенная цена Китай</div>
+                        <div class="value val-green">$0.74/кг</div>
+                        <div class="note">~58 руб/кг | 123 т за янв-фев 2026</div>
+                    </div>
+                    <div class="pc-metric">
+                        <div class="label">Опт Москва</div>
+                        <div class="value val-yellow">110-330 руб/кг</div>
+                        <div class="note">розница: 200-400 руб/кг</div>
+                    </div>
+                    <div class="pc-metric">
+                        <div class="label">Маржа (грубо)</div>
+                        <div class="value val-green">x2-4</div>
+                        <div class="note">купить ~80, продать 200-330</div>
+                    </div>
+                </div>
+                <div class="pc-verdict positive">
+                    <div class="verdict-title">Почему подходит</div>
+                    <p style="color: var(--text); margin: 0;">Чеснок <strong>хранится месяцами</strong> — логистика не проблема. Китай = 60-70% российского импорта чеснока. Стабильный спрос круглый год. Для школьного питания — идеально (дёшево, всегда нужен). Для Фуд Сити — стабильная маржа.</p>
+                </div>
+                <div style="margin-top: 10px; font-size: 0.85rem; color: var(--dim);">
+                    <strong>Вкус:</strong> Китайский чеснок мягче, менее острый (3500 ppm аллицина vs 4400 у местного). Белый, ровный, без стержня. Для массового рынка и школьного питания — отлично. Для HoReCa — заметно хуже. <strong>Школам — идеален.</strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== ORANGE ====== -->
+        <div class="product-card top-pick">
+            <div class="pc-header">
+                <h3>Апельсины</h3>
+                <div>
+                    <span class="badge badge-green">ТОП выбор</span>
+                    <span class="badge badge-blue">Питатель</span>
+                </div>
+            </div>
+            <div class="pc-body">
+                <div class="pc-grid">
+                    <div class="pc-metric">
+                        <div class="label">Питатель платит (1С)</div>
+                        <div class="value val-red">29-103 руб/кг</div>
+                        <div class="note">Фалкон 29 | Евразия 103 | разброс огромный</div>
+                    </div>
+                    <div class="pc-metric">
+                        <div class="label">Таможенная цена Китай</div>
+                        <div class="value val-green">$0.43/кг</div>
+                        <div class="note">~34 руб/кг | 258 т за янв-фев</div>
+                    </div>
+                    <div class="pc-metric">
+                        <div class="label">Опт Москва</div>
+                        <div class="value val-yellow">100-200 руб/кг</div>
+                        <div class="note">розница: 150-200 руб/кг</div>
+                    </div>
+                    <div class="pc-metric">
+                        <div class="label">Объём Питатель</div>
+                        <div class="value">1,817 т за 5 мес</div>
+                        <div class="note">Евразия+Фалкон+Коминс+Акванур</div>
+                    </div>
+                </div>
+                <div class="pc-verdict positive">
+                    <div class="verdict-title">Почему подходит</div>
+                    <p style="color: var(--text); margin: 0;">Цитрусовые — <strong>идеальная транспортабельность</strong>. ТК Евразия платит 103 руб/кг за иранские апельсины — китайские проходят по $0.43 = 34 руб/кг. <strong>Экономия 67%</strong>. Для школьного питания — базовый продукт.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== APPLE ====== -->
+        <div class="product-card good">
+            <div class="pc-header">
+                <h3>Яблоки</h3>
+                <div>
+                    <span class="badge badge-yellow">Осторожно</span>
+                    <span class="badge badge-blue">Питатель</span>
+                </div>
+            </div>
+            <div class="pc-body">
+                <div class="pc-grid">
+                    <div class="pc-metric">
+                        <div class="label">Питатель платит (1С)</div>
+                        <div class="value val-orange">46 руб/кг</div>
+                        <div class="note">Евразия, из Азербайджана</div>
+                    </div>
+                    <div class="pc-metric">
+                        <div class="label">Таможенная цена Китай</div>
+                        <div class="value val-green">$0.50/кг</div>
+                        <div class="note">~39 руб/кг | 324 т за янв-фев</div>
+                    </div>
+                    <div class="pc-metric">
+                        <div class="label">Опт Москва</div>
+                        <div class="value val-yellow">90-200 руб/кг</div>
+                        <div class="note">среднее 148 руб/кг (Росстат)</div>
+                    </div>
+                    <div class="pc-metric">
+                        <div class="label">Экономия</div>
+                        <div class="value val-yellow">~15%</div>
+                        <div class="note">небольшая, но объём большой</div>
+                    </div>
+                </div>
+                <div class="pc-verdict caution">
+                    <div class="verdict-title">Осторожно: вкус</div>
+                    <p style="color: var(--text); margin: 0;">Азербайджанские яблоки имеют <strong>хорошую репутацию</strong> в России. Китайские (Фуджи) — хранятся отлично, но вкус считается хуже. Экономия всего ~15%. Предлагать можно, но <strong>не как первый товар</strong>. Для школ может подойти — дешевле и лежат долго.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== CARROT ====== -->
+        <div class="product-card good">
+            <div class="pc-header">
+                <h3>Морковь</h3>
+                <div>
+                    <span class="badge badge-yellow">Возможно</span>
+                    <span class="badge badge-blue">Питатель</span>
+                </div>
+            </div>
+            <div class="pc-body">
+                <div class="pc-grid">
+                    <div class="pc-metric">
+                        <div class="label">Питатель платит (1С)</div>
+                        <div class="value">23 руб/кг</div>
+                        <div class="note">Евразия, из Узбекистана. Уже ДЁШЕВО.</div>
+                    </div>
+                    <div class="pc-metric">
+                        <div class="label">Таможенная цена Китай</div>
+                        <div class="value val-green">$0.18/кг</div>
+                        <div class="note">~14 руб/кг | 274 т за янв-фев</div>
+                    </div>
+                    <div class="pc-metric">
+                        <div class="label">Опт Москва</div>
+                        <div class="value">24-40 руб/кг</div>
+                        <div class="note">розница: 39-65 руб/кг</div>
+                    </div>
+                    <div class="pc-metric">
+                        <div class="label">Экономия</div>
+                        <div class="value val-yellow">~39%</div>
+                        <div class="note">14 vs 23 руб/кг. Неплохо по %</div>
+                    </div>
+                </div>
+                <div class="pc-verdict caution">
+                    <div class="verdict-title">Годится, но маржа маленькая</div>
+                    <p style="color: var(--text); margin: 0;">Морковь — корнеплод, транспорт не проблема. Но <strong>абсолютная разница мала</strong> (9 руб/кг). На 5,500 т за 5 мес = ~50 млн руб экономии. Можно включить как «бонус» к основному предложению, не как главный товар.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== THINGS THAT DON'T WORK FOR PITATEL ====== -->
+        <div class="product-card nope">
+            <div class="pc-header">
+                <h3>НЕ подходит для Китая (основа Питателя)</h3>
+                <span class="badge badge-red">Не заменяемо</span>
+            </div>
+            <div class="pc-body">
+                <table class="summary-table">
+                    <tr>
+                        <th>Товар</th>
+                        <th>Питатель берёт</th>
+                        <th>Почему Китай не подходит</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Перец сладкий</strong></td>
+                        <td>6,594 т / 5 мес<br><span style="color: var(--red);">61-179 руб/кг</span></td>
+                        <td>Нежный продукт. 15-25 дней транспорта = потеря товарного вида. Стенка тоньше. Пестициды.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Баклажаны</strong></td>
+                        <td>3,304 т / 5 мес<br><span style="color: var(--red);">58-218 руб/кг</span></td>
+                        <td>Самый высокий % пестицидов среди китайских овощей. Не переживёт дорогу.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Салат Айсберг</strong></td>
+                        <td>2,836 т / 5 мес<br><span style="color: var(--red);">82-199 руб/кг</span></td>
+                        <td><strong>Физически невозможно.</strong> Срок хранения 14-21 день. Транспорт = 15-25 дней. Не доедет.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Огурцы</strong></td>
+                        <td>2,846 т / 5 мес<br><span style="color: var(--red);">57-176 руб/кг</span></td>
+                        <td>Один из самых скоропортящихся овощей. Из Ирана — 5-7 дней, и то на пределе.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Томаты</strong></td>
+                        <td>4,056 т / 5 мес<br>67-68 руб/кг</td>
+                        <td>18 случаев вируса в 2025, уничтожено 27 тонн. Россельхознадзор блокирует. Туркменские лучше.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Хурма</strong></td>
+                        <td>5,818 т / 5 мес<br>40-42 руб/кг</td>
+                        <td>«Азербайджанская хурма» = бренд в России. Замена = репутационный удар.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Киви</strong></td>
+                        <td>2,020 т / 5 мес<br>55-172 руб/кг</td>
+                        <td>Иран = 60% мирового экспорта. Устоявшаяся цепочка. Китайский киви хуже по качеству.</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- ===== TRACK B: MARCH FREE SALE ===== -->
+<div class="section">
+    <h2 style="color: var(--green);">Трек Б: Товары для свободной продажи в марте</h2>
+    <p class="desc">Что <strong>резко растёт в марте</strong> и что можно сбагрить на Фуд Сити / в опт, даже если с Питателем не сложится. Сезонные хиты.</p>
+
+    <div class="product-grid">
+
+        <!-- ====== LEMON ====== -->
+        <div class="product-card top-pick">
+            <div class="pc-header">
+                <h3>Лимоны</h3>
+                <div>
+                    <span class="badge badge-green">Мартовский хит #1</span>
+                    <span class="march-spike">Март: x8.3 от февраля!</span>
+                </div>
+            </div>
+            <div class="pc-body">
+                <div class="pc-grid">
+                    <div class="pc-metric">
+                        <div class="label">Февраль 2025</div>
+                        <div class="value">64 т</div>
+                    </div>
+                    <div class="pc-metric">
+                        <div class="label">Март 2025</div>
+                        <div class="value val-green" style="font-size: 1.6rem;">533 т</div>
+                        <div class="note">Рост x8.3!</div>
+                    </div>
+                    <div class="pc-metric">
+                        <div class="label">Таможенная цена</div>
+                        <div class="value val-green">$0.49/кг</div>
+                        <div class="note">~38 руб/кг</div>
+                    </div>
+                    <div class="pc-metric">
+                        <div class="label">Опт Москва</div>
+                        <div class="value val-yellow">80-150 руб/кг</div>
+                        <div class="note">розница ~154 руб/кг (Росстат)</div>
+                    </div>
+                </div>
+                <div class="pc-verdict positive">
+                    <div class="verdict-title">Сезонный бум</div>
+                    <p style="color: var(--text); margin: 0;">Лимоны в марте <strong>взрывают спрос</strong> — рост с 64 до 533 тонн. Весенний авитаминоз + Масленица + 8 Марта. Цитрусовые отлично переносят дорогу. Маржа: купить ~50, продать 100-150 руб/кг. <strong>Идеальный мартовский товар.</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== STRAWBERRY ====== -->
+        <div class="product-card top-pick">
+            <div class="pc-header">
+                <h3>Клубника</h3>
+                <div>
+                    <span class="badge badge-green">Мартовский хит #2</span>
+                    <span class="march-spike">Март: x7.1 от февраля!</span>
+                </div>
+            </div>
+            <div class="pc-body">
+                <div class="pc-grid">
+                    <div class="pc-metric">
+                        <div class="label">Февраль 2025</div>
+                        <div class="value">29 т</div>
+                    </div>
+                    <div class="pc-metric">
+                        <div class="label">Март 2025</div>
+                        <div class="value val-green" style="font-size: 1.6rem;">206 т</div>
+                        <div class="note">Рост x7.1!</div>
+                    </div>
+                    <div class="pc-metric">
+                        <div class="label">Таможенная цена</div>
+                        <div class="value">$1.05/кг</div>
+                        <div class="note">~82 руб/кг</div>
+                    </div>
+                    <div class="pc-metric">
+                        <div class="label">Опт Москва (зима)</div>
+                        <div class="value val-orange">276-600 руб/кг</div>
+                        <div class="note">розница: 600-1200 руб/кг (!)</div>
+                    </div>
+                </div>
+                <div class="pc-verdict positive">
+                    <div class="verdict-title">Максимальная маржа к 8 Марта</div>
+                    <p style="color: var(--text); margin: 0;">Клубника к 8 Марта — <strong>золотая жила</strong>. Купить по ~100-120 руб/кг, продать 400-800. Но: <strong>нежный товар, нужен идеальный реф</strong>. Рискованно, но маржа перекрывает потери. Если брат найдёт хорошую клубнику по $1.0-1.5 — забирать.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== TOMATO (March) ====== -->
+        <div class="product-card good">
+            <div class="pc-header">
+                <h3>Томаты (для свободной продажи!)</h3>
+                <div>
+                    <span class="badge badge-yellow">Хороший объём</span>
+                    <span class="march-spike">Март: x1.7 от февраля</span>
+                </div>
+            </div>
+            <div class="pc-body">
+                <div class="pc-grid">
+                    <div class="pc-metric">
+                        <div class="label">Февраль → Март 2025</div>
+                        <div class="value">474 → 828 т</div>
+                        <div class="note">Рост x1.7</div>
+                    </div>
+                    <div class="pc-metric">
+                        <div class="label">Таможенная цена</div>
+                        <div class="value val-green">$0.70/кг</div>
+                        <div class="note">~55 руб/кг</div>
+                    </div>
+                    <div class="pc-metric">
+                        <div class="label">Опт Москва</div>
+                        <div class="value val-yellow">100-240 руб/кг</div>
+                        <div class="note">среднее 219 руб/кг (Росстат)</div>
+                    </div>
+                    <div class="pc-metric">
+                        <div class="label">Маржа</div>
+                        <div class="value val-green">x2-3</div>
+                        <div class="note">если довезти живыми</div>
+                    </div>
+                </div>
+                <div class="pc-verdict caution">
+                    <div class="verdict-title">Для Фуд Сити — можно, для Питателя — нет</div>
+                    <p style="color: var(--text); margin: 0;">Томаты из Китая <strong>не подходят Питателю</strong> (фитосанитарные риски, блокировки). Но для <strong>свободной продажи на Фуд Сити</strong> — 828 тонн проехало через Сармант в марте 2025. Значит, рынок есть. Вопрос — довезти без проблем с Россельхознадзором. <strong>Рискованно, но объём огромный.</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== MANGO ====== -->
+        <div class="product-card good">
+            <div class="pc-header">
+                <h3>Манго</h3>
+                <div>
+                    <span class="badge badge-yellow">Высокая маржа</span>
+                    <span class="march-spike">Весной: рост x3-5</span>
+                </div>
+            </div>
+            <div class="pc-body">
+                <div class="pc-grid">
+                    <div class="pc-metric">
+                        <div class="label">Динамика (2025)</div>
+                        <div class="value">18→76→57→111→234 т</div>
+                        <div class="note">Янв→Фев→Мар→Апр→Май: постоянный рост</div>
+                    </div>
+                    <div class="pc-metric">
+                        <div class="label">Таможенная цена</div>
+                        <div class="value">$0.93/кг</div>
+                        <div class="note">~73 руб/кг</div>
+                    </div>
+                    <div class="pc-metric">
+                        <div class="label">Опт Москва</div>
+                        <div class="value val-orange">200-500 руб/кг</div>
+                        <div class="note">розница: 300-600 руб/кг</div>
+                    </div>
+                    <div class="pc-metric">
+                        <div class="label">Маржа</div>
+                        <div class="value val-green">x3-5</div>
+                        <div class="note">купить ~100, продать 300-500</div>
+                    </div>
+                </div>
+                <div class="pc-verdict positive">
+                    <div class="verdict-title">Экзотика с хорошей маржой</div>
+                    <p style="color: var(--text); margin: 0;">Манго весной растёт каждый месяц. На Фуд Сити уходит отлично — HoReCa и розница. <strong>Высокая маржа</strong>. Переносит транспорт нормально (если правильный сорт). Конкуренция есть, но рынок растёт.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== GRAPE ====== -->
+        <div class="product-card good">
+            <div class="pc-header">
+                <h3>Виноград</h3>
+                <div>
+                    <span class="badge badge-yellow">Стабильный спрос</span>
+                </div>
+            </div>
+            <div class="pc-body">
+                <div class="pc-grid">
+                    <div class="pc-metric">
+                        <div class="label">Янв-Фев 2026</div>
+                        <div class="value">238 т</div>
+                    </div>
+                    <div class="pc-metric">
+                        <div class="label">Таможенная цена</div>
+                        <div class="value">$0.88/кг</div>
+                        <div class="note">~69 руб/кг</div>
+                    </div>
+                    <div class="pc-metric">
+                        <div class="label">Опт Москва</div>
+                        <div class="value val-yellow">100-300 руб/кг</div>
+                        <div class="note">среднее 243 руб/кг (Росстат)</div>
+                    </div>
+                    <div class="pc-metric">
+                        <div class="label">Маржа</div>
+                        <div class="value val-green">x2-3</div>
+                    </div>
+                </div>
+                <div class="pc-verdict caution">
+                    <div class="verdict-title">Хорошо, но объёмы падают весной</div>
+                    <p style="color: var(--text); margin: 0;">Виноград зимой идёт хорошо (254 т в январе), но к весне падает (140 в марте, 64 в апреле). Маржа хорошая. Хороший «зимний» товар, но в марте уже не пик.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====== MUSHROOMS ====== -->
+        <div class="product-card good">
+            <div class="pc-header">
+                <h3>Грибы (шиитаке, эноки)</h3>
+                <div>
+                    <span class="badge badge-yellow">Нишевый, маржинальный</span>
+                </div>
+            </div>
+            <div class="pc-body">
+                <div class="pc-grid">
+                    <div class="pc-metric">
+                        <div class="label">Объём (янв-фев 2026)</div>
+                        <div class="value">32 т (экзот) + 53 т (шамп)</div>
+                    </div>
+                    <div class="pc-metric">
+                        <div class="label">Таможенная цена</div>
+                        <div class="value">$0.86-1.17/кг</div>
+                        <div class="note">67-91 руб/кг</div>
+                    </div>
+                    <div class="pc-metric">
+                        <div class="label">Розница Москва</div>
+                        <div class="value val-orange">1500-2500 руб/кг</div>
+                        <div class="note">шиитаке/эноки в METRO, О'КЕЙ</div>
+                    </div>
+                    <div class="pc-metric">
+                        <div class="label">Маржа</div>
+                        <div class="value val-green">x10-20</div>
+                        <div class="note">нереальная, но объёмы маленькие</div>
+                    </div>
+                </div>
+                <div class="pc-verdict caution">
+                    <div class="verdict-title">Нишевый товар для HoReCa</div>
+                    <p style="color: var(--text); margin: 0;">Маржа сумасшедшая (x10-20), но объёмы крошечные (32 т/2мес). Хороший довесок к основной фуре. Целевые клиенты — азиатские рестораны, METRO, Азбука Вкуса. <strong>Не основной бизнес, но отличный бонус.</strong></p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- ===== SUMMARY TABLE ===== -->
+<div class="section">
+    <h2>Сводная таблица для брата</h2>
+    <p class="desc">Это отправить брату. Нужно пробить закупочные цены в Китае (FOB/EXW) на эти позиции.</p>
+
+    <table class="summary-table">
+        <tr>
+            <th>#</th>
+            <th>Товар</th>
+            <th>Трек</th>
+            <th>Проходит таможню по ($/кг)</th>
+            <th>Опт Москва (руб/кг)</th>
+            <th>Маржа (грубо)</th>
+            <th>Март: объём растёт?</th>
+            <th>Приоритет</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td><strong>Мандарины</strong></td>
+            <td><span class="badge badge-blue" style="font-size: 0.7rem;">Питатель + опт</span></td>
+            <td style="color: var(--green);">$0.51</td>
+            <td>110-200</td>
+            <td style="color: var(--green);">x2-3</td>
+            <td>Стабильно (562 т)</td>
+            <td><span class="badge badge-green">1</span></td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td><strong>Лимоны</strong></td>
+            <td><span class="badge badge-green" style="font-size: 0.7rem;">Март-бум</span></td>
+            <td style="color: var(--green);">$0.49</td>
+            <td>80-150</td>
+            <td style="color: var(--green);">x2-3</td>
+            <td style="color: var(--green); font-weight: 800;">x8.3 (533 т!)</td>
+            <td><span class="badge badge-green">1</span></td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td><strong>Чеснок</strong></td>
+            <td><span class="badge badge-blue" style="font-size: 0.7rem;">Питатель (школы) + опт</span></td>
+            <td style="color: var(--green);">$0.74</td>
+            <td>110-330</td>
+            <td style="color: var(--green);">x2-4</td>
+            <td>Стабильно (296 т)</td>
+            <td><span class="badge badge-green">1</span></td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td><strong>Капуста (все виды)</strong></td>
+            <td><span class="badge badge-blue" style="font-size: 0.7rem;">Питатель</span></td>
+            <td style="color: var(--green);">$0.27</td>
+            <td>15-200 (по виду)</td>
+            <td style="color: var(--green);">x2-5</td>
+            <td style="color: var(--green); font-weight: 800;">x1.8 (338 т)</td>
+            <td><span class="badge badge-green">1</span></td>
+        </tr>
+        <tr>
+            <td>5</td>
+            <td><strong>Апельсины</strong></td>
+            <td><span class="badge badge-blue" style="font-size: 0.7rem;">Питатель</span></td>
+            <td style="color: var(--green);">$0.43</td>
+            <td>100-200</td>
+            <td style="color: var(--green);">x2-3</td>
+            <td>Спад к весне</td>
+            <td><span class="badge badge-green">2</span></td>
+        </tr>
+        <tr>
+            <td>6</td>
+            <td><strong>Клубника</strong></td>
+            <td><span class="badge badge-green" style="font-size: 0.7rem;">Март-бум + 8 Марта</span></td>
+            <td>$1.05</td>
+            <td>276-600</td>
+            <td style="color: var(--green);">x3-5</td>
+            <td style="color: var(--green); font-weight: 800;">x7.1 (206 т!)</td>
+            <td><span class="badge badge-yellow">2</span></td>
+        </tr>
+        <tr>
+            <td>7</td>
+            <td><strong>Манго</strong></td>
+            <td><span class="badge badge-orange" style="font-size: 0.7rem;">Фуд Сити / HoReCa</span></td>
+            <td>$0.93</td>
+            <td>200-500</td>
+            <td style="color: var(--green);">x3-5</td>
+            <td style="color: var(--green);">Постоянный рост</td>
+            <td><span class="badge badge-yellow">2</span></td>
+        </tr>
+        <tr>
+            <td>8</td>
+            <td><strong>Яблоки</strong></td>
+            <td><span class="badge badge-blue" style="font-size: 0.7rem;">Питатель (школы)</span></td>
+            <td style="color: var(--green);">$0.50</td>
+            <td>90-200</td>
+            <td>x2</td>
+            <td>Стабильно</td>
+            <td><span class="badge badge-yellow">3</span></td>
+        </tr>
+        <tr>
+            <td>9</td>
+            <td><strong>Виноград</strong></td>
+            <td><span class="badge badge-orange" style="font-size: 0.7rem;">Фуд Сити</span></td>
+            <td>$0.88</td>
+            <td>100-300</td>
+            <td>x2-3</td>
+            <td>Падение (140 т в мар)</td>
+            <td><span class="badge badge-yellow">3</span></td>
+        </tr>
+        <tr>
+            <td>10</td>
+            <td><strong>Помело</strong></td>
+            <td><span class="badge badge-orange" style="font-size: 0.7rem;">Опт / розница</span></td>
+            <td style="color: var(--green);">$0.43</td>
+            <td>110-150</td>
+            <td>x2-3</td>
+            <td>Спад (зимний товар)</td>
+            <td><span class="badge badge-yellow">3</span></td>
+        </tr>
+        <tr>
+            <td>11</td>
+            <td><strong>Грибы (шиитаке/эноки)</strong></td>
+            <td><span class="badge badge-orange" style="font-size: 0.7rem;">HoReCa / сети</span></td>
+            <td>$1.17</td>
+            <td>600-2500 (!)</td>
+            <td style="color: var(--green);">x10-20</td>
+            <td>Стабильно (мало)</td>
+            <td><span class="badge badge-yellow">3</span></td>
+        </tr>
+        <tr>
+            <td>12</td>
+            <td><strong>Морковь</strong></td>
+            <td><span class="badge badge-blue" style="font-size: 0.7rem;">Питатель (довесок)</span></td>
+            <td style="color: var(--green);">$0.18</td>
+            <td>24-40</td>
+            <td>x1.5-2</td>
+            <td>Стабильно</td>
+            <td><span class="badge badge-yellow">3</span></td>
+        </tr>
+        <tr>
+            <td>13</td>
+            <td><strong>Груши</strong></td>
+            <td><span class="badge badge-orange" style="font-size: 0.7rem;">Опт</span></td>
+            <td style="color: var(--green);">$0.46</td>
+            <td>150-180</td>
+            <td>x2-3</td>
+            <td>Стабильно (71 т)</td>
+            <td><span class="badge badge-yellow">3</span></td>
+        </tr>
+    </table>
+
+    <div class="footnote">
+        <strong>Как читать таблицу:</strong><br>
+        - «Проходит таможню по» = средняя таможенная стоимость из Логоса (Jan-Feb 2026). Это цена, по которой китайские товары <em>уже реально проходят</em> через Сармант.<br>
+        - «Опт Москва» = оптовые цены на Фуд Сити / Агробазар (февраль 2026). Это то, за сколько <em>уже реально продают</em> в Москве.<br>
+        - Маржа = (опт Москва) / (таможенная цена + ~30-50% на пошлины, логистику, НДС). Очень грубо.<br>
+        - <strong>Реальную маржу считать после получения цен от брата</strong> (FOB Китай + фрахт + таможня + пошлина + НДС + доставка до Москвы).
+    </div>
+</div>
+
+
+<!-- ===== ACTION PLAN ===== -->
+<div class="section">
+    <h2>Что брату нужно пробить в Китае</h2>
+
+    <div class="action-card">
+        <h3>Задание для брата: пробить цены (FOB / EXW)</h3>
+        <ul class="action-list">
+            <li><strong>Мандарины</strong> — FOB цена за тонну, сорт (Халлабон / Понкан / Сатсума), минимальная партия, откуда отгрузка</li>
+            <li><strong>Лимоны</strong> — FOB за тонну, доступность в марте (!!), сроки отгрузки, сорт</li>
+            <li><strong>Чеснок</strong> — FOB за тонну, калибр (5.0+, 5.5+, 6.0+), в сетке/ящике, провинция (Шаньдун — лучший)</li>
+            <li><strong>Капуста</strong> — цветная, белокочанная, пекинская, брокколи — отдельно по каждой</li>
+            <li><strong>Апельсины</strong> — FOB, сорт (Нэвел / Валенсия), калибр</li>
+            <li><strong>Клубника</strong> — FOB, сроки поставки в марте, сорт, упаковка (критично для сохранности)</li>
+            <li><strong>Манго</strong> — FOB, сорт (Kent / Nam Doc Mai / Keitt), откуда (Хайнань?)</li>
+        </ul>
+        <p style="color: var(--dim); margin-top: 14px; font-size: 0.9rem;">
+            Ключевой вопрос к каждому: <strong>минимальная партия</strong> (идеально — 1 фура = 20 тонн) и <strong>условия оплаты</strong> (предоплата / LC / отсрочка).
+        </p>
+    </div>
+
+    <div class="two-col">
+        <div class="strategy-box">
+            <h4 style="color: var(--accent2);">Стратегия захода к финдиректору</h4>
+            <p>Учитывая, что она может <strong>знать обо всей схеме</strong> (ставила главбуха Сарманта), подход должен быть НЕ «я раскрыл ваши тайны», а:</p>
+            <ul style="padding-left: 20px; margin-top: 10px;">
+                <li style="color: var(--text); margin-bottom: 6px;"><strong>«Я вижу возможность оптимизации закупок»</strong></li>
+                <li style="color: var(--text); margin-bottom: 6px;">Предлагаешь 4 конкретных товара (мандарины, чеснок, капуста, апельсины)</li>
+                <li style="color: var(--text); margin-bottom: 6px;">Говоришь: «У меня есть канал поставки из Китая через Казахстан»</li>
+                <li style="color: var(--text); margin-bottom: 6px;">Показываешь цены из Китая (от брата) vs текущие (осторожно — «рыночные»)</li>
+                <li style="color: var(--text); margin-bottom: 6px;"><strong>Никогда не упоминаешь ANKARA GYD и двойное ценообразование</strong></li>
+            </ul>
+        </div>
+        <div class="strategy-box">
+            <h4 style="color: var(--green);">План Б: свободная продажа</h4>
+            <p>Если с финдиректором не сложится — те же товары продаём сами:</p>
+            <ul style="padding-left: 20px; margin-top: 10px;">
+                <li style="color: var(--text); margin-bottom: 6px;"><strong>Март:</strong> Лимоны (x8 рост!) + Клубника (x7 рост!)</li>
+                <li style="color: var(--text); margin-bottom: 6px;"><strong>Круглый год:</strong> Мандарины, чеснок, манго</li>
+                <li style="color: var(--text); margin-bottom: 6px;"><strong>Канал:</strong> Фуд Сити (ты там работаешь) + оптовые базы</li>
+                <li style="color: var(--text); margin-bottom: 6px;"><strong>Нишевый:</strong> грибы шиитаке/эноки → HoReCa (маржа x10-20)</li>
+                <li style="color: var(--text); margin-bottom: 6px;"><strong>Первая фура:</strong> 20т мандаринов или лимонов — самый безопасный старт</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+</div>
+
+<div class="footer">
+    Создано 27 февраля 2026 | Данные: Логос (таможенные декларации) + Фуд Сити / Росстат (оптовые цены) + открытые источники (вкусовые характеристики)
+</div>
+
+</body>
+</html>
