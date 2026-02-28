@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Аналитика — все товары из Китая</title>
+<style>
+:root {
+  --bg: #0a0e1a;
+  --card: #141b2d;
+  --card-alt: #1a2235;
+  --border: #2a3450;
+  --accent: #3b82f6;
+  --green: #22c55e;
+  --green-dim: rgba(34,197,94,.12);
+  --red: #ef4444;
+  --red-dim: rgba(239,68,68,.1);
+  --orange: #f59e0b;
+  --orange-dim: rgba(245,158,11,.1);
+  --purple: #a78bfa;
+  --purple-dim: rgba(167,139,250,.1);
+  --cyan: #06b6d4;
+  --text: #e2e8f0;
+  --dim: #94a3b8;
+  --muted: #64748b;
+  --radius: 14px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,system-ui,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.55;-webkit-font-smoothing:antialiased;padding-bottom:80px}
+
+.nav{position:sticky;top:0;z-index:100;background:rgba(10,14,26,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:10px 16px;display:flex;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.nav a{flex-shrink:0;padding:7px 14px;border-radius:20px;font-size:.82rem;font-weight:600;text-decoration:none;color:var(--dim);border:1px solid var(--border);transition:.2s;white-space:nowrap}
+.nav a.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.nav a:hover{border-color:var(--accent);color:var(--text)}
+
+.hero{padding:28px 16px 20px;text-align:center}
+.hero h1{font-size:1.6rem;font-weight:800;background:linear-gradient(135deg,var(--purple),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero .sub{color:var(--dim);font-size:.88rem;margin-top:4px}
+
+/* FILTER PILLS */
+.filter-row{display:flex;gap:6px;padding:0 12px 12px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.filter-pill{flex-shrink:0;padding:6px 12px;border-radius:16px;font-size:.76rem;font-weight:600;border:1px solid var(--border);background:transparent;color:var(--dim);cursor:pointer;transition:.2s;white-space:nowrap}
+.filter-pill.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.filter-pill:active{transform:scale(.95)}
+
+.section{margin:0 12px 16px}
+.section-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;transition:.2s}
+.section-header:active{transform:scale(.98)}
+.section-header h2{font-size:.95rem;font-weight:700;display:flex;align-items:center;gap:8px}
+.section-header .arrow{font-size:.7rem;color:var(--dim);transition:.3s}
+.section-header.open .arrow{transform:rotate(180deg)}
+.section-body{display:none;padding:12px 0 0}
+.section-body.show{display:block}
+
+.product{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;overflow:hidden}
+.product-head{padding:14px 16px;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;justify-content:space-between}
+.product-head:active{background:var(--card-alt)}
+.product-head h3{font-size:.92rem;font-weight:700;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.product-head .badge{font-size:.68rem;padding:2px 8px;border-radius:10px;font-weight:600}
+.badge-green{background:var(--green-dim);color:var(--green)}
+.badge-orange{background:var(--orange-dim);color:var(--orange)}
+.badge-red{background:var(--red-dim);color:var(--red)}
+.badge-purple{background:var(--purple-dim);color:var(--purple)}
+.badge-cyan{background:rgba(6,182,212,.12);color:var(--cyan)}
+.product-head .arrow2{font-size:.65rem;color:var(--dim);transition:.3s;flex-shrink:0}
+.product-head.open .arrow2{transform:rotate(180deg)}
+.product-body{display:none;padding:0 16px 16px;border-top:1px solid var(--border)}
+.product-body.show{display:block}
+
+.kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+.kpi-row.four{grid-template-columns:repeat(4,1fr)}
+.kpi{background:var(--card-alt);border-radius:10px;padding:10px;text-align:center}
+.kpi .val{font-size:1rem;font-weight:800;color:var(--accent)}
+.kpi .lbl{font-size:.68rem;color:var(--dim);margin-top:2px}
+.kpi.green .val{color:var(--green)}
+.kpi.orange .val{color:var(--orange)}
+.kpi.red .val{color:var(--red)}
+.kpi.cyan .val{color:var(--cyan)}
+
+.dtable{width:100%;border-collapse:collapse;font-size:.78rem;margin:10px 0}
+.dtable th{text-align:left;padding:6px 8px;color:var(--dim);font-weight:600;border-bottom:1px solid var(--border);font-size:.72rem;text-transform:uppercase;letter-spacing:.3px}
+.dtable td{padding:6px 8px;border-bottom:1px solid rgba(42,52,80,.5)}
+.dtable tr:last-child td{border-bottom:none}
+
+.info-box{background:var(--card-alt);border-radius:10px;padding:12px 14px;margin:10px 0;font-size:.82rem;line-height:1.6}
+.info-box.warn{border-left:3px solid var(--orange)}
+.info-box.success{border-left:3px solid var(--green)}
+.info-box.danger{border-left:3px solid var(--red)}
+.info-box.info{border-left:3px solid var(--accent)}
+.info-box .title{font-weight:700;margin-bottom:4px;font-size:.84rem}
+
+.chart-bar{margin:10px 0}
+.chart-bar .bar-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:.75rem}
+.chart-bar .bar-label{width:60px;text-align:right;color:var(--dim);flex-shrink:0;font-size:.72rem}
+.chart-bar .bar-track{flex:1;height:18px;background:var(--card-alt);border-radius:6px;overflow:hidden}
+.chart-bar .bar-fill{height:100%;border-radius:6px;transition:.6s}
+.chart-bar .bar-val{font-size:.7rem;font-weight:600;margin-left:6px;flex-shrink:0;min-width:40px}
+
+.risk-meter{display:flex;gap:3px;margin:6px 0}
+.risk-dot{width:20px;height:6px;border-radius:3px;background:var(--border)}
+.risk-dot.filled.low{background:var(--green)}
+.risk-dot.filled.med{background:var(--orange)}
+.risk-dot.filled.high{background:var(--red)}
+
+.tag{display:inline-block;font-size:.7rem;padding:2px 8px;border-radius:8px;margin:2px 2px 2px 0}
+.tag-green{background:rgba(34,197,94,.1);color:var(--green)}
+.tag-red{background:rgba(239,68,68,.1);color:var(--red)}
+.tag-orange{background:rgba(245,158,11,.1);color:var(--orange)}
+.tag-blue{background:rgba(59,130,246,.1);color:var(--accent)}
+.tag-cyan{background:rgba(6,182,212,.1);color:var(--cyan)}
+
+.verdict{padding:10px 14px;border-radius:10px;margin:10px 0;font-size:.84rem;font-weight:600;display:flex;align-items:center;gap:8px}
+.verdict-yes{background:var(--green-dim);color:var(--green);border:1px solid rgba(34,197,94,.2)}
+.verdict-no{background:var(--red-dim);color:var(--red);border:1px solid rgba(239,68,68,.2)}
+.verdict-maybe{background:var(--orange-dim);color:var(--orange);border:1px solid rgba(245,158,11,.2)}
+.verdict-season{background:rgba(6,182,212,.1);color:var(--cyan);border:1px solid rgba(6,182,212,.2)}
+
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(10,14,26,.95);backdrop-filter:blur(12px);border-top:1px solid var(--border);display:flex;z-index:100}
+.bottom-nav a{flex:1;text-align:center;padding:10px 0 8px;text-decoration:none;color:var(--muted);font-size:.68rem;font-weight:600;transition:.2s}
+.bottom-nav a.active{color:var(--accent)}
+.bottom-nav a .icon{font-size:1.2rem;display:block;margin-bottom:2px}
+
+.scroll-hint{text-align:center;font-size:.72rem;color:var(--muted);padding:4px 0}
+
+@media(min-width:600px){
+  .section{max-width:560px;margin-left:auto;margin-right:auto}
+  .hero{max-width:560px;margin:0 auto}
+  .filter-row{max-width:560px;margin:0 auto;padding-bottom:12px}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html">Предложения</a>
+  <a href="analytics.html" class="active">Аналитика рынка</a>
+</nav>
+
+<div class="hero">
+  <h1>Аналитика рынка</h1>
+  <div class="sub">Все товарные позиции из Китая через Сармант</div>
+</div>
+
+<div class="filter-row">
+  <button class="filter-pill active" onclick="filterAll(this)">Все</button>
+  <button class="filter-pill" onclick="filterCat(this,'recommended')">Рекомендуемые</button>
+  <button class="filter-pill" onclick="filterCat(this,'seasonal')">Сезонные</button>
+  <button class="filter-pill" onclick="filterCat(this,'pitatel')">Для Питателя</button>
+  <button class="filter-pill" onclick="filterCat(this,'eliminated')">Отклонённые</button>
+</div>
+
+<!-- ===== OVERVIEW ===== -->
+<div class="section">
+  <div class="section-header open" onclick="toggle(this)">
+    <h2>Обзор рынка</h2>
+    <span class="arrow">▼</span>
+  </div>
+  <div class="section-body show">
+    <div class="kpi-row">
+      <div class="kpi green"><div class="val">~80K т</div><div class="lbl">из Китая / 2025</div></div>
+      <div class="kpi"><div class="val">+18-29%</div><div class="lbl">рост YoY</div></div>
+      <div class="kpi"><div class="val">4,700</div><div class="lbl">деклараций</div></div>
+    </div>
+
+    <div style="font-size:.82rem;font-weight:700;margin:12px 0 8px;color:var(--dim)">ТОП-5 по объёму (тонн/год)</div>
+    <div class="chart-bar">
+      <div class="bar-row"><span class="bar-label">Мандарины</span><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--green)"></div></div><span class="bar-val">50,516</span></div>
+      <div class="bar-row"><span class="bar-label">Томаты</span><div class="bar-track"><div class="bar-fill" style="width:35%;background:var(--red)"></div></div><span class="bar-val">17,761</span></div>
+      <div class="bar-row"><span class="bar-label">Овощи пр.</span><div class="bar-track"><div class="bar-fill" style="width:34%;background:var(--orange)"></div></div><span class="bar-val">17,024</span></div>
+      <div class="bar-row"><span class="bar-label">Лук/чеснок</span><div class="bar-track"><div class="bar-fill" style="width:27%;background:var(--cyan)"></div></div><span class="bar-val">13,763</span></div>
+      <div class="bar-row"><span class="bar-label">Капуста</span><div class="bar-track"><div class="bar-fill" style="width:22%;background:var(--purple)"></div></div><span class="bar-val">11,317</span></div>
+    </div>
+
+    <div style="font-size:.82rem;font-weight:700;margin:14px 0 8px;color:var(--dim)">Тренды YoY (янв-фев 2025 vs 2026)</div>
+    <div class="chart-bar">
+      <div class="bar-row"><span class="bar-label">Помело</span><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--green)"></div></div><span class="bar-val" style="color:var(--green)">+413%</span></div>
+      <div class="bar-row"><span class="bar-label">Бел. кап.</span><div class="bar-track"><div class="bar-fill" style="width:87%;background:var(--green)"></div></div><span class="bar-val" style="color:var(--green)">+359%</span></div>
+      <div class="bar-row"><span class="bar-label">Лук</span><div class="bar-track"><div class="bar-fill" style="width:30%;background:var(--green)"></div></div><span class="bar-val" style="color:var(--green)">+125%</span></div>
+      <div class="bar-row"><span class="bar-label">Мандарины</span><div class="bar-track"><div class="bar-fill" style="width:3%;background:var(--cyan)"></div></div><span class="bar-val">+14%</span></div>
+      <div class="bar-row"><span class="bar-label">Томаты</span><div class="bar-track"><div class="bar-fill" style="width:45%;background:var(--red)"></div></div><span class="bar-val" style="color:var(--red)">-45%</span></div>
+      <div class="bar-row"><span class="bar-label">Перец</span><div class="bar-track"><div class="bar-fill" style="width:65%;background:var(--red)"></div></div><span class="bar-val" style="color:var(--red)">-65%</span></div>
+      <div class="bar-row"><span class="bar-label">Брокколи</span><div class="bar-track"><div class="bar-fill" style="width:73%;background:var(--red)"></div></div><span class="bar-val" style="color:var(--red)">-73%</span></div>
+      <div class="bar-row"><span class="bar-label">Чеснок</span><div class="bar-track"><div class="bar-fill" style="width:74%;background:var(--orange)"></div></div><span class="bar-val" style="color:var(--orange)">-74%*</span></div>
+    </div>
+    <div class="info-box warn" style="font-size:.76rem">*Чеснок -74% = миграция клиента между брокерами, не рынок. Китай стабильно держит 75-80% рынка чеснока РФ.</div>
+
+    <div style="font-size:.82rem;font-weight:700;margin:14px 0 8px;color:var(--dim)">Сезонные скачки в марте (исторически)</div>
+    <div class="kpi-row four">
+      <div class="kpi green"><div class="val">x10</div><div class="lbl">Лимоны</div></div>
+      <div class="kpi orange"><div class="val">x8</div><div class="lbl">Клубника</div></div>
+      <div class="kpi"><div class="val">x8</div><div class="lbl">Дайкон</div></div>
+      <div class="kpi"><div class="val">x7</div><div class="lbl">Картофель</div></div>
+    </div>
+
+    <div class="info-box info">
+      <div class="title">Два гиганта: 75% потока</div>
+      ВОСТОК-Ф (106,512 т) и ДРАКОН (85,694 т) забирают ~75% всего китайского скоропорта через Сармант.
+    </div>
+  </div>
+</div>
+
+<!-- ===== RECOMMENDED PRODUCTS ===== -->
+
+<!-- MANDARINS -->
+<div class="product" data-cat="seasonal recommended pitatel">
+  <div class="product-head" onclick="toggleProduct(this)">
+    <h3>Мандарины <span class="badge badge-cyan">Осень</span> <span class="badge badge-purple">Питатель</span></h3>
+    <span class="arrow2">▼</span>
+  </div>
+  <div class="product-body">
+    <div class="verdict verdict-season">Осенний сезон 2026 (окт-фев). Весной не брать!</div>
+    <div class="kpi-row">
+      <div class="kpi green"><div class="val">50,516 т</div><div class="lbl">за 2025 Сармант</div></div>
+      <div class="kpi"><div class="val">~77 ₽</div><div class="lbl">себестоимость КЗ</div></div>
+      <div class="kpi green"><div class="val">110-200 ₽</div><div class="lbl">опт Москва</div></div>
+    </div>
+    <div class="kpi-row">
+      <div class="kpi"><div class="val">$0.46-0.51</div><div class="lbl">DAP</div></div>
+      <div class="kpi"><div class="val">x1.1-2.1</div><div class="lbl">маржа</div></div>
+      <div class="kpi cyan"><div class="val">окт-фев</div><div class="lbl">сезон</div></div>
+    </div>
+
+    <div class="info-box success">
+      <div class="title">Для Питателя</div>
+      Питатель платит ~118 руб/кг (ANKARA GYD, Иран). Наша цена через КЗ: ~77 руб/кг. Экономия: -35%. Главный покупатель: АКВАНУР ФУД СИТИ (76% закупок). Объём: 1,833 т за 7 мес, ~4,000 т/год.
+    </div>
+
+    <div style="font-size:.82rem;font-weight:700;margin:12px 0 6px;color:var(--dim)">Помесячные объёмы (тонн)</div>
+    <div class="chart-bar">
+      <div class="bar-row"><span class="bar-label">Окт 25</span><div class="bar-track"><div class="bar-fill" style="width:20%;background:var(--cyan)"></div></div><span class="bar-val">~460</span></div>
+      <div class="bar-row"><span class="bar-label">Ноя 25</span><div class="bar-track"><div class="bar-fill" style="width:45%;background:var(--green)"></div></div><span class="bar-val">1,039</span></div>
+      <div class="bar-row"><span class="bar-label">Дек 25</span><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--green)"></div></div><span class="bar-val" style="color:var(--green)">2,286</span></div>
+      <div class="bar-row"><span class="bar-label">Янв 26</span><div class="bar-track"><div class="bar-fill" style="width:33%;background:var(--cyan)"></div></div><span class="bar-val">762</span></div>
+    </div>
+
+    <div class="info-box warn">
+      <div class="title">Сорта (Gemini)</div>
+      Shatangju (砂糖桔), Халлабон, Понкан — премиум-сегмент. Baby-мандарины с листочками заходят на ура и стоят дорого на Фуд Сити.
+    </div>
+    <div class="info-box danger">
+      К марту мандарины сохнут внутри = неликвид! Строго октябрь-февраль.
+    </div>
+
+    <div style="font-size:.82rem;font-weight:700;margin:12px 0 6px;color:var(--dim)">Риски</div>
+    <div class="risk-meter">
+      <div class="risk-dot filled low"></div>
+      <div class="risk-dot filled low"></div>
+      <div class="risk-dot filled med"></div>
+      <div class="risk-dot"></div>
+      <div class="risk-dot"></div>
+    </div>
+    <div style="font-size:.76rem;color:var(--dim);margin-top:4px">Средний: строгая сезонность, но транспорт ОК и рынок огромный</div>
+  </div>
+</div>
+
+<!-- POMELO -->
+<div class="product" data-cat="seasonal recommended">
+  <div class="product-head" onclick="toggleProduct(this)">
+    <h3>Помело <span class="badge badge-cyan">Осень</span> <span class="badge badge-green">Тренд +413%</span></h3>
+    <span class="arrow2">▼</span>
+  </div>
+  <div class="product-body">
+    <div class="verdict verdict-season">Осенний сезон (окт-янв). Весной «ватное».</div>
+    <div class="kpi-row">
+      <div class="kpi"><div class="val">~72 ₽</div><div class="lbl">себестоимость КЗ</div></div>
+      <div class="kpi"><div class="val">110-150 ₽</div><div class="lbl">опт Москва</div></div>
+      <div class="kpi green"><div class="val">x1.5-2.1</div><div class="lbl">маржа</div></div>
+    </div>
+    <div class="info-box success">
+      <div class="title">Скрытый бриллиант (Gemini)</div>
+      Китай = абсолютный мировой лидер по помело. Хранится месяцами. Транспорт идеальный. Тренд +413% YoY (янв-фев 2025 vs 2026). Пик: окт (241 т), ноя (275 т).
+    </div>
+    <div class="info-box danger">К марту помело «ватное» (сухое) = убыток. Только осень-зима.</div>
+    <div style="font-size:.82rem;font-weight:700;margin:12px 0 6px;color:var(--dim)">Риски</div>
+    <div class="risk-meter">
+      <div class="risk-dot filled low"></div>
+      <div class="risk-dot filled low"></div>
+      <div class="risk-dot"></div>
+      <div class="risk-dot"></div>
+      <div class="risk-dot"></div>
+    </div>
+    <div style="font-size:.76rem;color:var(--dim);margin-top:4px">Низкий (в сезон): хранится долго, дорогое, Китай = монополист</div>
+  </div>
+</div>
+
+<!-- ORANGES -->
+<div class="product" data-cat="pitatel">
+  <div class="product-head" onclick="toggleProduct(this)">
+    <h3>Апельсины <span class="badge badge-purple">Питатель МЕГА</span></h3>
+    <span class="arrow2">▼</span>
+  </div>
+  <div class="product-body">
+    <div class="verdict verdict-yes">Мега-позиция: 6,676 т за 7 мес, все 6 принципалов</div>
+    <div class="kpi-row">
+      <div class="kpi green"><div class="val">6,676 т</div><div class="lbl">объём (7 мес)</div></div>
+      <div class="kpi"><div class="val">~25K т</div><div class="lbl">прогноз/год</div></div>
+      <div class="kpi"><div class="val">$0.43</div><div class="lbl">Китай $/кг</div></div>
+    </div>
+    <div class="kpi-row">
+      <div class="kpi"><div class="val">$0.45</div><div class="lbl">Питатель сейчас</div></div>
+      <div class="kpi green"><div class="val">-22-25%</div><div class="lbl">экономия</div></div>
+      <div class="kpi"><div class="val">~77-80 ₽</div><div class="lbl">наша цена КЗ</div></div>
+    </div>
+    <div class="info-box success">
+      <div class="title">Почему мега-позиция</div>
+      <ul style="list-style:none;padding:0">
+        <li>Все 6 принципалов покупают апельсины</li>
+        <li>~2,150 т/мес, тренд растущий</li>
+        <li>Китай дешевле даже по таможенной ($0.43 vs $0.45 Иран)</li>
+        <li>Цитрусовые = идеальная транспортабельность</li>
+        <li>Главный покупатель: СМАРТ МОУШН ЛИНК</li>
+      </ul>
+    </div>
+    <div class="info-box warn">
+      <div class="title">Риски</div>
+      Конкуренция с Турцией/Египтом в Москве. Тяжёлый и дешёвый товар — фрахт $0.45/кг съедает маржу. Только через Питатель (большие объёмы), не для свободной продажи.
+    </div>
+    <div style="font-size:.82rem;font-weight:700;margin:12px 0 6px;color:var(--dim)">Риски</div>
+    <div class="risk-meter">
+      <div class="risk-dot filled low"></div>
+      <div class="risk-dot filled med"></div>
+      <div class="risk-dot filled med"></div>
+      <div class="risk-dot"></div>
+      <div class="risk-dot"></div>
+    </div>
+  </div>
+</div>
+
+<!-- CABBAGE (for Pitatel) -->
+<div class="product" data-cat="pitatel">
+  <div class="product-head" onclick="toggleProduct(this)">
+    <h3>Капуста (брокколи/цветная) <span class="badge badge-purple">Питатель</span></h3>
+    <span class="arrow2">▼</span>
+  </div>
+  <div class="product-body">
+    <div class="verdict verdict-yes">Экономия 30-80% для Питателя</div>
+    <div class="kpi-row">
+      <div class="kpi"><div class="val">2,796 т</div><div class="lbl">объём (7 мес)</div></div>
+      <div class="kpi"><div class="val">$0.26-0.70</div><div class="lbl">Китай $/кг</div></div>
+      <div class="kpi green"><div class="val">-59-80%</div><div class="lbl">экономия</div></div>
+    </div>
+    <div class="info-box success">
+      Питатель платит $0.63-0.72/кг (через ANKARA GYD). Китайская: $0.26-0.44/кг. Основной покупатель: ТК ЕВРАЗИЯ (55%). Отлично транспортируется.
+    </div>
+    <div class="info-box warn">
+      НЕ путать с пекинской капустой (убыточна — см. ниже). Здесь речь о цветной / брокколи для школьного питания.
+    </div>
+  </div>
+</div>
+
+<!-- MANGO -->
+<div class="product" data-cat="pitatel">
+  <div class="product-head" onclick="toggleProduct(this)">
+    <h3>Манго <span class="badge badge-orange">Перспектива</span></h3>
+    <span class="arrow2">▼</span>
+  </div>
+  <div class="product-body">
+    <div class="verdict verdict-maybe">Высокая маржа, но нишевый для Фуд Сити / HoReCa</div>
+    <div class="kpi-row">
+      <div class="kpi"><div class="val">3,318 т</div><div class="lbl">за 2025</div></div>
+      <div class="kpi"><div class="val">$0.93</div><div class="lbl">тамож. $/кг</div></div>
+      <div class="kpi green"><div class="val">200-500 ₽</div><div class="lbl">опт Москва</div></div>
+    </div>
+    <div class="info-box info">
+      Маржа x3-5. Растёт к весне, пик в мае. Нишевый товар для Фуд Сити / HoReCa, не для массового рынка. Приоритет 2 — после стабилизации основных позиций.
+    </div>
+    <div style="font-size:.82rem;font-weight:700;margin:12px 0 6px;color:var(--dim)">Риски</div>
+    <div class="risk-meter">
+      <div class="risk-dot filled low"></div>
+      <div class="risk-dot filled med"></div>
+      <div class="risk-dot filled med"></div>
+      <div class="risk-dot"></div>
+      <div class="risk-dot"></div>
+    </div>
+    <div style="font-size:.76rem;color:var(--dim);margin-top:4px">Средний: скоропортящийся, но маржа компенсирует</div>
+  </div>
+</div>
+
+<!-- ===== ELIMINATED SECTION HEADER ===== -->
+<div class="section">
+  <div class="section-header" onclick="toggle(this)">
+    <h2>Кладбище: отклонённые товары</h2>
+    <span class="arrow">▼</span>
+  </div>
+  <div class="section-body">
+    <div class="info-box danger">
+      <div class="title">Главное правило</div>
+      Фрахт $0.45/кг (+40 руб) убивает дешёвые тяжёлые товары. Для первой фуры нужны ДОРОГИЕ товары с ДОЛГИМ хранением.
+    </div>
+
+    <!-- Strawberry -->
+    <div class="product" data-cat="eliminated">
+      <div class="product-head" onclick="toggleProduct(this)">
+        <h3>Клубника <span class="badge badge-red">Убрана</span></h3>
+        <span class="arrow2">▼</span>
+      </div>
+      <div class="product-body">
+        <div class="verdict verdict-no">«Самоубийство для первой фуры» — Gemini</div>
+        <div class="kpi-row">
+          <div class="kpi"><div class="val">$1.01</div><div class="lbl">тамож. $/кг</div></div>
+          <div class="kpi"><div class="val">276-600 ₽</div><div class="lbl">опт Москва</div></div>
+          <div class="kpi red"><div class="val">20-30%</div><div class="lbl">потери</div></div>
+        </div>
+        <div class="info-box danger">
+          Маржа x3-5 выглядит шикарно, НО: транспорт 10-18 дней, самый капризный товар. 20-30% потерь даже с идеальным рефрижератором. Мартовский скачок x7.1 (29-206 т), но везут самолётами или из ближних стран (Турция/Египет). Только для опытных операторов.
+        </div>
+        <div style="font-size:.82rem;font-weight:700;margin:12px 0 6px;color:var(--dim)">Риски</div>
+        <div class="risk-meter">
+          <div class="risk-dot filled high"></div>
+          <div class="risk-dot filled high"></div>
+          <div class="risk-dot filled high"></div>
+          <div class="risk-dot filled high"></div>
+          <div class="risk-dot filled high"></div>
+        </div>
+        <div style="font-size:.76rem;color:var(--red);margin-top:4px;font-weight:600">Максимальный: потери гарантированы</div>
+      </div>
+    </div>
+
+    <!-- Sweet Pepper -->
+    <div class="product" data-cat="eliminated">
+      <div class="product-head" onclick="toggleProduct(this)">
+        <h3>Перец сладкий <span class="badge badge-red">Отклонён</span></h3>
+        <span class="arrow2">▼</span>
+      </div>
+      <div class="product-body">
+        <div class="verdict verdict-no">Категорически нет: пестициды + фитоконтроль</div>
+        <div class="kpi-row">
+          <div class="kpi"><div class="val">6,594 т</div><div class="lbl">Питатель/5мес</div></div>
+          <div class="kpi"><div class="val">$0.30-0.56</div><div class="lbl">Китай $/кг</div></div>
+          <div class="kpi red"><div class="val">-65% YoY</div><div class="lbl">тренд</div></div>
+        </div>
+        <div class="info-box danger">
+          <div class="title">Причины отказа</div>
+          <ul style="list-style:none;padding:0">
+            <li>Не доедет 15-25 дней (нежный товар)</li>
+            <li>Пестициды: школьному питанию опасно</li>
+            <li>Россельхознадзор: вирус коричневой морщинистости, вирус пятнистого увядания</li>
+            <li>Gemini сначала предлагала, полностью отказалась после данных Claude</li>
+          </ul>
+        </div>
+        <div class="info-box info">
+          У Питателя огромный объём (6,594 т!), но замена Китаем нереальна по фитосанитарным причинам. ANKARA GYD наценка: 7.5-8x ($0.30 -> $2.30).
+        </div>
+        <div class="risk-meter">
+          <div class="risk-dot filled high"></div>
+          <div class="risk-dot filled high"></div>
+          <div class="risk-dot filled high"></div>
+          <div class="risk-dot filled high"></div>
+          <div class="risk-dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Napa Cabbage -->
+    <div class="product" data-cat="eliminated">
+      <div class="product-head" onclick="toggleProduct(this)">
+        <h3>Пекинская капуста <span class="badge badge-red">Убыток</span></h3>
+        <span class="arrow2">▼</span>
+      </div>
+      <div class="product-body">
+        <div class="verdict verdict-no">Ошибка в ценах. Реальный опт 25-35 руб, а не 116.</div>
+        <div class="kpi-row">
+          <div class="kpi red"><div class="val">~68 ₽</div><div class="lbl">себестоимость</div></div>
+          <div class="kpi red"><div class="val">25-35 ₽</div><div class="lbl">опт Москва</div></div>
+          <div class="kpi red"><div class="val">УБЫТОК</div><div class="lbl">результат</div></div>
+        </div>
+        <div class="info-box danger">
+          Изначально была P1 из-за ошибки: сравнивали с ценой цветной капусты (116 руб). Реальный опт пекинской: 25-35 руб. Себестоимость ~68 руб ($0.27 + $0.45 фрахт). ЧИСТЫЙ УБЫТОК. Везут из РФ/СНГ за копейки.
+        </div>
+        <div class="risk-meter">
+          <div class="risk-dot filled high"></div>
+          <div class="risk-dot filled high"></div>
+          <div class="risk-dot filled high"></div>
+          <div class="risk-dot filled high"></div>
+          <div class="risk-dot filled high"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- White Cabbage -->
+    <div class="product" data-cat="eliminated">
+      <div class="product-head" onclick="toggleProduct(this)">
+        <h3>Белокочанная капуста <span class="badge badge-red">Убыток</span></h3>
+        <span class="arrow2">▼</span>
+      </div>
+      <div class="product-body">
+        <div class="verdict verdict-no">Фрахт убивает: себест. 66 руб, опт 15-60 руб</div>
+        <div class="kpi-row">
+          <div class="kpi red"><div class="val">~66 ₽</div><div class="lbl">себестоимость</div></div>
+          <div class="kpi red"><div class="val">15-60 ₽</div><div class="lbl">опт Москва</div></div>
+          <div class="kpi red"><div class="val">УБЫТОК</div><div class="lbl">результат</div></div>
+        </div>
+        <div class="info-box danger">Дешёвый тяжёлый товар. +40 руб фрахта на каждый кг делает импорт из Китая бессмысленным. Тренд +359% YoY в Логосе, но экономика не работает для нас.</div>
+      </div>
+    </div>
+
+    <!-- Carrots -->
+    <div class="product" data-cat="eliminated">
+      <div class="product-head" onclick="toggleProduct(this)">
+        <h3>Морковь <span class="badge badge-red">Убыток</span></h3>
+        <span class="arrow2">▼</span>
+      </div>
+      <div class="product-body">
+        <div class="verdict verdict-no">Узбекистан ближе и дешевле</div>
+        <div class="kpi-row">
+          <div class="kpi red"><div class="val">~55 ₽</div><div class="lbl">себестоимость</div></div>
+          <div class="kpi red"><div class="val">24-40 ₽</div><div class="lbl">опт Москва</div></div>
+          <div class="kpi"><div class="val">$0.18</div><div class="lbl">Китай $/кг</div></div>
+        </div>
+        <div class="info-box danger">Таможенная всего $0.18/кг, но + фрахт $0.45 = $0.63 = ~49 руб. Опт 24-40 руб = УБЫТОК. Питатель покупает из Узбекистана по $0.33 — ближе и дешевле доставка.</div>
+      </div>
+    </div>
+
+    <!-- Iceberg Lettuce -->
+    <div class="product" data-cat="eliminated">
+      <div class="product-head" onclick="toggleProduct(this)">
+        <h3>Салат Айсберг <span class="badge badge-red">Невозможно</span></h3>
+        <span class="arrow2">▼</span>
+      </div>
+      <div class="product-body">
+        <div class="verdict verdict-no">Физически невозможно: хранение 5-7 дней, дорога 15-25</div>
+        <div class="kpi-row">
+          <div class="kpi"><div class="val">10,678 т</div><div class="lbl">Питатель/2мес</div></div>
+          <div class="kpi red"><div class="val">5-7 дн</div><div class="lbl">хранение</div></div>
+          <div class="kpi red"><div class="val">15-25 дн</div><div class="lbl">транзит</div></div>
+        </div>
+        <div class="info-box danger">Огромные объёмы у Питателя (10,678 т!), наценка ANKARA GYD 8-9.5x ($0.42 -> $3.65). Но срок годности = срок доставки. Физически не доедет из Китая.</div>
+      </div>
+    </div>
+
+    <!-- Cucumbers -->
+    <div class="product" data-cat="eliminated">
+      <div class="product-head" onclick="toggleProduct(this)">
+        <h3>Огурцы <span class="badge badge-red">Не доедет</span></h3>
+        <span class="arrow2">▼</span>
+      </div>
+      <div class="product-body">
+        <div class="verdict verdict-no">Самый скоропортящийся овощ</div>
+        <div class="kpi-row">
+          <div class="kpi"><div class="val">10,005 т</div><div class="lbl">Питатель/2мес</div></div>
+          <div class="kpi"><div class="val">$0.68</div><div class="lbl">Иран $/кг</div></div>
+          <div class="kpi"><div class="val">3.6-3.9x</div><div class="lbl">наценка ANKARA</div></div>
+        </div>
+        <div class="info-box danger">Самый скоропортящийся овощ. Из Ирана 5-7 дней — и то на пределе. Из Китая 15-25 дней = физически невозможно.</div>
+      </div>
+    </div>
+
+    <!-- Tomatoes -->
+    <div class="product" data-cat="eliminated">
+      <div class="product-head" onclick="toggleProduct(this)">
+        <h3>Томаты <span class="badge badge-red">Фитоконтроль</span></h3>
+        <span class="arrow2">▼</span>
+      </div>
+      <div class="product-body">
+        <div class="verdict verdict-no">18 фитосанитарных нарушений в 2025</div>
+        <div class="kpi-row">
+          <div class="kpi"><div class="val">17,761 т</div><div class="lbl">за 2025</div></div>
+          <div class="kpi red"><div class="val">18</div><div class="lbl">нарушений</div></div>
+          <div class="kpi red"><div class="val">-45% YoY</div><div class="lbl">тренд</div></div>
+        </div>
+        <div class="info-box danger">Россельхознадзор активно блокирует партии из Китая: вирус, 18 случаев в 2025. Тренд -45% YoY. Объёмы падают из-за проблем с фитоконтролем.</div>
+      </div>
+    </div>
+
+    <!-- Eggplants -->
+    <div class="product" data-cat="eliminated">
+      <div class="product-head" onclick="toggleProduct(this)">
+        <h3>Баклажаны <span class="badge badge-red">Пестициды</span></h3>
+        <span class="arrow2">▼</span>
+      </div>
+      <div class="product-body">
+        <div class="verdict verdict-no">Самый высокий % пестицидов среди кит. овощей</div>
+        <div class="kpi-row">
+          <div class="kpi"><div class="val">3,304 т</div><div class="lbl">Питатель/5мес</div></div>
+          <div class="kpi"><div class="val">$0.47</div><div class="lbl">тамож. $/кг</div></div>
+          <div class="kpi"><div class="val">5.8-6x</div><div class="lbl">наценка ANKARA</div></div>
+        </div>
+        <div class="info-box danger">Наценка ANKARA GYD: $0.47 -> $2.78 (5.8-6x). Но самый высокий процент пестицидов среди китайских овощей. Для школьного питания — критический риск.</div>
+      </div>
+    </div>
+
+    <!-- Persimmon -->
+    <div class="product" data-cat="eliminated">
+      <div class="product-head" onclick="toggleProduct(this)">
+        <h3>Хурма <span class="badge badge-red">Репутация</span></h3>
+        <span class="arrow2">▼</span>
+      </div>
+      <div class="product-body">
+        <div class="verdict verdict-no">«Азербайджанская хурма» = бренд. Замена = удар по репутации</div>
+        <div class="kpi-row">
+          <div class="kpi"><div class="val">5,818 т</div><div class="lbl">Питатель/5мес</div></div>
+          <div class="kpi"><div class="val">$0.52</div><div class="lbl">Азербайджан $/кг</div></div>
+        </div>
+        <div class="info-box danger">Хурма из Азербайджана — устоявшийся бренд. Попытка замены на китайскую = репутационный удар. Не подходит для Питателя.</div>
+      </div>
+    </div>
+
+    <!-- Kiwi -->
+    <div class="product" data-cat="eliminated">
+      <div class="product-head" onclick="toggleProduct(this)">
+        <h3>Киви <span class="badge badge-red">Устоявшийся</span></h3>
+        <span class="arrow2">▼</span>
+      </div>
+      <div class="product-body">
+        <div class="verdict verdict-no">Иран = 60% мирового экспорта, цепочка устоялась</div>
+        <div class="kpi-row">
+          <div class="kpi"><div class="val">14,416 т</div><div class="lbl">Питатель/2мес</div></div>
+          <div class="kpi"><div class="val">$0.56</div><div class="lbl">Иран $/кг</div></div>
+          <div class="kpi"><div class="val">4.6x</div><div class="lbl">наценка ANKARA</div></div>
+        </div>
+        <div class="info-box danger">Огромные объёмы, но Иран контролирует 60% мирового экспорта киви. Цепочка поставок устоялась. Наценка ANKARA: $0.47 -> $2.17 (4.6x). Нет смысла конкурировать.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== EXOTIC ===== -->
+<div class="section">
+  <div class="section-header" onclick="toggle(this)">
+    <h2>Экзотика и нишевые товары</h2>
+    <span class="arrow">▼</span>
+  </div>
+  <div class="section-body">
+    <div class="info-box info">
+      <div class="title">Замечены в базе Логоса, но объёмы маленькие</div>
+    </div>
+    <table class="dtable">
+      <tr><th>Товар</th><th>$/кг</th><th>Опт МСК</th><th>Объём</th><th>Комментарий</th></tr>
+      <tr><td>Питайя</td><td>$6.24</td><td>420+ ₽</td><td>малый</td><td>Нишевый</td></tr>
+      <tr><td>Гранат</td><td>$4.55-5.42</td><td>—</td><td>малый</td><td>Нишевый</td></tr>
+      <tr><td>Грибы эноки</td><td>$3.23</td><td>350-600 ₽</td><td>32 т</td><td>HoReCa, маржа x10</td></tr>
+      <tr><td>Грибы шиитаке</td><td>—</td><td>350-600 ₽</td><td>малый</td><td>HoReCa</td></tr>
+      <tr><td>Дуриан</td><td>—</td><td>1,500-3,200 ₽</td><td>0 через Сармант</td><td>Не найден</td></tr>
+    </table>
+    <div class="info-box warn">Экзотика = высокая маржа, но крошечные объёмы. Не для первой фуры. Перспектива на будущее для HoReCa канала.</div>
+  </div>
+</div>
+
+<!-- ===== ANKARA GYD ===== -->
+<div class="section">
+  <div class="section-header" onclick="toggle(this)">
+    <h2>ANKARA GYD: двойное ценообразование</h2>
+    <span class="arrow">▼</span>
+  </div>
+  <div class="section-body">
+    <div class="info-box danger">
+      <div class="title">Три клона ANKARA GYD в 1С</div>
+      Один посредник с тремя ценовыми профилями. Базовая цена = таможенная. Продажная = в 3.5-9.5 раз выше.
+    </div>
+    <div style="overflow-x:auto">
+    <table class="dtable">
+      <tr><th>Товар</th><th>Базовая $/кг</th><th>Продажная $/кг</th><th>Наценка</th></tr>
+      <tr><td>Салат Айсберг</td><td>$0.42</td><td>$3.65</td><td style="color:var(--red);font-weight:700">8-9.5x</td></tr>
+      <tr><td>Перец сладкий</td><td>$0.30</td><td>$2.30</td><td style="color:var(--red);font-weight:700">7.5-8x</td></tr>
+      <tr><td>Баклажаны</td><td>$0.47</td><td>$2.78</td><td style="color:var(--red);font-weight:700">5.8-6x</td></tr>
+      <tr><td>Киви</td><td>$0.47</td><td>$2.17</td><td style="color:var(--orange);font-weight:700">4.6x</td></tr>
+      <tr><td>Огурцы</td><td>$0.60</td><td>$2.25</td><td style="color:var(--orange);font-weight:700">3.6-3.9x</td></tr>
+    </table>
+    </div>
+    <div class="scroll-hint">скролл вправо, если не влезает</div>
+
+    <div class="info-box warn" style="margin-top:12px">
+      <div class="title">Внимание: возможно, это НЕ баг, а фича</div>
+      Все участники могут быть связаны (финдиректор Питателя ставила главбуха Сарманта). Высокие цены могут быть частью схемы: раздутая себестоимость снижает налог на прибыль, маржа оседает за рубежом. «Дешёвое и честное» предложение может сломать их модель. Заходить осторожно.
+    </div>
+  </div>
+</div>
+
+<!-- ===== PITATEL PRINCIPALS ===== -->
+<div class="section">
+  <div class="section-header" onclick="toggle(this)">
+    <h2>Принципалы Питателя</h2>
+    <span class="arrow">▼</span>
+  </div>
+  <div class="section-body">
+    <div class="chart-bar">
+      <div class="bar-row"><span class="bar-label">ТК ЕВРАЗИЯ</span><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--accent)"></div></div><span class="bar-val">35%</span></div>
+      <div class="bar-row"><span class="bar-label">СМАРТ МОУШН</span><div class="bar-track"><div class="bar-fill" style="width:51%;background:var(--cyan)"></div></div><span class="bar-val">18%</span></div>
+      <div class="bar-row"><span class="bar-label">АКВАНУР</span><div class="bar-track"><div class="bar-fill" style="width:43%;background:var(--green)"></div></div><span class="bar-val">15%</span></div>
+      <div class="bar-row"><span class="bar-label">ФАЛКОН</span><div class="bar-track"><div class="bar-fill" style="width:37%;background:var(--purple)"></div></div><span class="bar-val">13%</span></div>
+      <div class="bar-row"><span class="bar-label">КОМИНС</span><div class="bar-track"><div class="bar-fill" style="width:26%;background:var(--orange)"></div></div><span class="bar-val">9%</span></div>
+      <div class="bar-row"><span class="bar-label">АЛЬЯНС</span><div class="bar-track"><div class="bar-fill" style="width:26%;background:var(--orange)"></div></div><span class="bar-val">9%</span></div>
+    </div>
+    <div class="kpi-row">
+      <div class="kpi"><div class="val">208,217 т</div><div class="lbl">за 7 мес</div></div>
+      <div class="kpi"><div class="val">$164M</div><div class="lbl">прогноз/год</div></div>
+      <div class="kpi"><div class="val">219</div><div class="lbl">поставщиков</div></div>
+    </div>
+    <div class="info-box info">
+      Все консолидировались в УТК ФС (ID 122041) с конца декабря 2025. 219 уникальных поставщиков = вход для нового китайского поставщика РЕАЛЕН.
+    </div>
+  </div>
+</div>
+
+<div class="bottom-nav">
+  <a href="index.html"><span class="icon">&#9733;</span>Предложения</a>
+  <a href="analytics.html" class="active"><span class="icon">&#9776;</span>Аналитика</a>
+</div>
+
+<script>
+function toggle(el){
+  el.classList.toggle('open');
+  el.nextElementSibling.classList.toggle('show');
+}
+function toggleProduct(el){
+  el.classList.toggle('open');
+  el.nextElementSibling.classList.toggle('show');
+}
+
+function filterAll(btn){
+  document.querySelectorAll('.filter-pill').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.product[data-cat]').forEach(p=>p.style.display='');
+  document.querySelectorAll('.section').forEach(s=>s.style.display='');
+}
+
+function filterCat(btn,cat){
+  document.querySelectorAll('.filter-pill').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+
+  document.querySelectorAll('.product[data-cat]').forEach(p=>{
+    if(p.dataset.cat.includes(cat)){
+      p.style.display='';
+    } else {
+      p.style.display='none';
+    }
+  });
+
+  // Show/hide eliminated section based on filter
+  const sections = document.querySelectorAll('.section');
+  sections.forEach(s=>{
+    const h2 = s.querySelector('h2');
+    if(!h2) return;
+    const text = h2.textContent;
+    if(cat === 'eliminated'){
+      // Show cemetery, hide others that don't have matching products
+      if(text.includes('Кладбище') || text.includes('Обзор')){
+        s.style.display='';
+      } else {
+        s.style.display='none';
+      }
+    } else if(cat === 'pitatel'){
+      if(text.includes('Кладбище') || text.includes('Экзотика')){
+        s.style.display='none';
+      } else {
+        s.style.display='';
+      }
+    } else if(cat === 'seasonal'){
+      if(text.includes('Кладбище') || text.includes('Экзотика') || text.includes('ANKARA') || text.includes('Принципалы')){
+        s.style.display='none';
+      } else {
+        s.style.display='';
+      }
+    } else if(cat === 'recommended'){
+      if(text.includes('Кладбище') || text.includes('ANKARA') || text.includes('Принципалы')){
+        s.style.display='none';
+      } else {
+        s.style.display='';
+      }
+    }
+  });
+}
+</script>
+</body>
+</html>
